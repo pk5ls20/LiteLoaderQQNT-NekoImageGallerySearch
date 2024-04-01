@@ -1,0 +1,9 @@
+{
+  "name": "image_search",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "description": "NekoImage Search in LiteLoaderQQNT",
+  "scripts": {
+    "deploy": "cp -r . /home/pk5ls/LiteLoaderQQNT/plugins/LiteLoaderQQNT-NekoImage/"
+  }
+}

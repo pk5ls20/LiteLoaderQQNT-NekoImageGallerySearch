@@ -1,8 +1,20 @@
-// Electron 主进程 与 渲染进程 交互的桥梁
-const { contextBridge } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
+contextBridge.exposeInMainWorld("imageSearch", {
+    getSettings: () => ipcRenderer.invoke(
+        "LiteLoader.imageSearch.getSettings"
+    ),
 
-// 在window对象下导出只读对象
-contextBridge.exposeInMainWorld("plugin_template", {
+    setSettings: content => ipcRenderer.invoke(
+        "LiteLoader.imageSearch.setSettings",
+        content
+    ),
 
+    logToMain: (...args) => ipcRenderer.invoke(
+        "LiteLoader.imageSearch.logToMain",
+        ...args
+    ),
+
+    openWeb: (url) =>
+        ipcRenderer.send("LiteLoader.imageSearch.openWeb", url)
 });
