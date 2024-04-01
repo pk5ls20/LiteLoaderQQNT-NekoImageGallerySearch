@@ -1,0 +1,34 @@
+{
+    "$schema": "./manifest_schema.json",
+    "manifest_version": 4,
+    "type": "extension",
+    "name": "插件模板",
+    "slug": "plugin_template",
+    "description": "LiteLoaderQQNT的插件模板",
+    "version": "0.1.0",
+    "icon": "./icon.png",
+    "authors": [
+        {
+            "name": "LiteLoaderQQNT",
+            "link": "https://github.com/LiteLoaderQQNT"
+        }
+    ],
+    "platform": [
+        "win32",
+        "linux",
+        "darwin"
+    ],
+    "injects": {
+        "renderer": "./src/renderer.js",
+        "main": "./src/main.js",
+        "preload": "./src/preload.js"
+    },
+    "repository": {
+        "repo": "LiteLoaderQQNT/Plugin-Template",
+        "branch": "main",
+        "release": {
+            "tag": "0.1.0",
+            "file": "Plugin-Template.zip"
+        }
+    }
+}
