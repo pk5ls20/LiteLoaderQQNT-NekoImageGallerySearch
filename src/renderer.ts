@@ -1,4 +1,5 @@
 /// <reference path="global.d.ts" />
+import { log } from './logs';
 const mountPoint = document.createElement('div');
 mountPoint.id = 'pendingInject';document.body.insertAdjacentElement('afterbegin', mountPoint);
 import('vue').then(({ createApp }) => {
@@ -13,7 +14,8 @@ link.rel = 'stylesheet';
 link.href = `local:///${LiteLoader.plugins["image_search"].path.plugin}/renderer/style.css`;
 document.head.appendChild(link);
 
-import iconHtml from './assets/svg/logo.svg?raw';
+import iconHtml from './assets/logo.svg?raw';
+
 
 export const onSettingWindowCreated = async view => {
     try {
@@ -26,7 +28,7 @@ export const onSettingWindowCreated = async view => {
             }
         });
         const settings = await window.imageSearch.getSettings();
-        console.log("Settings", JSON.stringify(settings))
+        log("Settings", JSON.stringify(settings))
         const api_input = view.querySelector(".image_search .api-input");
         const reset = view.querySelector(".image_search .reset");
         const apply = view.querySelector(".image_search .apply");
@@ -74,6 +76,6 @@ export const onSettingWindowCreated = async view => {
             alert("Admin Token Reset");
         });
     } catch (error) {
-        console.log("[Error in setting]", error);
+        log("[Error in setting]", error);
     }
 }

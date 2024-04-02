@@ -2,4 +2,5 @@
 /.vscode
 /dist
 /node_modules
+/dist-only-vue
 *.log

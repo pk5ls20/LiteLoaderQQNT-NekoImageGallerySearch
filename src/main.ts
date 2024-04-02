@@ -1,6 +1,7 @@
 /// <reference path="global.d.ts" />
 import fs = require("fs");
 import path = require("path");
+import {log} from "./logs";
 import {BrowserWindow, ipcMain, shell} from "electron";
 
 function watchSettingsChange(webContents: Electron.WebContents, settingsPath: fs.PathLike) {
@@ -45,7 +46,7 @@ ipcMain.handle(
             const data = fs.readFileSync(settingsPath, "utf-8");
             return JSON.parse(data);
         } catch (error) {
-            console.log(error);
+            log(error);
             return {};
         }
     }
@@ -58,7 +59,7 @@ ipcMain.handle(
             const new_config = JSON.stringify(content);
             fs.writeFileSync(settingsPath, new_config, "utf-8");
         } catch (error) {
-            console.log(error);
+            log(error);
         }
     }
 );
@@ -70,6 +71,6 @@ ipcMain.on("LiteLoader.imageSearch.openWeb", (event, message) =>
 ipcMain.handle(
     "LiteLoader.imageSearch.logToMain",
     (event, ...args) => {
-        console.log(...args);
+        log(...args);
     }
 );

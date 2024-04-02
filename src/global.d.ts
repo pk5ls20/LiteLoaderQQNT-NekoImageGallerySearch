@@ -1,3 +1,4 @@
+import 'vite/client';
 declare global {
     let LiteLoader: any;
     interface Window {
@@ -12,7 +13,6 @@ declare global {
 
 declare module "*.svg" {
     const content: any;
-    export default content;
 }
 
 export {};
