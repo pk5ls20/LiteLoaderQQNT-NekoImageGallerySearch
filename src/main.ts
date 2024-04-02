@@ -1,14 +1,15 @@
-const fs = require("fs");
-const path = require("path");
-const { BrowserWindow, ipcMain, shell } = require("electron");
+/// <reference path="global.d.ts" />
+import fs = require("fs");
+import path = require("path");
+import {BrowserWindow, ipcMain, shell} from "electron";
 
-function watchSettingsChange(webContents, settingsPath) {
+function watchSettingsChange(webContents: Electron.WebContents, settingsPath: fs.PathLike) {
     fs.watch(settingsPath, "utf-8", debounce(() => {
         updateStyle(webContents, settingsPath);
     }, 100));
 }
 
-function openWeb(url) {
+function openWeb(url: string) {
     shell.openExternal(url);
 }
 
@@ -42,8 +43,7 @@ ipcMain.handle(
     (event, message) => {
         try {
             const data = fs.readFileSync(settingsPath, "utf-8");
-            const config = JSON.parse(data);
-            return config;
+            return JSON.parse(data);
         } catch (error) {
             console.log(error);
             return {};
@@ -63,8 +63,8 @@ ipcMain.handle(
     }
 );
 
-ipcMain.on("LiteLoader.imageSearch.openWeb", (event, ...message) =>
-    openWeb(...message)
+ipcMain.on("LiteLoader.imageSearch.openWeb", (event, message) =>
+    openWeb(message)
 );
 
 ipcMain.handle(

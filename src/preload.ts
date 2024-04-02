@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("imageSearch", {
+let imageSearch = {
     getSettings: () => ipcRenderer.invoke(
         "LiteLoader.imageSearch.getSettings"
     ),
@@ -17,4 +17,6 @@ contextBridge.exposeInMainWorld("imageSearch", {
 
     openWeb: (url) =>
         ipcRenderer.send("LiteLoader.imageSearch.openWeb", url)
-});
+}
+
+contextBridge.exposeInMainWorld("imageSearch", imageSearch);
