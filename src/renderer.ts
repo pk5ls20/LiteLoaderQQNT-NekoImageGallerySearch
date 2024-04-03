@@ -2,13 +2,14 @@
 import { log } from './logs';
 const mountPoint = document.createElement('div');
 mountPoint.id = 'pendingInject';document.body.insertAdjacentElement('afterbegin', mountPoint);
+import BalmUI from 'balm-ui'; // Official Google Material Components
 import('vue').then(({ createApp }) => {
     import('./ui/app.vue').then(({ default: App }) => {
-        createApp(App).mount('#pendingInject');
+        createApp(App).use(BalmUI).mount('#pendingInject');
     });
 });
-
 // force inject css
+import 'balm-ui-css';
 const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = `local:///${LiteLoader.plugins["image_search"].path.plugin}/renderer/style.css`;

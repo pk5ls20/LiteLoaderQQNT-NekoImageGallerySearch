@@ -1,5 +1,5 @@
 <template>
-  <div id="search-window" class="q-dialog">
+  <div id="search-window" v-if=localVisibleState class="q-dialog">
     <div id="search-mark-window" class="q-dialog-modal"></div>
     <search-window></search-window>
   </div>
@@ -13,6 +13,8 @@ import {pluginSettings} from "./utils";
 import {log} from "../logs";
 import SearchWindow from "./searchWindow.vue";
 import iconHtml from '../assets/logo.svg?raw';
+import {windowVisibleState} from "./windowLoader";
+const localVisibleState = ref(false);
 
 let settings = ref(null);
 const observer = new MutationObserver((mutations) => {
@@ -29,11 +31,14 @@ const observer = new MutationObserver((mutations) => {
           const nekoImageMarkWindow = document.getElementById('search-mark-window');
           const nekoImageDialog = document.getElementById('search-dialog');
           log("[capture]", nekoImageWindow, nekoImageMarkWindow, nekoImageDialog);
+          localVisibleState.value = true;
           openButton.addEventListener('click', () => {
-            // click, initial
+            log("[click]", windowVisibleState.value);
+            windowVisibleState.value = true;
             adjustVisible(true);
           });
           funcBar.appendChild(openButton);
+          log("[val]", localVisibleState.value);
         }
       });
     }

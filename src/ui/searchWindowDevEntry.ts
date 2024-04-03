@@ -1,3 +1,5 @@
 import { createApp } from 'vue'
 import searchWindow from './searchWindow.vue'
-createApp(searchWindow).mount('#app')
+import BalmUI from 'balm-ui';
+import 'balm-ui-css';
+createApp(searchWindow).use(BalmUI).mount('#app')

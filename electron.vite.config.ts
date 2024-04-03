@@ -59,12 +59,17 @@ let config = {
             vue(),
             svgLoader()
         ],
-        resolve: {},
+        resolve: {
+            alias: {
+                'balm-ui-plus': 'balm-ui/dist/balm-ui-plus.esm.js',
+                'balm-ui-css': 'balm-ui/dist/balm-ui.css'
+            }
+        },
         define: {
             'process.env': {}
         },
-        // cssCodeSplit: false
     }
+    // cssCodeSplit: false
 }
 
 export default config;

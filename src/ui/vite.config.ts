@@ -10,6 +10,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname),
+      'balm-ui-plus': 'balm-ui/dist/balm-ui-plus.esm.js',
+      'balm-ui-css': 'balm-ui/dist/balm-ui.css'
     },
   },
   build: {
