@@ -8,15 +8,13 @@
 
 <script setup lang="ts">
 import {onMounted, onUnmounted, ref} from 'vue';
-import {adjustVisible} from "./windowLoader";
-import {pluginSettings} from "./utils";
-import {log} from "../logs";
+import {log} from "../../logs";
+import iconHtml from '../../assets/logo.svg?raw';
 import SearchWindow from "./searchWindow.vue";
-import iconHtml from '../assets/logo.svg?raw';
-import {windowVisibleState} from "./windowLoader";
+import {adjustVisible} from "../Utils/windowLoader";
+import {windowVisibleState} from "../Utils/windowLoader";
 const localVisibleState = ref(false);
 
-let settings = ref(null);
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.type === 'childList') {
@@ -38,7 +36,6 @@ const observer = new MutationObserver((mutations) => {
             adjustVisible(true);
           });
           funcBar.appendChild(openButton);
-          log("[val]", localVisibleState.value);
         }
       });
     }
@@ -48,8 +45,6 @@ const observer = new MutationObserver((mutations) => {
 
 onMounted(async () => {
   observer.observe(document.body, {childList: true, subtree: true, attributes: true});
-  settings = await pluginSettings();
-  log('Mounted', JSON.stringify(settings.value));
 });
 
 onUnmounted(() => {

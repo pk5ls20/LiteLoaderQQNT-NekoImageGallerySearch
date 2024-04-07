@@ -1,27 +1,27 @@
 /// <reference path="global.d.ts" />
-import { log } from './logs';
+import {log} from './logs';
+import iconHtml from './assets/logo.svg?raw';
+import AppEntry from './app/appEntry';
+
+// dynamic inject vue
 const mountPoint = document.createElement('div');
-mountPoint.id = 'pendingInject';document.body.insertAdjacentElement('afterbegin', mountPoint);
-import BalmUI from 'balm-ui'; // Official Google Material Components
-import('vue').then(({ createApp }) => {
-    import('./ui/app.vue').then(({ default: App }) => {
-        createApp(App).use(BalmUI).mount('#pendingInject');
-    });
-});
-// force inject css
-import 'balm-ui-css';
+mountPoint.id = 'nekoImagePluginView';
+document.body.insertAdjacentElement('afterbegin', mountPoint);
+AppEntry('mainApp', '#nekoImagePluginView')
+    .then(r => log("AppEntry Success", r))
+    .catch(e => log("AppEntry Failed", e))
+
+// inject global css
 const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = `local:///${LiteLoader.plugins["image_search"].path.plugin}/renderer/style.css`;
 document.head.appendChild(link);
 
-import iconHtml from './assets/logo.svg?raw';
-
-
-export const onSettingWindowCreated = async view => {
+// export settings
+export const onSettingWindowCreated = async (view: any) => {
     try {
         const plugin_path = LiteLoader.plugins["image_search"].path.plugin;
-        const html_file_path = `local:///${plugin_path}/ui/settings.html`;
+        const html_file_path = `local:///${plugin_path}/app/settings.html`;
         view.innerHTML = await (await fetch(html_file_path)).text();
         document.querySelectorAll(".nav-item.liteloader").forEach((node) => {
             if (node.textContent === "Image Search") {

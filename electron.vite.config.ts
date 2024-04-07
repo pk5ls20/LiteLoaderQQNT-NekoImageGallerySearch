@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 let config = {
     main: {
         build: {
-            outDir: "dist/main",
+            outDir: "LiteLoaderQQNT-NekoImage/main",
             emptyOutDir: true,
             lib: {
                 formats: ["cjs"],
@@ -19,14 +19,14 @@ let config = {
             targets: [
                 {src: './manifest.json', dest: 'dist'},
                 {src: './icon.png', dest: 'dist'},
-                {src: 'src/ui/settings.html', dest: 'dist/ui/'},
+                {src: 'src/app/settings.html', dest: 'dist/app/'},
             ]
         })]
         // , cssCodeSplit: false
     },
     preload: {
         build: {
-            outDir: "dist/preload",
+            outDir: "LiteLoaderQQNT-NekoImage/preload",
             emptyOutDir: true,
             lib: {
                 formats: ["cjs"],
@@ -43,7 +43,7 @@ let config = {
     renderer: {
         // vite config options
         build: {
-            outDir: "dist/renderer",
+            outDir: "LiteLoaderQQNT-NekoImage/renderer",
             emptyOutDir: true,
             lib: {
                 formats: ["es"],
@@ -55,12 +55,12 @@ let config = {
             }
         },
         plugins: [
-            // vue({customElement: true})
             vue(),
             svgLoader()
         ],
         resolve: {
             alias: {
+                vue: 'vue/dist/vue.esm-bundler.js',
                 'balm-ui-plus': 'balm-ui/dist/balm-ui-plus.esm.js',
                 'balm-ui-css': 'balm-ui/dist/balm-ui.css'
             }

@@ -5,19 +5,27 @@
   "description": "NekoImage Search in LiteLoaderQQNT",
   "license": "AGPL-3.0",
   "scripts": {
-    "ui-dev": "cd src/ui && vite",
+    "ui-dev": "cd src/app && vite",
+    "ui-dev-build": "cd src/app && vite build",
     "plugin-build": "electron-vite build",
-    "remote-plugin-build": "electron-vite build && scp -r dist/* pk5ls@pk5ls-vm:/home/pk5ls/LiteLoaderQQNT/plugins/LiteLoaderQQNT-NekoImage/"
+    "remote-plugin-build": "electron-vite build && scp -r LiteLoaderQQNT-NekoImage/* pk5ls@pk5ls-vm:/home/pk5ls/LiteLoaderQQNT/plugins/LiteLoaderQQNT-NekoImage/"
+  },
+  "dependencies": {
+    "ajax": "^0.0.4",
+    "balm-ui": "^10.28.2",
+    "darkreader": "^4.9.81",
+    "pinia": "^2.1.7",
+    "vue": "^3.3.11"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
-    "balm-ui": "^10.28.2",
-    "electron": "^29.0.1",
+    "@vue/devtools": "^7.0.25",
+    "electron": "^28.0.0",
     "electron-vite": "^2.0.0",
+    "sass": "^1.74.1",
     "typescript": "*",
     "vite": "^5.1.4",
     "vite-plugin-cp": "^4.0.8",
-    "vite-svg-loader": "^5.1.0",
-    "vue": "^3.3.11"
+    "vite-svg-loader": "^5.1.0"
   }
 }
