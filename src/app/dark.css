@@ -1,0 +1,95 @@
+/* SPECIAL THANKS TO https://github.com/darkreader/darkreader */
+
+.q-dialog-main {
+  background-color: #242525 !important;
+}
+.q-dialog-main {
+  color-scheme: dark !important;
+}
+.q-dialog-main {
+  background-color: #242525;
+}
+.q-dialog-main {
+  border-color: #776f62;
+  color: #e5e0d8;
+}
+
+.mdc-notched-outline__leading {
+  border-color: rgba(140, 130, 115, 0.38) !important;
+}
+.mdc-notched-outline__notch {
+  border-color: rgba(140, 130, 115, 0.38) !important;
+}
+.mdc-notched-outline__trailing {
+  border-color: rgba(140, 130, 115, 0.38) !important;
+}
+.mdc-notched-outline, .mdc-notched-outline--no-label, .mdc-notched-outline--notched	{
+  border-color: #303436 !important;
+}
+
+.mdc-tab .mdc-tab__text-label {
+  color: rgba(232, 230, 227, 0.6) !important;
+}
+
+.mdc-floating-label{
+  color: rgba(232, 230, 227, 0.6) !important;
+}
+
+.mdc-button--raised:not(:disabled) {
+  color: rgb(255, 255, 255) !important;
+}
+
+.mdc-chip {
+  background-color: rgb(42, 45, 47);
+  color: rgba(232, 230, 227, 0.87);
+  outline-color: initial;
+}
+
+.mdc-chip-set--choice .mdc-chip--selected{
+  background-color: #181a1b
+}
+
+.mdc-chip__text:hover, .mdc-chip:hover{
+  color: rgba(232, 230, 227, 0.7) !important;
+}
+
+.mdc-select:not(.mdc-select--disabled) .mdc-select__selected-text {
+  color: rgba(232, 230, 227, 0.87);
+}
+
+.mdc-select:not(.mdc-select--disabled) .mdc-select__dropdown-icon {
+  fill: rgba(232, 230, 227, 0.54);
+}
+
+.mdc-select__menu .mdc-deprecated-list .mdc-deprecated-list-item--selected {
+  background-color: #5183de;
+  color: #e8e6e3;
+}
+
+.mdc-menu-surface{
+  background-color: #242525;
+}
+
+.mdc-deprecated-list-item__text{
+  color: #e8e6e3;
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+ color: rgba(232, 230, 227, 0.87);
+}
+
+.mdc-dialog .mdc-dialog__surface {
+  background-color: #181a1b;
+}
+
+.mdc-dialog .mdc-dialog__title {
+  color: rgba(232, 230, 227, 0.87);
+}
+
+.mdc-dialog .mdc-dialog__content {
+  color: rgba(232, 230, 227, 0.6);
+}
+
+.mdc-dialog .mdc-dialog__close {
+  color: rgba(232, 230, 227, 0.87);
+}

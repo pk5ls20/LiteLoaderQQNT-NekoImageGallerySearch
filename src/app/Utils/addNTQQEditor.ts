@@ -4,7 +4,16 @@ import {log} from "../../logs";
 export const addNTQQEditor = (message: { src: string; }) => {
     try {
         let emojiElement: any;
-        const ckeditorInstance = document.querySelector(".ck.ck-content.ck-editor__editable")["ckeditorInstance"];
+        let ckeditorInstance: any;
+        const selectors = ".ck.ck-content.ck-editor__editable";
+        const ele = "ckeditorInstance";
+        if (window === window.parent) {
+            // in iframe, plugin inject mode
+            ckeditorInstance = document.querySelector(selectors)[ele];
+        } else {
+            // not in iframe, pwa mode
+            ckeditorInstance = window.parent.document.querySelector(selectors)[ele];
+        }
         const editorModel = ckeditorInstance.model;
         const editorSelection = editorModel.document.selection;
         const position = editorSelection.getFirstPosition();

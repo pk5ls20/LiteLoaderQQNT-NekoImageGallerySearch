@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'HarmonyOS Sans SC';
+    src: url('../assets/HarmonyOS_Sans_SC_Medium.subset.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.q-dialog-main, .q-dialog, .q-status-dialog, .mdc-floating-label{
+    font-family: 'HarmonyOS Sans SC', sans-serif;
+    --mdc-theme-primary: #5183de !important;
+    --mdc-theme-secondary: #5183de !important;
+}
+
+.mdc-floating-label--float-above{
+    color: #5183de !important;
+}

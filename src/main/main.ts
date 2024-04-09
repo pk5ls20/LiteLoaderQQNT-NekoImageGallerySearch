@@ -1,7 +1,7 @@
-/// <reference path="global.d.ts" />
-import fs = require("fs");
-import path = require("path");
-import {log} from "./logs";
+/// <reference path="../global.d.ts" />
+import * as fs from 'node:fs';
+const path = require('node:path');
+import {log} from "../logs";
 import {BrowserWindow, ipcMain, shell} from "electron";
 
 function watchSettingsChange(webContents: Electron.WebContents, settingsPath: fs.PathLike) {

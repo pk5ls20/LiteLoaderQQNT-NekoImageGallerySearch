@@ -23,9 +23,11 @@
     "electron": "^28.0.0",
     "electron-vite": "^2.0.0",
     "sass": "^1.74.1",
+    "terser": "^5.30.3",
     "typescript": "*",
     "vite": "^5.1.4",
     "vite-plugin-cp": "^4.0.8",
+    "vite-plugin-singlefile": "^2.0.1",
     "vite-svg-loader": "^5.1.0"
   }
 }
