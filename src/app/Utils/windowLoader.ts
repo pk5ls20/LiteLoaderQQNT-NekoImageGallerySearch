@@ -1,22 +1,13 @@
-import {Ref, ref} from "vue";
-
-export const windowVisibleState: Ref<boolean> = ref(false);
+import {isDevEnv} from './envFlag'
+import {log} from '../../logs'
 
 export const adjustVisible = (state: boolean) => {
-    const nekoImageWindow = document.getElementById('search-window');
-    const nekoImageMarkWindow = document.getElementById('search-mark-window');
-    const nekoImageDialog = document.getElementById('search-dialog');
-    if (state) {
-        nekoImageWindow.style.visibility = 'visible';
-        nekoImageMarkWindow.style.transitionDelay = '0ms';
-        nekoImageDialog.style.transitionDelay = '150ms';
-        nekoImageWindow.style.opacity = '1';
-        nekoImageDialog.style.transform = 'translate(0px, 0px)';
+    if (isDevEnv) {
+        log(`Switched to ${state.toString()}`)
     } else {
-        nekoImageWindow.style.visibility = 'hidden';
-        nekoImageMarkWindow.style.transitionDelay = '150ms';
-        nekoImageDialog.style.transitionDelay = '0ms';
-        nekoImageWindow.style.opacity = '0';
-        nekoImageDialog.style.transform = 'translate(0px, -20px)';
+        import("../../renderer/injectIframe").then(module => {
+            const { hideIframe, showIframe } = module;
+            state ? showIframe() : hideIframe();
+        });
     }
 }

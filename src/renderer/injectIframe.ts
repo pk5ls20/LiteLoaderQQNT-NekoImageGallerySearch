@@ -4,6 +4,7 @@ import AppEntry from "../app/appEntry";
 const iframeMaxWidth = 700;
 const iframeMaxHeight = 650;
 const mountID = 'nekoImagePluginView'
+const iframeID = 'nekoImagePluginIframe'
 const iframeClassName = 'nekoimage_iframe'
 const iframePreShowClassName = 'nekoimage_iframe_pre_show'
 const iframePreHideClassName = 'nekoimage_iframe_pre_hide'
@@ -60,6 +61,7 @@ const adjustIframe = (iframe: any) => {
 
 export const setupIframe = () => {
     const iframe = document.createElement('iframe');
+    iframe.id = iframeID;
     log(document.body.getAttribute('q-theme') == 'dark')
     iframe.onload = () => {
         const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
@@ -121,22 +123,24 @@ export const setupIframe = () => {
 
 
 export const showIframe = (iframe: HTMLIFrameElement | null) => {
-    if (iframe) {
+    const targetIframe = iframe || document.getElementById(iframeID);
+    if (targetIframe) {
         controlMask('block')
-        controlIframe(iframeStyleEnum.show, iframe);
-        preShow(iframe);
+        controlIframe(iframeStyleEnum.show, targetIframe);
+        preShow(targetIframe);
         setTimeout(() => {
-            controlIframe(iframeStyleEnum.show, iframe);
-            preHide(iframe);
+            controlIframe(iframeStyleEnum.show, targetIframe);
+            preHide(targetIframe);
         }, 0);
     }
 };
 
 export const hideIframe = (iframe: HTMLIFrameElement | null) => {
-    if (iframe) {
-        preShow(iframe);
+    const targetIframe = iframe || document.getElementById(iframeID);
+    if (targetIframe) {
+        preShow(targetIframe);
         setTimeout(() => {
-            controlIframe(iframeStyleEnum.hide, iframe);
+            controlIframe(iframeStyleEnum.hide, targetIframe);
             controlMask('none')
         }, 400);
     }

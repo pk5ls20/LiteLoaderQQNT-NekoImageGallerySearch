@@ -56,7 +56,7 @@ import {performQuerySearch} from "../Services/performQuerySearch";
 import {useSearchStore} from "../States/searchWindowState";
 import {isDevEnv} from "../Utils/envFlag";
 import {addNTQQEditor} from "../Utils/addNTQQEditor";
-import {adjustVisible, windowVisibleState} from "../Utils/windowLoader";
+import {adjustVisible} from "../Utils/windowLoader";
 
 const store = useSearchStore()
 
@@ -79,7 +79,6 @@ const handleImageClick = (url: string, id: string) => {
     log('Dev Env: Adding editor', msg)
   } else {
     addNTQQEditor(msg);
-    windowVisibleState.value = false;
     adjustVisible(false);
   }
 };

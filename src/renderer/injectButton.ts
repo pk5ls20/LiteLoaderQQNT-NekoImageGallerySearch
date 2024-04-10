@@ -1,6 +1,5 @@
 import {log} from "../logs";
 import iconHtml from '../assets/logo.svg?raw';
-import {windowVisibleState} from "../app/Utils/windowLoader";
 import {showIframe} from "./injectIframe";
 
 export const btn_observer = new MutationObserver((mutations) => {
@@ -18,7 +17,6 @@ export const btn_observer = new MutationObserver((mutations) => {
                     const nekoImageDialog = document.getElementById('search-dialog');
                     log("[capture]", nekoImageWindow, nekoImageMarkWindow, nekoImageDialog);
                     openButton.addEventListener('click', () => {
-                        log("[click]", windowVisibleState.value);
                         showIframe(document.querySelector("#app > iframe"))
                     });
                     funcBar.appendChild(openButton);

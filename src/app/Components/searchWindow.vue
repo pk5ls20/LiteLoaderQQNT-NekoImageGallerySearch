@@ -40,7 +40,7 @@ import {log} from "../../logs";
 import {fetchStatus, searchType, serverStatus, tabItem} from "../Models/searchWindowEnum";
 import {getClient} from "../Services/baseSearchService";
 import {useSearchStore} from "../States/searchWindowState";
-import {adjustVisible, windowVisibleState} from "../Utils/windowLoader";
+import {adjustVisible} from "../Utils/windowLoader";
 import {pluginSettings} from "../Utils/pluginSettings";
 import {handleCatchError} from "../Utils/handleCatchError";
 import {isDevEnv} from "../Utils/envFlag"
@@ -123,11 +123,12 @@ onMounted(async () => {
       if (searchMarkWindow) {
         searchMarkWindow.addEventListener('click', () => {
           log("search-mark-window clicked")
-          windowVisibleState.value = false;
           adjustVisible(false);
         });
       } else {
-        !isDevEnv ? log('search-mark-window not found') : null // make ide happy
+        if (!isDevEnv) {
+          log('search-mark-window not found');
+        }
       }
     }
 );
