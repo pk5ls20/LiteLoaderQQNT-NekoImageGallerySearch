@@ -6,7 +6,7 @@ import {SearchResult} from "../Models/SearchResult";
 import {handleCatchError} from "../Utils/handleCatchError";
 
 export const performQuerySearch = async (query: SearchQuery, type: fetchType) => {
-    const store= useSearchStore()
+    const store = useSearchStore()
     store.fetchingStatus = type === fetchType.FIRST ? fetchStatus.FIRST_FETCHING : fetchStatus.MORE_FETCHING
     try {
         if (type === fetchType.FIRST) {

@@ -117,19 +117,6 @@ onMounted(async () => {
           break;
       }
       log("store.serverStatus", store.serverStatus)
-      // listen at element in mainApp.vue, cuz <search-window></search-window> loaded on clicked button (?
-      // maybe there are better ways to do this
-      const searchMarkWindow = document.getElementById('search-mark-window');
-      if (searchMarkWindow) {
-        searchMarkWindow.addEventListener('click', () => {
-          log("search-mark-window clicked")
-          adjustVisible(false);
-        });
-      } else {
-        if (!isDevEnv) {
-          log('search-mark-window not found');
-        }
-      }
     }
 );
 

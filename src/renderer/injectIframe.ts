@@ -72,6 +72,7 @@ export const setupIframe = () => {
         iframeDocument.head.appendChild(innerGlobalCSSLink);
         // inner css - Dark mode css
         // TODO: dynamic adjust even manually switch dark mode
+        // TODO: why here don't work until inject it globally in windows???
         if (isDarkMode) {
             log("DarkMode detected")
             const innerDarkCSSLink = document.createElement('link');
@@ -87,12 +88,14 @@ export const setupIframe = () => {
         outerCSSLink.href = `local:///${LiteLoader.plugins["image_search"].path.plugin}/renderer/injectIframe.css`;
         document.head.appendChild(outerCSSLink);
         // inject vue app
+        // start work with LiteLoaderQQNT-lite_tools since commit
+        // https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools/commit/49700bdbdd4a7d17466b125f301fe34b52433b53
         const mountPoint = iframeDocument.createElement('div');
         mountPoint.id = mountID;
         iframeDocument.body.appendChild(mountPoint);
         AppEntry('searchWindow', `#${mountID}`, iframeDocument)
             .then(r => console.log("AppEntry Success", r))
-            .catch(e => console.log("AppEntry Failed", e));
+            .catch(e => console.log("AppEntry Failed", e.stack.toString()));
     };
     iframe.src = 'about:blank';
     // set QQNT locate
@@ -122,7 +125,7 @@ export const setupIframe = () => {
 }
 
 
-export const showIframe = (iframe: HTMLIFrameElement | null) => {
+export const showIframe = (iframe?: HTMLIFrameElement | null) => {
     const targetIframe = iframe || document.getElementById(iframeID);
     if (targetIframe) {
         controlMask('block')
@@ -135,7 +138,7 @@ export const showIframe = (iframe: HTMLIFrameElement | null) => {
     }
 };
 
-export const hideIframe = (iframe: HTMLIFrameElement | null) => {
+export const hideIframe = (iframe?: HTMLIFrameElement | null) => {
     const targetIframe = iframe || document.getElementById(iframeID);
     if (targetIframe) {
         preShow(targetIframe);

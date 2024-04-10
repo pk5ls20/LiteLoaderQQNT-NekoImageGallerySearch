@@ -8,6 +8,7 @@
     "ui-dev": "cd src/app && vite",
     "ui-dev-build": "cd src/app && vite build",
     "plugin-build": "electron-vite build",
+    "local-plugin-build": "electron-vite build && cp -r LiteLoaderQQNT-NekoImage C:\\etc\\LiteLoaderQQNT\\plugins",
     "remote-plugin-build": "electron-vite build && scp -r LiteLoaderQQNT-NekoImage/* pk5ls@pk5ls-vm:/home/pk5ls/LiteLoaderQQNT/plugins/LiteLoaderQQNT-NekoImage/"
   },
   "dependencies": {
