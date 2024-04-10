@@ -1,17 +1,17 @@
 ## LiteLoaderQQNT-NekoImage
 
-> 🤔 Note:
-> You can preview the development roadmap in [here](https://github.com/users/pk5ls20/projects/5)
+> 🤔 提示:   
+> 可以[在这里](https://github.com/users/pk5ls20/projects/5)查看本项目的开发路线图
 
 ----
 
 [![wakatime](https://wakatime.com/badge/user/4e079db9-a68b-469b-a3b4-1a7e1bb4d357/project/018e9abd-9451-41d3-81e2-e52211960018.svg)](https://wakatime.com/badge/user/4e079db9-a68b-469b-a3b4-1a7e1bb4d357/project/018e9abd-9451-41d3-81e2-e52211960018)
 
-Another web UI for [NekoImageGallery](https://github.com/hv0905/NekoImageGallery), but completed using Vue, and **seamlessly integrated with NTQQ** through [LiteLoaderQQNT](https://liteloaderqqnt.github.io)
+又一个[NekoImageGallery](https://github.com/hv0905/NekoImageGallery)的web UI, 但基于vue完成，并通过[LiteLoaderQQNT](https://liteloaderqqnt.github.io)与NTQQ无缝结合
 
-[中文文档](README_ZH.md)
+[English Document](README.md)
 
-## Screenshots
+## 预览
 
 -----
 
@@ -19,16 +19,16 @@ Another web UI for [NekoImageGallery](https://github.com/hv0905/NekoImageGallery
 
 -----
 
-## Build & Install
+## 构建及安装
 ```shell
 npm install -g yarn
 yarn install && yarn plugin-build
 cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 ```
 
-## Reference & Special Thanks
+## 参考及特别致谢
 
-Thanks to the following programs. LiteLoaderQQNT-NekoImage could not have been realized without you!
+感谢以下项目，`LiteLoaderQQNT-NekoImage`的诞生离不开你们！
 
 - https://github.com/hv0905/NekoImageGallery.App
 - https://github.com/xtaw/LiteLoaderQQNT-Fake-Message
