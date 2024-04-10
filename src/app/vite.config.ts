@@ -20,5 +20,4 @@ export default defineConfig({
       input: path.resolve(__dirname, 'index.html'),
     },
   },
-
 });
