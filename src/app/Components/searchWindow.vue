@@ -40,10 +40,8 @@ import {log} from "../../logs";
 import {fetchStatus, searchType, serverStatus, tabItem} from "../Models/searchWindowEnum";
 import {getClient} from "../Services/baseSearchService";
 import {useSearchStore} from "../States/searchWindowState";
-import {adjustVisible} from "../Utils/windowLoader";
 import {pluginSettings} from "../Utils/pluginSettings";
 import {handleCatchError} from "../Utils/handleCatchError";
-import {isDevEnv} from "../Utils/envFlag"
 import BasicSearchInputComponents from "./basicSearchInputComponents.vue";
 import AdvanceSearchInputComponents from "./advanceSearchInputComponents.vue";
 import SearchResultComponents from "./searchResultComponents.vue";

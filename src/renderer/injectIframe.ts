@@ -1,46 +1,20 @@
 import {log} from "../logs";
 import AppEntry from "../app/appEntry";
+import {
+    controlIframe,
+    controlMask,
+    hideIframe,
+    iframeMaskClassName,
+    iframePreShowClassName,
+    iframeStyleEnum
+} from "./controlIframe";
 
+export const iframeID = 'nekoImagePluginIframe'
 const iframeMaxWidth = 700;
 const iframeMaxHeight = 650;
 const mountID = 'nekoImagePluginView'
-const iframeID = 'nekoImagePluginIframe'
 const iframeClassName = 'nekoimage_iframe'
-const iframePreShowClassName = 'nekoimage_iframe_pre_show'
-const iframePreHideClassName = 'nekoimage_iframe_pre_hide'
-const iframeMaskClassName = 'nekoimage_mask'
-const preShow = (ele: any) => {
-    ele.classList.add(iframePreShowClassName)
-    ele.classList.remove(iframePreHideClassName)
-}
-const preHide = (ele: any) => {
-    ele.classList.add(iframePreHideClassName)
-    ele.classList.remove(iframePreShowClassName)
-}
-enum iframeStyleEnum {
-    show, hide
-}
-const controlIframe = (style: iframeStyleEnum, iframe: any) => {
-    if (style === iframeStyleEnum.show) {
-        iframe.style.visibility = 'visible';
-        iframe.style.display = 'block';
-    } else if (style === iframeStyleEnum.hide) {
-        iframe.style.visibility = 'hidden';
-        iframe.style.display = 'none';
-    } else {
-        log("Bad style")
-    }
-}
-const controlMask = (style: string, mask?: any) => {
-    if (mask) {
-        mask.style.display = style
-    } else {
-        const mask = document.getElementById(iframeMaskClassName);
-        if (mask) mask.style.display = style;
-    }
-}
-const isDarkMode = document.body.getAttribute('q-theme') == 'dark';
-
+const isDarkMode = () => document.body.getAttribute('q-theme') === 'dark';
 const adjustIframe = (iframe: any) => {
     const appDiv = document.getElementById('app');
     if (!appDiv) {
@@ -72,15 +46,15 @@ export const setupIframe = () => {
         iframeDocument.head.appendChild(innerGlobalCSSLink);
         // inner css - Dark mode css
         // TODO: dynamic adjust even manually switch dark mode
-        // TODO: why here don't work until inject it globally in windows???
-        if (isDarkMode) {
-            log("DarkMode detected")
+        if (isDarkMode()) {
+            log("DarkMode is detected");
             const innerDarkCSSLink = document.createElement('link');
             innerDarkCSSLink.rel = 'stylesheet';
+            innerDarkCSSLink.className = 'dark-mode-style';
             innerDarkCSSLink.href = `local:///${LiteLoader.plugins["image_search"].path.plugin}/renderer/dark.css`;
             iframeDocument.head.appendChild(innerDarkCSSLink);
         } else {
-            log("DarkMode isn't detected")
+            log("DarkMode is not detected");
         }
         // outer css
         const outerCSSLink = document.createElement('link');
@@ -119,32 +93,7 @@ export const setupIframe = () => {
     mask.classList.add(iframeMaskClassName)
     document.body.appendChild(mask);
     mask.addEventListener('click', function () {
-        hideIframe(iframe);
+        hideIframe(iframeID);
         controlMask('none', mask)
     });
 }
-
-
-export const showIframe = (iframe?: HTMLIFrameElement | null) => {
-    const targetIframe = iframe || document.getElementById(iframeID);
-    if (targetIframe) {
-        controlMask('block')
-        controlIframe(iframeStyleEnum.show, targetIframe);
-        preShow(targetIframe);
-        setTimeout(() => {
-            controlIframe(iframeStyleEnum.show, targetIframe);
-            preHide(targetIframe);
-        }, 0);
-    }
-};
-
-export const hideIframe = (iframe?: HTMLIFrameElement | null) => {
-    const targetIframe = iframe || document.getElementById(iframeID);
-    if (targetIframe) {
-        preShow(targetIframe);
-        setTimeout(() => {
-            controlIframe(iframeStyleEnum.hide, targetIframe);
-            controlMask('none')
-        }, 400);
-    }
-};

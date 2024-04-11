@@ -71,7 +71,7 @@ const performSimilarSearch = async (searchId: string, type: fetchType) => {
   await performQuerySearch(query, type)
 }
 
-const handleImageClick = (url: string, id: string) => {
+const handleImageClick = async (url: string, id: string) => {
   log(`Image Clicked: ${url}`);
   log(`Image ID: ${id}`);
   const msg = {src: `${store.pluginSettingData.nekoimage_api}${url}`} // TODO: url maybe not always fs, maybe s3 url?
@@ -79,7 +79,7 @@ const handleImageClick = (url: string, id: string) => {
     log('Dev Env: Adding editor', msg)
   } else {
     addNTQQEditor(msg);
-    adjustVisible(false);
+    await adjustVisible(false);
   }
 };
 
