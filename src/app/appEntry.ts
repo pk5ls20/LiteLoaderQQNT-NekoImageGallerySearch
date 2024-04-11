@@ -25,5 +25,6 @@ export default async function AppEntry(entryFile: string, entryId: string, docCo
 }
 
 if (isDevEnv) {
+    const _ = await import("./dark.css");
     await AppEntry('searchWindow', '#app');
 }
