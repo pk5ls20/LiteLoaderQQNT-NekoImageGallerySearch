@@ -14,7 +14,7 @@
 
 .q-dialog-main {
     border-color: #776f62;
-    color: #e5e0d8;
+    color: rgba(232, 230, 227, 0.87);
 }
 
 .mdc-notched-outline__leading {
@@ -72,7 +72,7 @@
 }
 
 .mdc-chip__text:hover, .mdc-chip:hover {
-    color: rgba(232, 230, 227, 0.7) !important;
+    color: rgba(232, 230, 227, 0.87) !important;
 }
 
 .mdc-select:not(.mdc-select--disabled) .mdc-select__selected-text {
@@ -92,8 +92,16 @@
     background-color: #242525;
 }
 
+.mdc-menu .mdc-deprecated-list-item__graphic{
+    color: rgba(232, 230, 227, 0.87);
+}
+
 .mdc-deprecated-list-item__text {
-    color: #e8e6e3;
+    color: rgba(232, 230, 227, 0.87); !important;
+}
+
+.mdc-deprecated-list-item--disabled .mdc-deprecated-list-item__text{
+    color: rgba(232, 230, 227, 0.87); !important;
 }
 
 .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
@@ -109,7 +117,7 @@
 }
 
 .mdc-dialog .mdc-dialog__content {
-    color: rgba(232, 230, 227, 0.6);
+    color: rgba(232, 230, 227, 0.87);
 }
 
 .mdc-dialog .mdc-dialog__close {
