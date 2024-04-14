@@ -10,7 +10,7 @@
       </ui-tab>
     </ui-tab-bar>
     <div class="q-dialog-all" @click="handleDialogClick">
-      <div v-show="searchType.TEXT <= store.tabActiveItem && store.tabActiveItem <= searchType.OCR"
+      <div v-show="isBasicSearch()"
            class="q-dialog-basic">
         <basic-search-input-components/>
       </div>
@@ -27,7 +27,10 @@
                      indeterminate>
         </ui-progress>
       </figure>
-      <div :class="{ 'active': store.isQueryAdvanceModeClicked }" class="q-search-results">
+      <div :class="{'active': store.isQueryAdvanceModeClicked,
+                    'basic_search': isBasicSearch(),
+                    'not_basic_search': !isBasicSearch() }"
+           class="q-search-results">
         <search-result-components/>
       </div>
       <div class="q-status-bar">
@@ -53,6 +56,8 @@ import StatusDialogComponents from "./statusDialogComponents.vue";
 import StatusBarComponents from "./statusBarComponents.vue";
 
 const store = useSearchStore()
+
+const isBasicSearch = () => searchType.TEXT <= store.tabActiveItem && store.tabActiveItem <= searchType.OCR
 
 // Special handling of ui-select
 // [Non-ideal situation], When the user clicks elsewhere and the dropdown box closes, the handleDialogClick is triggered.
@@ -167,7 +172,7 @@ onMounted(async () => {
   position: fixed;
   left: 450px;
   right: 0;
-  bottom: 0;
+  bottom: 10px;
   width: auto;
   margin: auto;
   display: flex;
@@ -182,5 +187,13 @@ onMounted(async () => {
 .q-search-results.active {
   position: relative !important;
   z-index: -10000 !important;
+}
+
+.q-search-results.basic_search {
+  height: 400px;
+}
+
+.q-search-results.not_basic_search {
+  height: 330px;
 }
 </style>
