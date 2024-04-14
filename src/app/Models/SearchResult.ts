@@ -1,6 +1,6 @@
-import { Image } from './Image';
+import {Image} from './Image';
 
 export interface SearchResult {
-  score: number;
-  img: Image;
+    score: number;
+    img: Image;
 }

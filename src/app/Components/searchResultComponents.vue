@@ -49,38 +49,31 @@
   </div>
 </template>
 <script setup lang="ts">
-import {log} from "../../logs";
+import {EnvAdapter} from "../Adapter/EnvAdapter";
 import {fetchStatus, fetchType} from "../Models/searchWindowEnum";
-import {SimilarSearchQuery} from "../Services/searchQuery";
-import {performQuerySearch} from "../Services/performQuerySearch";
+import {SimilarSearchQuery} from "../Services/search/searchQueryServices";
+import {performQuerySearchService} from "../Services/search/performQuerySearchService";
 import {useSearchStore} from "../States/searchWindowState";
-import {isDevEnv} from "../Utils/envFlag";
-import {addNTQQEditor} from "../Utils/addNTQQEditor";
-import {adjustVisible} from "../Utils/windowLoader";
 
 const store = useSearchStore()
 
 const performLoadMoreSearch = async () => {
-  await performQuerySearch(store.lastQueryEntry, fetchType.MORE)
+  await performQuerySearchService(store.lastQueryEntry, fetchType.MORE)
 }
 
 const performSimilarSearch = async (searchId: string, type: fetchType) => {
   const query = new SimilarSearchQuery(
       searchId
   )
-  await performQuerySearch(query, type)
+  await performQuerySearchService(query, type)
 }
 
 const handleImageClick = async (url: string, id: string) => {
-  log(`Image Clicked: ${url}`);
-  log(`Image ID: ${id}`);
   const msg = {src: `${store.pluginSettingData.nekoimage_api}${url}`} // TODO: url maybe not always fs, maybe s3 url?
-  if (isDevEnv) {
-    log('Dev Env: Adding editor', msg)
-  } else {
-    addNTQQEditor(msg);
-    await adjustVisible(false);
-  }
+  EnvAdapter.log('Adding editor', msg)
+  EnvAdapter.log(`Image ID: ${id}`);
+  EnvAdapter.addNTQQEditor(msg);
+  await EnvAdapter.adjustVisible(false);
 };
 
 const handleImageRightClick = (id: string) => {

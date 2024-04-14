@@ -1,24 +1,25 @@
 /// <reference path="../global.d.ts" />
 import * as fs from 'node:fs';
-const path = require('node:path');
+import * as path from 'node:path';
 import {log} from "../logs";
 import {BrowserWindow, ipcMain, shell} from "electron";
 
+// TODO: rubbish
 function watchSettingsChange(webContents: Electron.WebContents, settingsPath: fs.PathLike) {
-    fs.watch(settingsPath, "utf-8", debounce(() => {
-        updateStyle(webContents, settingsPath);
-    }, 100));
+    // fs.watch(settingsPath, "utf-8", debounce(() => {
+    //     updateStyle(webContents, settingsPath);
+    // }, 100));
 }
 
 function openWeb(url: string) {
-    shell.openExternal(url);
+    shell.openExternal(url).then();
 }
 
 const pluginDataPath = LiteLoader.plugins["image_search"].path.data;
 const settingsPath = path.join(pluginDataPath, "settings.json");
 
 if (!fs.existsSync(pluginDataPath)) {
-    fs.mkdirSync(pluginDataPath, { recursive: true });
+    fs.mkdirSync(pluginDataPath, {recursive: true});
 }
 
 if (!fs.existsSync(settingsPath)) {
@@ -67,6 +68,23 @@ ipcMain.handle(
 ipcMain.on("LiteLoader.imageSearch.openWeb", (event, message) =>
     openWeb(message)
 );
+
+ipcMain.handle(
+    "LiteLoader.imageSearch.getLocalFile",
+    (event, file_path) => {
+        try {
+            return fs.readFileSync(file_path);
+        } catch (error) {
+            log(error);
+            return null;
+        }
+    }
+);
+
+ipcMain.on("LiteLoader.imageSearch.postAppImageSearchReq",
+    (event, file_buffer: Buffer | null) => {
+        event.sender.send('LiteLoader.imageSearch.imageSearchResponse', file_buffer);
+    });
 
 ipcMain.handle(
     "LiteLoader.imageSearch.logToMain",

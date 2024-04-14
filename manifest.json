@@ -1,18 +1,24 @@
 {
-    "manifest_version": 4,
-    "type": "extension",
-    "name": "Image Search",
-    "slug": "image_search",
-    "description": "NekoImage Search in LiteLoaderQQNT",
-    "version": "0.0.1",
-    "authors": [{
-        "name": "pk5ls20",
-        "link": "https://github.com/pk5ls20"
-    }],
-    "platform": ["win32", "linux", "darwin"],
-    "injects": {
-        "renderer": "./renderer/renderer.mjs",
-        "main": "./main/main.js",
-        "preload": "./preload/preload.js"
+  "manifest_version": 4,
+  "type": "extension",
+  "name": "Image Search",
+  "slug": "image_search",
+  "description": "NekoImage Search in LiteLoaderQQNT",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "pk5ls20",
+      "link": "https://github.com/pk5ls20"
     }
+  ],
+  "platform": [
+    "win32",
+    "linux",
+    "darwin"
+  ],
+  "injects": {
+    "renderer": "./renderer/renderer.mjs",
+    "main": "./main/main.js",
+    "preload": "./preload/preload.js"
+  }
 }

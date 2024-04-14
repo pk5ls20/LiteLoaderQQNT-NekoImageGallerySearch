@@ -1,6 +1,7 @@
 export const tabItem = [
     {text: 'TEXT'},
     {text: 'OCR'},
+    {text: 'IMAGE'},
     {text: 'ADVANCED'}
 ];
 
@@ -13,7 +14,8 @@ export enum serverStatus {
 export enum searchType {
     TEXT = 0,
     OCR = 1,
-    ADVANCED = 2,
+    IMAGE = 2,
+    ADVANCED = 3,
 }
 
 export enum promptType {

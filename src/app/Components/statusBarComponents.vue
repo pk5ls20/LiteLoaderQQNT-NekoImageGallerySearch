@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import {useSearchStore} from "../States/searchWindowState";
+
 const store = useSearchStore()
 </script>
 

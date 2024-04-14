@@ -37,7 +37,6 @@ let config = {
                 entry: {"preload": "src/preload/preload.ts"},
             },
             rollupOptions: {
-                // external: externalAll,
                 input: "src/preload/preload.ts",
             }
         },
@@ -55,7 +54,6 @@ let config = {
                 entry: {"renderer": "src/renderer/renderer.ts"},
             },
             rollupOptions: {
-                // external: externalAll,
                 input: "src/renderer/renderer.ts",
             }
         },

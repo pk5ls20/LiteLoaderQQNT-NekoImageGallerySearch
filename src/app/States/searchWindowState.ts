@@ -14,6 +14,7 @@ export const useSearchStore = defineStore('search', {
         tabActiveItem: searchType.TEXT,
         searchResults: <SearchResult[]>([]),
         queryBasicInput: '',
+        queryImageInput: null,
         queryAdvanceChipsList: [
             {label: 'Positive', value: promptType.POSITIVE},
             {label: 'Negative', value: promptType.NEGATIVE},

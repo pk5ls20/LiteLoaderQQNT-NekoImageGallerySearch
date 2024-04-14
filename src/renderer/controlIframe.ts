@@ -3,9 +3,11 @@ import {log} from "../logs";
 export const iframeMaskClassName = 'nekoimage_mask'
 export const iframePreShowClassName = 'nekoimage_iframe_pre_show'
 export const iframePreHideClassName = 'nekoimage_iframe_pre_hide'
+
 export enum iframeStyleEnum {
     show, hide
 }
+
 const preShow = (ele: any) => {
     ele.classList.add(iframePreShowClassName)
     ele.classList.remove(iframePreHideClassName)

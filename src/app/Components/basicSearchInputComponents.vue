@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import {SearchBasis} from "../Models/SearchBasis";
 import {fetchType, searchType} from "../Models/searchWindowEnum";
+import {performQuerySearchService} from "../Services/search/performQuerySearchService";
+import {RandomSearchQuery, TextSearchQuery} from "../Services/search/searchQueryServices";
 import {useSearchStore} from "../States/searchWindowState";
-import {performQuerySearch} from "../Services/performQuerySearch";
-import {RandomSearchQuery, TextSearchQuery} from "../Services/searchQuery";
 
 const store = useSearchStore()
 
@@ -29,11 +29,11 @@ const performBasicSearch = async (type: fetchType) => {
       store.tabActiveItem === searchType.TEXT ? SearchBasis.vision : SearchBasis.ocr,
       false
   );
-  await performQuerySearch(query, type);
+  await performQuerySearchService(query, type);
 };
 
 const performRandomSearch = async () => {
-  await performQuerySearch(new RandomSearchQuery(), fetchType.FIRST)
+  await performQuerySearchService(new RandomSearchQuery(), fetchType.FIRST)
 }
 
 </script>

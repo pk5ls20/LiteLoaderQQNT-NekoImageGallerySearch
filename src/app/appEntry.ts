@@ -1,6 +1,6 @@
 import {isDevEnv} from "./Utils/envFlag";
 import {createApp} from 'vue';
-import { createPinia } from 'pinia'
+import {createPinia} from 'pinia'
 import BalmUI from 'balm-ui';
 import BalmUIPlus from 'balm-ui-plus';
 import 'balm-ui-css';

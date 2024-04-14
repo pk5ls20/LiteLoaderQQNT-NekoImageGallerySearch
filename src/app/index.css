@@ -5,12 +5,12 @@
     font-style: normal;
 }
 
-.q-dialog-main, .q-dialog, .q-status-dialog, .mdc-floating-label{
+.q-dialog-main, .q-dialog, .q-status-dialog, .mdc-floating-label {
     font-family: 'HarmonyOS Sans SC', sans-serif;
     --mdc-theme-primary: #5183de !important;
     --mdc-theme-secondary: #5183de !important;
 }
 
-.mdc-floating-label--float-above{
+.mdc-floating-label--float-above {
     color: #5183de !important;
 }

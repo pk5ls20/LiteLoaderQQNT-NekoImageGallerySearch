@@ -36,7 +36,6 @@ const adjustIframe = (iframe: any) => {
 export const setupIframe = () => {
     const iframe = document.createElement('iframe');
     iframe.id = iframeID;
-    log(document.body.getAttribute('q-theme') == 'dark')
     iframe.onload = () => {
         const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
         // inner css - global css

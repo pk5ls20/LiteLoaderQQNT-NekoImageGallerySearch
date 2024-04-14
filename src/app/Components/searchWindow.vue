@@ -3,21 +3,25 @@
     <ui-tab-bar
         v-model="store.tabActiveItem"
         align="center"
-        @update:model-value="log('activeIndex', $event)"
+        @update:model-value="EnvAdapter.log('activeIndex', $event)"
     >
       <ui-tab v-for="(tab, index) in tabItem" :key="index" min-width>
         {{ tab.text }}
       </ui-tab>
     </ui-tab-bar>
     <div class="q-dialog-all" @click="handleDialogClick">
-      <div v-if="store.tabActiveItem != searchType.ADVANCED" class="q-dialog-basic">
+      <div v-show="searchType.TEXT <= store.tabActiveItem && store.tabActiveItem <= searchType.OCR"
+           class="q-dialog-basic">
         <basic-search-input-components/>
       </div>
-      <div v-if="store.tabActiveItem == searchType.ADVANCED" class="q-dialog-advance">
+      <div v-show="store.tabActiveItem === searchType.IMAGE" class="q-dialog-advance">
+        <image-search-input-components/>
+      </div>
+      <div v-show="store.tabActiveItem === searchType.ADVANCED" class="q-dialog-advance">
         <advance-search-input-components/>
       </div>
       <figure>
-        <ui-progress v-if="store.fetchingStatus == fetchStatus.FIRST_FETCHING"
+        <ui-progress v-show="store.fetchingStatus == fetchStatus.FIRST_FETCHING"
                      :active="true"
                      class="q-process-bar"
                      indeterminate>
@@ -36,13 +40,13 @@
 
 <script lang="ts" setup>
 import {onMounted, watch} from "vue";
-import {log} from "../../logs";
+import {EnvAdapter} from "../Adapter/EnvAdapter";
 import {fetchStatus, searchType, serverStatus, tabItem} from "../Models/searchWindowEnum";
-import {getClient} from "../Services/baseSearchService";
+import {getClient} from "../Services/search/baseSearchService";
 import {useSearchStore} from "../States/searchWindowState";
-import {pluginSettings} from "../Utils/pluginSettings";
 import {handleCatchError} from "../Utils/handleCatchError";
 import BasicSearchInputComponents from "./basicSearchInputComponents.vue";
+import imageSearchInputComponents from "./imageSearchInputCompents.vue";
 import AdvanceSearchInputComponents from "./advanceSearchInputComponents.vue";
 import SearchResultComponents from "./searchResultComponents.vue";
 import StatusDialogComponents from "./statusDialogComponents.vue";
@@ -59,7 +63,7 @@ const handleDialogClick = () => {
     store.advanceSelectEquivalentClickCount += 1;
     store.isQueryAdvanceModeClicked = false;
   }
-  log("Dialog clicked, advanceSelectEquivalentClickCount:", store.advanceSelectEquivalentClickCount);
+  EnvAdapter.log("Dialog clicked, advanceSelectEquivalentClickCount:", store.advanceSelectEquivalentClickCount);
 };
 
 // Special handling of ui-select
@@ -72,7 +76,7 @@ watch(() => store.tabActiveItem, (newValue, oldValue) => {
 });
 
 const checkServer = async () => {
-  log("Start to checkServer...")
+  EnvAdapter.log("Start to checkServer...")
   const remoteEndpoint = store.pluginSettingData.nekoimage_api;
   if (remoteEndpoint !== null) {
     try {
@@ -94,11 +98,11 @@ const checkServer = async () => {
 }
 
 onMounted(async () => {
-      log('Search Window Mounted');
+      EnvAdapter.log('Search Window Mounted');
       // get setting
-      store.pluginSettingData = await pluginSettings();
+      store.pluginSettingData = await EnvAdapter.getSettings();
       // check status
-      log(JSON.stringify(store.pluginSettingData));
+      EnvAdapter.log(JSON.stringify(store.pluginSettingData));
       store.serverStatus = await checkServer();
       switch (store.serverStatus) {
         case serverStatus.CONNECTED:
@@ -114,7 +118,7 @@ onMounted(async () => {
           store.serverStatusColor = 'grey';
           break;
       }
-      log("store.serverStatus", store.serverStatus)
+      EnvAdapter.log("store.serverStatus", store.serverStatus)
     }
 );
 

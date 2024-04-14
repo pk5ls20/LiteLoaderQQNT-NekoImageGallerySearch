@@ -46,12 +46,12 @@
 
 <script lang="ts" setup>
 import {watch} from "vue";
-import {log} from "../../logs";
+import {EnvAdapter} from "../Adapter/EnvAdapter";
 import {SearchBasis} from "../Models/SearchBasis";
 import {fetchType, promptType} from "../Models/searchWindowEnum";
 import {AdvancedSearchMode} from "../Models/AdvancedSearchModel";
-import {performQuerySearch} from "../Services/performQuerySearch";
-import {AdvancedSearchQuery, CombinedSearchQuery} from "../Services/searchQuery";
+import {performQuerySearchService} from "../Services/search/performQuerySearchService";
+import {AdvancedSearchQuery, CombinedSearchQuery} from "../Services/search/searchQueryServices";
 import {useSearchStore} from "../States/searchWindowState";
 
 const store = useSearchStore()
@@ -72,7 +72,7 @@ const handleClickStop = (event: MouseEvent) => {
   store.advanceSelectEquivalentClickCount += 1;
   store.isQueryAdvanceModeClicked = store.advanceSelectEquivalentClickCount % 2 !== 0;
   hiddenAdvanceSearchBtnStatus = false;
-  log("Click event stopped,", " processedUpdate:", hiddenAdvanceSearchBtnStatus,
+  EnvAdapter.log("Click event stopped,", " processedUpdate:", hiddenAdvanceSearchBtnStatus,
       "advanceSelectEquivalentClickCount:", store.advanceSelectEquivalentClickCount);
 };
 
@@ -113,7 +113,7 @@ const performAdvanceSearch = async (type: fetchType) => {
     )
   }
   if (query) {
-    await performQuerySearch(query, type)
+    await performQuerySearchService(query, type)
   }
 };
 </script>
