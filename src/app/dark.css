@@ -97,11 +97,11 @@
 }
 
 .mdc-deprecated-list-item__text {
-    color: rgba(232, 230, 227, 0.87); !important;
+    color: rgba(232, 230, 227, 0.87) !important;
 }
 
 .mdc-deprecated-list-item--disabled .mdc-deprecated-list-item__text{
-    color: rgba(232, 230, 227, 0.87); !important;
+    color: rgba(232, 230, 227, 0.87) !important;
 }
 
 .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
