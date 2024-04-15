@@ -3,7 +3,7 @@ import svgLoader from 'vite-svg-loader'
 import vue from '@vitejs/plugin-vue';
 import {viteSingleFile} from "vite-plugin-singlefile";
 
-let config = {
+const config = {
     main: {
         build: {
             outDir: "LiteLoaderQQNT-NekoImage/main",
@@ -21,7 +21,7 @@ let config = {
             targets: [
                 {src: './manifest.json', dest: 'LiteLoaderQQNT-NekoImage'},
                 {src: './icon.png', dest: 'LiteLoaderQQNT-NekoImage'},
-                {src: 'src/app/settings.html', dest: 'LiteLoaderQQNT-NekoImage/app/'},
+                {src: 'src/settings.html', dest: 'LiteLoaderQQNT-NekoImage'},
             ]
         })
         ],

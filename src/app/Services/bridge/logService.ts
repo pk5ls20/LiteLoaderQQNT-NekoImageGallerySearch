@@ -1,17 +1,18 @@
-import {log} from "../../../logs";
+// @ts-ignore
+import { log } from '../../../logs';
 
 interface LogService {
-    set(...args: any[]): void;
+  set(...args: any[]): void;
 }
 
 export class devLogService implements LogService {
-    set(...args: any[]): void {
-        console.log(...args);
-    }
+  set(...args: any[]): void {
+    console.log(...args);
+  }
 }
 
 export class LLNTLogService implements LogService {
-    set(...args: any[]): void {
-        log(...args);
-    }
+  set(...args: any[]): void {
+    log(...args);
+  }
 }

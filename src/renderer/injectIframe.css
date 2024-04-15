@@ -1,29 +1,31 @@
 .nekoimage_iframe {
-    border: none;
-    display: none;
-    visibility: hidden;
-    z-index: 1000;
-    position: absolute;
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  border: none;
+  display: none;
+  visibility: hidden;
+  z-index: 1000;
+  position: absolute;
+  transition:
+    opacity 0.4s ease-out,
+    transform 0.4s ease-out;
 }
 
 .nekoimage_iframe_pre_show {
-    opacity: 0;
-    transform: translateY(20px);
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .nekoimage_iframe_pre_hide {
-    opacity: 1;
-    transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .nekoimage_mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
 }

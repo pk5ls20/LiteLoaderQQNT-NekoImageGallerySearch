@@ -1,4 +1,4 @@
 export enum SearchBasis {
-    vision = 'vision',
-    ocr = 'ocr',
+  vision = 'vision',
+  ocr = 'ocr'
 }

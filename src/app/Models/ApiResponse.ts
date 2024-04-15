@@ -1,7 +1,7 @@
 export interface NekoProtocol {
-    message: string;
+  message: string;
 }
 
 export interface ErrorProtocol {
-    detail: string;
+  detail: string;
 }

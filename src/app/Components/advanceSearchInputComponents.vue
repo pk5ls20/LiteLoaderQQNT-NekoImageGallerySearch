@@ -1,65 +1,70 @@
 <template>
   <div class="q-dialog-advance-set">
-    <div class="q-dialog-advance-set-tip">
-      Prompt
-    </div>
+    <div class="q-dialog-advance-set-tip">Prompt</div>
     <div class="q-dialog-advance-set-select">
       <ui-chips
-          v-model="store.queryAdvanceChipsSelectVal"
-          :options="store.queryAdvanceChipsList"
-          class="q-dialog-advance-set-select-chips"
-          type="choice"
+        v-model="store.queryAdvanceChipsSelectVal"
+        :options="store.queryAdvanceChipsList"
+        class="q-dialog-advance-set-select-chips"
+        type="choice"
       ></ui-chips>
-      <ui-select v-model="store.queryAdvanceModeBind"
-                 :options="store.queryAdvanceModes"
-                 class="q-dialog-advance-set-select-mode"
-                 outlined
-                 @click.stop="handleClickStop">Mode
+      <ui-select
+        v-model="store.queryAdvanceModeBind"
+        :options="store.queryAdvanceModes"
+        class="q-dialog-advance-set-select-mode"
+        outlined
+        @click.stop="handleClickStop"
+        >Mode
       </ui-select>
     </div>
   </div>
-  <div :class="{ 'active': store.isQueryAdvanceModeClicked }" class="q-dialog-advance-input">
-    <ui-textfield v-model="store.queryAdvanceInput"
-                  :change="store.queryAdvanceInputPromptMap.set(store.queryAdvanceChipsSelectVal, store.queryAdvanceInput)"
-                  :dense="false"
-                  :disabled="store.queryAdvanceChipsSelectVal === ''"
-                  :label="store.queryAdvanceChipsSelectVal === '' ?
-                                'Please Select at least one prompt!':
-                                `Enter ${store.queryAdvanceChipsSelectVal} prompt...`"
-                  class="q-dialog-advance-input-text"
-                  outlined
-                  @keyup.enter="performAdvanceSearch(fetchType.FIRST)">
-    </ui-textfield>
-    <ui-button :class="{ 'active': store.isQueryAdvanceModeClicked }"
-               class="q-dialog-advance-input-search-button"
-               raised
-               @click="performAdvanceSearch(fetchType.FIRST)">GO🔍
-    </ui-button>
-    <ui-icon-button
-        class="q-dialog-advance-input-clear-button"
-        icon="delete"
-        @click="clearPrompt"
+  <div :class="{ active: store.isQueryAdvanceModeClicked }" class="q-dialog-advance-input">
+    <ui-textfield
+      v-model="store.queryAdvanceInput"
+      :change="store.queryAdvanceInputPromptMap.set(store.queryAdvanceChipsSelectVal, store.queryAdvanceInput)"
+      :dense="false"
+      :disabled="store.queryAdvanceChipsSelectVal === ''"
+      :label="
+        store.queryAdvanceChipsSelectVal === ''
+          ? 'Please Select at least one prompt!'
+          : `Enter ${store.queryAdvanceChipsSelectVal} prompt...`
+      "
+      class="q-dialog-advance-input-text"
+      outlined
+      @keyup.enter="performAdvanceSearch(fetchType.FIRST)"
     >
-    </ui-icon-button>
+    </ui-textfield>
+    <ui-button
+      :class="{ active: store.isQueryAdvanceModeClicked }"
+      class="q-dialog-advance-input-search-button"
+      raised
+      @click="performAdvanceSearch(fetchType.FIRST)"
+      >GO🔍
+    </ui-button>
+    <ui-icon-button class="q-dialog-advance-input-clear-button" icon="delete" @click="clearPrompt"> </ui-icon-button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {watch} from "vue";
-import {EnvAdapter} from "../Adapter/EnvAdapter";
-import {SearchBasis} from "../Models/SearchBasis";
-import {fetchType, promptType} from "../Models/searchWindowEnum";
-import {AdvancedSearchMode} from "../Models/AdvancedSearchModel";
-import {performQuerySearchService} from "../Services/search/performQuerySearchService";
-import {AdvancedSearchQuery, CombinedSearchQuery} from "../Services/search/searchQueryServices";
-import {useSearchStore} from "../States/searchWindowState";
+import { watch } from 'vue';
+import { EnvAdapter } from '../Adapter/EnvAdapter';
+import { SearchBasis } from '../Models/SearchBasis';
+import { fetchType, promptType } from '../Models/searchWindowEnum';
+import { AdvancedSearchMode } from '../Models/AdvancedSearchModel';
+import { performQuerySearchService } from '../Services/search/performQuerySearchService';
+import { AdvancedSearchQuery, CombinedSearchQuery } from '../Services/search/searchQueryServices';
+import { useSearchStore } from '../States/searchWindowState';
 
-const store = useSearchStore()
+const store = useSearchStore();
 
 // perform chips render in tab 'advanced'
-watch(() => store.queryAdvanceChipsSelectVal, (newVal, oldVal) => {
-  store.updateQueryAdvanceChipsList(newVal, oldVal);
-}, {deep: true});
+watch(
+  () => store.queryAdvanceChipsSelectVal,
+  (newVal, oldVal) => {
+    store.updateQueryAdvanceChipsList(newVal, oldVal);
+  },
+  { deep: true }
+);
 
 // Special handling of ui-select
 let hiddenAdvanceSearchBtnStatus = false;
@@ -72,20 +77,22 @@ const handleClickStop = (event: MouseEvent) => {
   store.advanceSelectEquivalentClickCount += 1;
   store.isQueryAdvanceModeClicked = store.advanceSelectEquivalentClickCount % 2 !== 0;
   hiddenAdvanceSearchBtnStatus = false;
-  EnvAdapter.log("Click event stopped,", " processedUpdate:", hiddenAdvanceSearchBtnStatus,
-      "advanceSelectEquivalentClickCount:", store.advanceSelectEquivalentClickCount);
+  EnvAdapter.log(
+    'Click event stopped,',
+    ' processedUpdate:',
+    hiddenAdvanceSearchBtnStatus,
+    'advanceSelectEquivalentClickCount:',
+    store.advanceSelectEquivalentClickCount
+  );
 };
 
 const clearPrompt = () => {
   store.queryAdvanceInputPromptMap.clear();
   store.queryAdvanceInput = '';
-  store.queryAdvanceChipsList.map((item: {
-    label: string,
-    value: string
-  }) => {
+  store.queryAdvanceChipsList.map((item: { label: string; value: string }) => {
     if (item.label.indexOf('⭐') !== -1) item.label = item.label.replace('⭐', '');
-  })
-}
+  });
+};
 
 const performAdvanceSearch = async (type: fetchType) => {
   // first, decide to use which type of advance search
@@ -93,27 +100,31 @@ const performAdvanceSearch = async (type: fetchType) => {
   let query = null;
   if (store.queryAdvanceInputPromptMap.has(promptType.COMBINED)) {
     // use combined mode
-    query = new CombinedSearchQuery({
-          extra_prompt: store.queryAdvanceInputPromptMap.get(promptType.COMBINED),
-          criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE)],  // TODO: split ' '
-          negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE)],
-          mode: store.queryAdvanceLookUp.at(0) as AdvancedSearchMode
-        },
-        store.queryAdvanceLookUp.at(1) as SearchBasis
-    )
-  } else if (store.queryAdvanceInputPromptMap.has(promptType.POSITIVE) ||
-      store.queryAdvanceInputPromptMap.has(promptType.NEGATIVE)) {
+    query = new CombinedSearchQuery(
+      {
+        extra_prompt: store.queryAdvanceInputPromptMap.get(promptType.COMBINED) ?? '',
+        criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE) ?? ''], // TODO: split ' '
+        negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE) ?? ''],
+        mode: store.queryAdvanceLookUp?.at(0) as AdvancedSearchMode
+      },
+      store.queryAdvanceLookUp?.at(1) as SearchBasis
+    );
+  } else if (
+    store.queryAdvanceInputPromptMap.has(promptType.POSITIVE) ||
+    store.queryAdvanceInputPromptMap.has(promptType.NEGATIVE)
+  ) {
     // use advance mode
-    query = new AdvancedSearchQuery({
-          criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE)],
-          negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE)],
-          mode: store.queryAdvanceLookUp.at(0) as AdvancedSearchMode
-        },
-        store.queryAdvanceLookUp.at(1) as SearchBasis
-    )
+    query = new AdvancedSearchQuery(
+      {
+        criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE) ?? ''],
+        negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE) ?? ''],
+        mode: store.queryAdvanceLookUp?.at(0) as AdvancedSearchMode
+      },
+      store.queryAdvanceLookUp?.at(1) as SearchBasis
+    );
   }
   if (query) {
-    await performQuerySearchService(query, type)
+    await performQuerySearchService(query, type);
   }
 };
 </script>

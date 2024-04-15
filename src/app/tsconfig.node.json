@@ -1,0 +1,16 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "include": ["vite.config.*", "Services/bridge/*.ts", "**/*.ts", "Components/imageSearchInputCompents.vue"],
+  "exclude": ["appEntry.ts"],
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "tsBuildInfoFile": "../../node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "lib": ["dom", "es6"],
+    "types": ["node"]
+  }
+}

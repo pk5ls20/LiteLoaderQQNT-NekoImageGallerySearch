@@ -1,0 +1,104 @@
+<style>
+  .image_search a {
+    color: var(--text-link);
+  }
+
+  .image_search input {
+    align-self: normal;
+    flex: 1;
+    border-radius: 4px;
+    margin-right: 12px;
+    padding: 2px 4px;
+    transition: all 100ms ease-out;
+  }
+
+  .image_search input:focus {
+    padding-left: 4px;
+    background-color: var(--overlay_active);
+  }
+
+  .image_search .input-group {
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+  }
+
+  .image_search .ops-btns > *:not(:last-child) {
+    margin-right: 4px;
+  }
+
+  /* 设置列表项宽度最大，而不是靠文本撑 */
+  .image_search setting-item > div {
+    width: 100%;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .image_search input {
+      color: black;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .image_search input {
+      color: white;
+    }
+  }
+</style>
+
+<setting-section data-title="常规" class="enhancement">
+  <setting-panel>
+    <setting-list data-direction="column">
+      <setting-item data-direction="column">
+        <div>
+          <setting-text>设置 NekoImageGallery API地址</setting-text>
+          <setting-text data-type="secondary" style="-webkit-line-clamp: initial"
+            >具体请参见
+            <a href="javascript:void(0);" onclick="imageSearch.openWeb('https://github.com/hv0905/NekoImageGallery')">
+              github.com/hv0905/NekoImageGallery</a
+            >
+          </setting-text>
+          <div class="input-group">
+            <input class="api-input" type="text" spellcheck="false" />
+            <div class="ops-btns">
+              <setting-button data-type="secondary" class="reset">恢复默认</setting-button>
+              <setting-button data-type="secondary" class="apply">立即应用</setting-button>
+            </div>
+          </div>
+        </div>
+      </setting-item>
+
+      <setting-item data-direction="column">
+        <div>
+          <setting-text>设置NekoImageGallery API Access Token</setting-text>
+          <setting-text data-type="secondary" style="-webkit-line-clamp: initial"
+            >若服务器设置了API Access Token，请在这里填入，以获得查询功能
+          </setting-text>
+
+          <div class="input-group">
+            <input class="right-target-lang" type="text" spellcheck="false" />
+            <div class="ops-btns">
+              <setting-button data-type="secondary" class="right-target-lang-reset">恢复默认 </setting-button>
+              <setting-button data-type="secondary" class="right-target-lang-apply">立即应用 </setting-button>
+            </div>
+          </div>
+        </div>
+      </setting-item>
+
+      <setting-item data-direction="column">
+        <div>
+          <setting-text>设置NekoImageGallery API Admin Token</setting-text>
+          <setting-text data-type="secondary" style="-webkit-line-clamp: initial"
+            >若服务器设置了API Admin Token，请在这里填入，以获得管理功能
+          </setting-text>
+          <div class="input-group">
+            <input class="chat-target-lang" type="text" spellcheck="false" />
+            <div class="ops-btns">
+              <setting-button data-type="secondary" class="chat-target-lang-reset">恢复默认 </setting-button>
+              <setting-button data-type="secondary" class="chat-target-lang-apply">立即应用 </setting-button>
+            </div>
+          </div>
+        </div>
+      </setting-item>
+    </setting-list>
+  </setting-panel>
+</setting-section>

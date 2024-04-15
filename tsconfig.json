@@ -3,23 +3,19 @@
     "target": "ESNext",
     "module": "ESNext",
     "outDir": "./dist",
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "paths": {
-      "balm-ui-plus": [
-        "./node_modules/balm-ui/dist/balm-ui-plus.d.ts"
-      ]
-    }
   },
   "include": [
     "src/*",
     "src/**/*"
   ],
   "exclude": [
-    "./node_modules"
+    "./node_modules",
+    "src/app/*"
   ]
 }

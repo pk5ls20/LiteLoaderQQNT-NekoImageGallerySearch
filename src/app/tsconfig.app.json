@@ -1,0 +1,17 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["**/*.ts", "**/*.vue", "**/*.css"],
+  "exclude": ["vite.config.ts"],
+  "compilerOptions": {
+    "composite": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "tsBuildInfoFile": "../../node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "balm-ui-plus": ["../../node_modules/balm-ui/dist/balm-ui-plus.d.ts"]
+    },
+    "lib": ["ESNext", "DOM"]
+  }
+}

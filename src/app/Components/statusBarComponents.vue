@@ -1,8 +1,10 @@
 <template>
   <ui-chips>
-    <ui-chip :style="{ color: store.serverStatusColor }"
-             class="q-status-bar-state"
-             @click="store.isStatusDialogOpen= !store.isStatusDialogOpen">
+    <ui-chip
+      :style="{ color: store.serverStatusColor }"
+      class="q-status-bar-state"
+      @click="store.isStatusDialogOpen = !store.isStatusDialogOpen"
+    >
       <span class="q-status-bar-state-button">●</span>
       <span class="q-status-bar-state-text">{{ store.serverStatusMessage }}</span>
     </ui-chip>
@@ -10,9 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import {useSearchStore} from "../States/searchWindowState";
+import { useSearchStore } from '../States/searchWindowState';
 
-const store = useSearchStore()
+const store = useSearchStore();
 </script>
 
 <style scoped>

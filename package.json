@@ -1,10 +1,12 @@
 {
   "name": "image_search",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "commonjs",
   "description": "NekoImage Search in LiteLoaderQQNT",
   "license": "AGPL-3.0",
   "scripts": {
+    "global-lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "global-format": "prettier --write src/",
     "ui-dev": "cd src/app && vite",
     "ui-dev-build": "cd src/app && vite build",
     "plugin-build": "electron-vite build",
@@ -18,16 +20,26 @@
     "vue": "^3.3.11"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.10.2",
+    "@tsconfig/node20": "^20.1.4",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/devtools": "^7.0.25",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/tsconfig": "^0.5.1",
     "electron": "^28.0.0",
     "electron-vite": "^2.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.25.0",
+    "prettier": "^3.2.5",
     "sass": "^1.74.1",
     "terser": "^5.30.3",
     "typescript": "*",
     "vite": "^5.1.4",
     "vite-plugin-cp": "^4.0.8",
     "vite-plugin-singlefile": "^2.0.1",
-    "vite-svg-loader": "^5.1.0"
+    "vite-plugin-vue-devtools": "^7.0.27",
+    "vite-svg-loader": "^5.1.0",
+    "vue-tsc": "^2.0.13"
   }
 }

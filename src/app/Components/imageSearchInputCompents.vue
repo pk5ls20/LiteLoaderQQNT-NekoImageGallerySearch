@@ -1,55 +1,51 @@
 <template>
   <div v-ripple class="q-dialog-image-input">
-    <div
-        v-if="store.queryImageInput === null"
-        class="q-dialog-image-input-tip"
-    >
+    <div v-if="store.queryImageInput === null" class="q-dialog-image-input-tip">
       Click here to upload an image from your local device for image search...
     </div>
-    <img
-        v-if="store.queryImageInput !== null"
-        :src="store.queryImageInput"
-        class="q-dialog-image-input-image"
-    >
+    <img v-if="store.queryImageInput !== null" :src="store.queryImageInput" class="q-dialog-image-input-image" />
     <ui-icon-button
-        v-if="store.queryImageInput !== null"
-        class="q-dialog-advance-input-clear-button"
-        icon="clear"
-        @click="() => {store.queryImageInput = null}"
+      v-if="store.queryImageInput !== null"
+      class="q-dialog-advance-input-clear-button"
+      icon="clear"
+      @click="
+        () => {
+          store.queryImageInput = null;
+        }
+      "
     >
     </ui-icon-button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {onMounted} from "vue";
-import {EnvAdapter} from "../Adapter/EnvAdapter";
-import {searchType} from "../Models/searchWindowEnum";
-import {ImageSearchQuery} from "../Services/search/searchQueryServices";
-import {performQuerySearchService} from "../Services/search/performQuerySearchService";
-import {useSearchStore} from "../States/searchWindowState";
-import {displayErrorDialog} from "../Utils/handleCatchError";
+import { onMounted } from 'vue';
+import { EnvAdapter } from '../Adapter/EnvAdapter';
+import { searchType } from '../Models/searchWindowEnum';
+import { ImageSearchQuery } from '../Services/search/searchQueryServices';
+import { performQuerySearchService } from '../Services/search/performQuerySearchService';
+import { useSearchStore } from '../States/searchWindowState';
+import { displayErrorDialog } from '../Utils/handleCatchError';
 
-const store = useSearchStore()
+const store = useSearchStore();
 
 const postAppImageSearchResCallBack = async (file_content: Buffer | null) => {
   store.tabActiveItem = searchType.IMAGE;
   await EnvAdapter.adjustVisible(true);
   if (file_content !== null) {
-    const blob = new Blob([file_content], {type: 'image/png'})
+    const blob = new Blob([file_content], { type: 'image/png' });
     store.queryImageInput = URL.createObjectURL(blob);
     const req = new ImageSearchQuery(blob);
     await performQuerySearchService(req, 0);
   } else {
-    displayErrorDialog("Error Fetching Local Picture!")
+    displayErrorDialog('Error Fetching Local Picture!');
   }
-}
+};
 
 onMounted(() => {
   EnvAdapter.triggerImageSearchService().init(postAppImageSearchResCallBack);
-  EnvAdapter.log("imageSearchInputComponents mounted")
-})
-
+  EnvAdapter.log('imageSearchInputComponents mounted');
+});
 </script>
 
 <style scoped>

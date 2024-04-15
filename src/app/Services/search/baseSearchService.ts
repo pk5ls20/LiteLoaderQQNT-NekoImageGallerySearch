@@ -1,29 +1,30 @@
-import axios, {AxiosInstance} from 'axios';
-import {EnvAdapter} from "../../Adapter/EnvAdapter";
-import {pluginSettingsModel} from "../../Models/pluginSettingsModel";
+import axios from 'axios';
+import type { AxiosInstance } from 'axios';
+import { EnvAdapter } from '../../Adapter/EnvAdapter';
+import { pluginSettingsModel } from '../../Models/pluginSettingsModel';
 
 let apiClient: AxiosInstance | null;
-let pluginSettingData: pluginSettingsModel = new pluginSettingsModel(null, null, null);
+let pluginSettingData: pluginSettingsModel | null = new pluginSettingsModel('', '', '');
 
 EnvAdapter.getSettings().then((settings) => {
-    pluginSettingData = settings;
+  pluginSettingData = settings;
 });
 
 export function getClient() {
-    if (!apiClient) {
-        let headers = {
-            'X-Access-Token': pluginSettingData.nekoimage_access_token,
-            'X-Admin-Token': pluginSettingData.nekoimage_admin_token,
-        };
-        apiClient = axios.create({
-            baseURL: pluginSettingData.nekoimage_api,
-            headers: headers,
-        });
-    }
+  if (!apiClient) {
+    const headers = {
+      'X-Access-Token': pluginSettingData?.nekoimage_access_token,
+      'X-Admin-Token': pluginSettingData?.nekoimage_admin_token
+    };
+    apiClient = axios.create({
+      baseURL: pluginSettingData?.nekoimage_api,
+      headers: headers
+    });
+  }
 
-    return apiClient;
+  return apiClient;
 }
 
 export function resetClient() {
-    apiClient = null;
+  apiClient = null;
 }
