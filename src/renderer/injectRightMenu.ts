@@ -43,7 +43,9 @@ class imageContainer {
 const addQContextMenu = (qContextMenu: Element, icon: string, title: string, callback: Function) => {
   if (qContextMenu.querySelector(`#${menuID}`) != null) return;
   const tempEl = document.createElement('div');
-  const menuItem = document.querySelector(`.q-context-menu :not([disabled="true"])`);
+  const selectorFirst = 'a.q-context-menu-item--normal:not([disabled="true"])'; // priority find normal menu item
+  const selectorSecond = '.q-context-menu :not([disabled="true"])'; // rollback to find any menu item
+  const menuItem = document.querySelector(selectorFirst) || document.querySelector(selectorSecond);
   if (menuItem) {
     tempEl.innerHTML = menuItem.outerHTML.replace(/<!---->/g, '');
   } else {
@@ -68,7 +70,8 @@ const addQContextMenu = (qContextMenu: Element, icon: string, title: string, cal
     await callback();
     qContextMenu.remove();
   });
-  qContextMenu.appendChild(item);
+  const separator = qContextMenu.querySelector('.q-context-menu-separator');
+  separator === null ? qContextMenu.appendChild(item) : qContextMenu.insertBefore(item, separator);
 };
 
 export const addQContextMenuMain = async () => {
