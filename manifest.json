@@ -1,10 +1,11 @@
 {
   "manifest_version": 4,
   "type": "extension",
-  "name": "Image Search",
+  "name": "NekoImageGallerySearch",
   "slug": "image_search",
-  "description": "NekoImage Search in LiteLoaderQQNT",
-  "version": "0.0.1",
+  "description": "NekoImageGallerySearch in LiteLoaderQQNT",
+  "version": "0.0.4",
+  "icon": "./icon.png",
   "authors": [
     {
       "name": "pk5ls20",

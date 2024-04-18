@@ -1,7 +1,8 @@
-## LiteLoaderQQNT-NekoImage
+## LiteLoaderQQNT-NekoImageGallerySearch
 
 > 🤔 提示:   
-> 可以[在这里](https://github.com/users/pk5ls20/projects/5)查看本项目的开发路线图
+> - 由于本项目处于WIP阶段，你需要按照下面的说明手动从源代码构建插件并手动安装
+> - 可以[在这里](https://github.com/users/pk5ls20/projects/5)查看本项目的开发路线图
 
 ----
 
@@ -23,9 +24,13 @@
 
 ## 构建及安装
 
+### 构建
 ```shell
 npm install -g yarn
 yarn install && yarn plugin-build
+```
+### 安装
+```shell
 cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 ```
 
