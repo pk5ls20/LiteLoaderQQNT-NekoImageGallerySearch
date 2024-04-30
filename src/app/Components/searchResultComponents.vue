@@ -3,7 +3,7 @@
     <ui-menu-anchor>
       <img
         :alt="it.img.ocr_text"
-        :src="`${store.pluginSettingData.nekoimage_api}${it.img.url}`"
+        :src="getPreviewURL(it.img)"
         @click="handleImageClick(it.img.url, it.img.id)"
         @contextmenu.prevent="handleImageRightClick(it.img.id)"
       />
@@ -44,6 +44,7 @@ import { fetchStatus, fetchType } from '../Models/searchWindowEnum';
 import { SearchQueryServices, SimilarSearchQuery } from '../Services/search/searchQueryServices';
 import { performQuerySearchService } from '../Services/search/performQuerySearchService';
 import { useSearchStore } from '../States/searchWindowState';
+import { getPreviewURL, getURL } from '../Utils/getURL';
 
 const store = useSearchStore();
 
@@ -58,7 +59,7 @@ const performSimilarSearch = async (searchId: string, type: fetchType) => {
 };
 
 const handleImageClick = async (url: string, id: string) => {
-  const msg = { src: `${store.pluginSettingData.nekoimage_api}${url}` }; // TODO: url maybe not always fs, maybe s3 url?
+  const msg = { src: getURL(url) };
   EnvAdapter.log('Adding editor', msg);
   EnvAdapter.log(`Image ID: ${id}`);
   EnvAdapter.addNTQQEditor(msg);
