@@ -2,6 +2,7 @@ import iconHtml from '../app/assets/logo.svg?raw';
 import { setupIframe, iframeID } from './injectIframe';
 import { showIframe } from './controlIframe';
 
+// reference https://github.com/xtaw/LiteLoaderQQNT-Fake-Message/blob/master/src/renderer.js#L72
 export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     for (const node of mutation.addedNodes) {

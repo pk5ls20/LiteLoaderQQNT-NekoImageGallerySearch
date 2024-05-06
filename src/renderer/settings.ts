@@ -1,6 +1,7 @@
 import { log } from '../logs';
 import iconHtml from '../app/assets/logo.svg?raw';
 
+// reference https://github.com/MUKAPP/LiteLoaderQQNT-DeepL/blob/main/src/renderer.js#L377
 export const settings = async (view: any) => {
   try {
     const plugin_path = LiteLoader.plugins['image_search'].path.plugin;

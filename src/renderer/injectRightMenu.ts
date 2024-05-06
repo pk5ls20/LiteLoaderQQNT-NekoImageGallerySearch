@@ -40,6 +40,7 @@ class imageContainer {
   }
 }
 
+// reference https://github.com/xh321/LiteLoaderQQNT-QR-Decode/blob/master/src/qContextMenu.js#L12
 const addQContextMenu = (qContextMenu: Element, icon: string, title: string, callback: Function) => {
   if (qContextMenu.querySelector(`#${menuID}`) != null) return;
   const tempEl = document.createElement('div');
