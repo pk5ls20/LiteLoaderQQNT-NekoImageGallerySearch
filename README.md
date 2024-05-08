@@ -39,6 +39,17 @@ yarn install && yarn plugin-build
 cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 ```
 
+## Known issues
+
+> See [RoadMap](https://github.com/users/pk5ls20/projects/5) for more known issues.
+
+- The settings of this plugin need to restart QQ to take effect.
+
+## Testing environment
+This plugin was developed and tested in the following environment:
+- QQ 9.9.9-22920 + LiteLoaderQQNT 1.1.1
+
+
 ## Reference & Special Thanks
 
 Thanks to the following projects. LiteLoaderQQNT-NekoImage could not have been realized without you!

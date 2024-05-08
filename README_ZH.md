@@ -40,6 +40,16 @@ yarn install && yarn plugin-build
 cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 ```
 
+## 已知问题
+
+> 更多的已知问题参见[RoadMap](https://github.com/users/pk5ls20/projects/5)
+
+- 本插件的设置需要重启QQ后才能生效
+
+## 测试环境
+本插件在以下环境中开发并测试通过：
+- QQ 9.9.9-22920 + LiteLoaderQQNT 1.1.1
+
 ## 参考及特别致谢
 
 感谢以下项目，`LiteLoaderQQNT-NekoImage`的诞生离不开你们！
