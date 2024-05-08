@@ -60,7 +60,7 @@ const performSimilarSearch = async (searchId: string, type: fetchType) => {
 
 const handleImageClick = async (url: string, id: string) => {
   const msg = { src: getURL(url) };
-  EnvAdapter.log('Adding editor', msg);
+  EnvAdapter.log('Adding editor', JSON.stringify(msg));
   EnvAdapter.log(`Image ID: ${id}`);
   EnvAdapter.addNTQQEditor(msg);
   await EnvAdapter.adjustVisible(false);
