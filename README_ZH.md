@@ -1,14 +1,8 @@
 ## LiteLoaderQQNT-NekoImageGallerySearch
 
-> 🤔 提示:   
-> - 由于本项目处于WIP阶段，你需要从Action中的Artifacts下载最新构建版插件 **（推荐）**，或按照下面的说明手动从源代码构建插件并手动安装
-> - 可以[在这里](https://github.com/users/pk5ls20/projects/5)查看本项目的开发路线图
+[![wakatime](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch.svg)](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch)
 
-----
-
-[![wakatime](https://wakatime.com/badge/user/4e079db9-a68b-469b-a3b4-1a7e1bb4d357/project/018e9abd-9451-41d3-81e2-e52211960018.svg)](https://wakatime.com/badge/user/4e079db9-a68b-469b-a3b4-1a7e1bb4d357/project/018e9abd-9451-41d3-81e2-e52211960018)
-
-又一个[NekoImageGallery](https://github.com/hv0905/NekoImageGallery)的web UI, 但基于vue完成，并通过[LiteLoaderQQNT](https://liteloaderqqnt.github.io)与NTQQ**无缝结合**
+又一个[NekoImageGallery](https://github.com/hv0905/NekoImageGallery)的web UI, 但使用vue并通过[LiteLoaderQQNT](https://liteloaderqqnt.github.io)与NTQQ**无缝结合**
 
 [English Document](README.md)
 
@@ -24,7 +18,11 @@
 
 ## 安装
 
-### 从Action中的Artifacts下载最新构建版插件 **（推荐）**
+### 从[Releases](https://github.com/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch/releases)下载稳定版插件 **（推荐）**
+1. 从[Releases](https://github.com/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch/releases)下载构建好的`LiteLoaderQQNT-NekoImage.zip`
+2. 解压压缩包至插件路径
+
+### 从Action中的Artifacts下载最新构建版插件
 1. 从Action中的Artifacts下载构建好的`LiteLoaderQQNT-NekoImage.zip`
 2. 解压压缩包至插件路径
 
@@ -40,15 +38,15 @@ yarn install && yarn plugin-build
 cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 ```
 
-## 已知问题
+## 已知问题及开发路线图
 
-> 更多的已知问题参见[RoadMap](https://github.com/users/pk5ls20/projects/5)
+> 更多的已知问题以及开发路线图参见[RoadMap](https://github.com/users/pk5ls20/projects/5)
 
 - 本插件的设置需要重启QQ后才能生效
 
 ## 测试环境
 本插件在以下环境中开发并测试通过：
-- QQ 9.9.9-22920 + LiteLoaderQQNT 1.1.1
+- Windows 11 + QQ >9.9.9-22920 + LiteLoaderQQNT 1.1.1
 
 ## 参考及特别致谢
 

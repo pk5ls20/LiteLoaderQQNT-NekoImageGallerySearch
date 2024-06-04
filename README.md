@@ -1,10 +1,6 @@
 ## LiteLoaderQQNT-NekoImageGallerySearch
 
-> 🤔 Note:
-> - As this project is in the WIP phase, you will need to download the latest build of the plugin from Artifacts in Action **(recommended)**, or manually build the plugin from source and install it manually by following the instructions below
-> - You can preview the development roadmap in [here](https://github.com/users/pk5ls20/projects/5)
-
-[![wakatime](https://wakatime.com/badge/user/4e079db9-a68b-469b-a3b4-1a7e1bb4d357/project/018e9abd-9451-41d3-81e2-e52211960018.svg)](https://wakatime.com/badge/user/4e079db9-a68b-469b-a3b4-1a7e1bb4d357/project/018e9abd-9451-41d3-81e2-e52211960018)
+[![wakatime](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch.svg)](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch)
 
 Another web UI for [NekoImageGallery](https://github.com/hv0905/NekoImageGallery), but completed using Vue, and **seamlessly integrated with NTQQ** through [LiteLoaderQQNT](https://liteloaderqqnt.github.io)
 
@@ -22,7 +18,11 @@ Another web UI for [NekoImageGallery](https://github.com/hv0905/NekoImageGallery
 
 ## Installation
 
-### Download the latest build of the plugin from Artifacts in Action **(Recommended)**
+### Download the stable build of the plugin from [Releases](https://github.com/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch/releases) **(Recommended)**
+1. Download the stable build `LiteLoaderQQNT-NekoImage.zip` from [Releases](https://github.com/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch/releases)
+2. Extract the zip to the plugin path
+
+### Download the latest build of the plugin from Artifacts in Action
 1. Download the build `LiteLoaderQQNT-NekoImage.zip` from Artifacts in Action.
 2. Extract the zip to the plugin path
 
@@ -39,15 +39,15 @@ yarn install && yarn plugin-build
 cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 ```
 
-## Known issues
+## Known issues & Development RoadMap
 
-> See [RoadMap](https://github.com/users/pk5ls20/projects/5) for more known issues.
+> See [RoadMap](https://github.com/users/pk5ls20/projects/5) for more known issues and development roadmap.
 
 - The settings of this plugin need to restart QQ to take effect.
 
 ## Testing environment
 This plugin was developed and tested in the following environment:
-- QQ 9.9.9-22920 + LiteLoaderQQNT 1.1.1
+- Windows 11 + QQ >9.9.9-22920 + LiteLoaderQQNT 1.1.1
 
 
 ## Reference & Special Thanks
