@@ -1,10 +1,14 @@
 name: 'Build Plugin'
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -15,19 +19,36 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: |
-          export ELECTRON_SKIP_BINARY_DOWNLOAD=1
-          npm install -g yarn && yarn install
+        run: ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install -g yarn && yarn install
 
       - name: Build plugin
         run: yarn plugin-build
 
-      - name: Pack plugin
-        run: |
-          sudo apt install zip -y
-          zip -r LiteLoaderQQNT-NekoImage.zip LiteLoaderQQNT-NekoImage
-
-      - uses: actions/upload-artifact@v4
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
           name: LiteLoaderQQNT-NekoImage.zip
-          path: LiteLoaderQQNT-NekoImage.zip
+          path: LiteLoaderQQNT-NekoImage
+
+      - name: Pack plugin for releases
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        run: zip -r LiteLoaderQQNT-NekoImage.zip LiteLoaderQQNT-NekoImage
+
+      - name: Create GitHub Release
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create
+          '${{ github.ref_name }}'
+          --repo '${{ github.repository }}'
+          --notes ""
+
+      - name: Upload artifact signatures to GitHub Release
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release upload
+          '${{ github.ref_name }}' LiteLoaderQQNT-NekoImage.zip
+          --repo '${{ github.repository }}'
