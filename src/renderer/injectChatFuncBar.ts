@@ -18,6 +18,13 @@ export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
             const lastElementChild = funcBar.lastElementChild;
             if (lastElementChild) {
               const openButton = lastElementChild.cloneNode(true) as Element;
+
+              // 查找并修改特定的嵌套 <div> 元素
+              const iconItem = openButton.querySelector('div.icon-item');
+              if (iconItem) {
+                iconItem.id = 'id-func-bar-neko-image';
+                iconItem.setAttribute('aria-label', 'NekoImage');
+              }
               const icon = openButton.getElementsByTagName('i')[0];
               icon.innerHTML = iconHtml;
               openButton.addEventListener('click', () => {
