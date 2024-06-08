@@ -15,11 +15,11 @@ const imageSearch = {
       if (buffer) {
         return new Blob([buffer], { type: 'image/png' });
       } else {
-        log('Error when loading file');
+        log.error('getLocalFileAsBlob: Error when loading file');
         return null;
       }
     } catch (error) {
-      log('Error when sending to main', error);
+      log.error('getLocalFileAsBlob: Error when sending to main', error);
       return null;
     }
   },
@@ -39,7 +39,7 @@ const imageSearch = {
       try {
         await callback(response);
       } catch (error) {
-        log('Error processing image search response:', error);
+        log.error('postAppImageSearchRes: Error processing image search response:', error);
       }
     });
   },

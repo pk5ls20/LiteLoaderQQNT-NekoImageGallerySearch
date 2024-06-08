@@ -50,7 +50,7 @@ const addQContextMenu = (qContextMenu: Element, icon: string, title: string, cal
   if (menuItem) {
     tempEl.innerHTML = menuItem.outerHTML.replace(/<!---->/g, '');
   } else {
-    log('No enabled menu item found.');
+    log.error('addQContextMenu: No enabled menu item found.');
     tempEl.innerHTML = '';
   }
   const item: HTMLElement = tempEl.firstChild as HTMLElement;
@@ -84,7 +84,7 @@ export const addQContextMenuMain = async () => {
     return imgEl !== null && imgEl.classList.contains('image-content') && !!imgEl.getAttribute('src');
   };
   if (bodyElement === null) {
-    log('Cannot find bodyElement, inject addQContextMenuMain failed');
+    log.error('addQContextMenuMain: Cannot find bodyElement, inject addQContextMenuMain failed');
     return;
   }
   document.addEventListener('mouseup', (event) => {

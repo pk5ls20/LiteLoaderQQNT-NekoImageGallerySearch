@@ -1,6 +1,7 @@
 import iconHtml from '../app/assets/logo.svg?raw';
 import { setupIframe, iframeID } from './injectIframe';
 import { showIframe } from './controlIframe';
+import { log } from '../logs';
 
 // reference https://github.com/xtaw/LiteLoaderQQNT-Fake-Message/blob/master/src/renderer.js#L72
 export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
@@ -11,14 +12,16 @@ export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
         if (element.classList.contains('chat-func-bar')) {
           // inject iframe only once
           if (document.getElementById(iframeID) === null) {
+            log.debug('injectChatFuncBarObserver: iframe not exists, prepare to inject');
             setupIframe();
+          } else {
+            log.debug('injectChatFuncBarObserver: iframe already exists');
           }
           const funcBar = element.getElementsByTagName('div')[0];
           if (funcBar) {
             const lastElementChild = funcBar.lastElementChild;
             if (lastElementChild) {
               const openButton = lastElementChild.cloneNode(true) as Element;
-
               // 查找并修改特定的嵌套 <div> 元素
               const iconItem = openButton.querySelector('div.icon-item');
               if (iconItem) {

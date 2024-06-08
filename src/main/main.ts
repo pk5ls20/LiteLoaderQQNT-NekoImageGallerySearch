@@ -47,7 +47,7 @@ ipcMain.handle('LiteLoader.imageSearch.getSettings', (event, message) => {
     const data = fs.readFileSync(settingsPath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
-    log(error);
+    log.error("Error occurred in ipcMain.handle('LiteLoader.imageSearch.getSettings')", error);
     return {};
   }
 });
@@ -57,7 +57,7 @@ ipcMain.handle('LiteLoader.imageSearch.setSettings', (event, content) => {
     const new_config = JSON.stringify(content);
     fs.writeFileSync(settingsPath, new_config, 'utf-8');
   } catch (error) {
-    log(error);
+    log.error("Error occurred in ipcMain.handle('LiteLoader.imageSearch.setSettings')", error);
   }
 });
 
@@ -67,7 +67,7 @@ ipcMain.handle('LiteLoader.imageSearch.getLocalFile', (event, file_path) => {
   try {
     return fs.readFileSync(file_path);
   } catch (error) {
-    log(error);
+    log.error("Error occurred in ipcMain.handle('LiteLoader.imageSearch.getLocalFile')", error);
     return null;
   }
 });
@@ -77,5 +77,5 @@ ipcMain.on('LiteLoader.imageSearch.postAppImageSearchReq', (event, file_buffer: 
 });
 
 ipcMain.handle('LiteLoader.imageSearch.logToMain', (event, ...args) => {
-  log(...args);
+  log.debug('Error occurred in LiteLoader.imageSearch.logToMain', ...args);
 });

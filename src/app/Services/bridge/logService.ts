@@ -13,6 +13,6 @@ export class devLogService implements LogService {
 
 export class LLNTLogService implements LogService {
   set(...args: any[]): void {
-    log(...args);
+    log.debug('[Vue app log]', ...args);
   }
 }

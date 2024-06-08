@@ -17,7 +17,7 @@ export const settings = async (view: any) => {
       }
     });
     const settings = await window.imageSearch.getSettings();
-    log('Settings', JSON.stringify(settings));
+    log.debug('Settings:', JSON.stringify(settings));
     const api_input = view.querySelector('.image_search .api-input');
     const reset = view.querySelector('.image_search .reset');
     const apply = view.querySelector('.image_search .apply');
@@ -65,6 +65,6 @@ export const settings = async (view: any) => {
       alert('Admin Token Reset');
     });
   } catch (error) {
-    log('[Error in setting]', error);
+    log.error('[Error in setting]', error);
   }
 };

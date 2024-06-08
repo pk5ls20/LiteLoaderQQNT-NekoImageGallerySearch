@@ -18,7 +18,7 @@ const isDarkMode = () => document.body.getAttribute('q-theme') === 'dark';
 const adjustIframe = (iframe: any) => {
   const appDiv = document.getElementById('app');
   if (!appDiv) {
-    log("Div with id 'app' not found.");
+    log.error("adjustIframe: Div with id 'app' not found.");
     return;
   }
   const rect = appDiv.getBoundingClientRect();
@@ -47,14 +47,14 @@ export const setupIframe = () => {
       // inner css - Dark mode css
       // TODO: dynamic adjust even manually switch dark mode
       if (isDarkMode()) {
-        log('DarkMode is detected');
+        log.debug('setupIframe: DarkMode is detected');
         const innerDarkCSSLink = document.createElement('link');
         innerDarkCSSLink.rel = 'stylesheet';
         innerDarkCSSLink.className = 'dark-mode-style';
         innerDarkCSSLink.href = `local:///${LiteLoader.plugins['image_search'].path.plugin}/renderer/dark.css`;
         iframeDocument.head.appendChild(innerDarkCSSLink);
       } else {
-        log('DarkMode is not detected');
+        log.debug('setupIframe: DarkMode is not detected');
       }
       // outer css
       const outerCSSLink = document.createElement('link');
@@ -68,10 +68,10 @@ export const setupIframe = () => {
       mountPoint.id = mountID;
       iframeDocument.body.appendChild(mountPoint);
       AppEntry('searchWindow', `#${mountID}`, iframeDocument)
-        .then((r) => console.log('AppEntry Success', r))
-        .catch((e) => console.log('AppEntry Failed', e.stack.toString()));
+        .then(() => log.debug('setupIframe: AppEntry Inject Success'))
+        .catch((e) => log.debug('setupIframe: AppEntry Inject Failed', e.stack.toString()));
     } else {
-      log('Cannot find iframeDocument');
+      log.debug('setupIframe: AppEntry Inject Cannot find iframeDocument!');
     }
   };
   iframe.src = 'about:blank';
@@ -84,7 +84,7 @@ export const setupIframe = () => {
     adjustIframe(iframe);
     window.addEventListener('resize', () => adjustIframe(iframe));
   } else {
-    console.error("Div with id 'app' not found.");
+    log.error("appDiv: Div with id 'app' not found.");
   }
   // add special injectIframe.css
   iframe.classList.add(iframeClassName);

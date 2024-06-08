@@ -25,7 +25,7 @@ export const controlIframe = (style: iframeStyleEnum, iframe: any) => {
     iframe.style.visibility = 'hidden';
     iframe.style.display = 'none';
   } else {
-    log('Bad style');
+    log.error('controlIframe: Bad style');
   }
 };
 export const controlMask = (style: string, mask?: any) => {
@@ -47,7 +47,7 @@ export const showIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | n
       preHide(targetIframe);
     }, 0);
   } else {
-    log('Cannot find targetIframe');
+    log.error('showIframe: Cannot find targetIframe');
   }
 };
 
@@ -60,6 +60,6 @@ export const hideIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | n
       controlIframe(iframeStyleEnum.hide, targetIframe);
     }, 400);
   } else {
-    log('Cannot find targetIframe');
+    log.error('hideIframe: Cannot find targetIframe');
   }
 };
