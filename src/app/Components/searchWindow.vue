@@ -59,6 +59,7 @@ import AdvanceSearchInputComponents from './advanceSearchInputComponents.vue';
 import SearchResultComponents from './searchResultComponents.vue';
 import StatusDialogComponents from './statusDialogComponents.vue';
 import StatusBarComponents from './statusBarComponents.vue';
+import { sha256 } from '../Utils/sha256';
 
 const store = useSearchStore();
 
@@ -114,7 +115,12 @@ onMounted(async () => {
   // get setting
   store.pluginSettingData = await EnvAdapter.getSettings();
   // check status
-  EnvAdapter.log(JSON.stringify(store.pluginSettingData));
+  const outputSettingData = {
+    nekoimage_api: store.pluginSettingData.nekoimage_api,
+    nekoimage_access_token_sha256: await sha256(store.pluginSettingData.nekoimage_access_token),
+    nekoimage_admin_token_sha256: await sha256(store.pluginSettingData.nekoimage_admin_token)
+  };
+  EnvAdapter.log('store.pluginSettingData', JSON.stringify(outputSettingData));
   store.serverStatus = await checkServer();
   switch (store.serverStatus) {
     case serverStatus.CONNECTED:
