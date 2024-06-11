@@ -1,6 +1,9 @@
 import iconHtml from '../app/assets/logo.svg?raw';
 import { log } from '../logs';
+
 const menuID = 'nekoimg-i2i-menu';
+
+let mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32' ? 'mouseup' : 'mousedown';
 
 class imageContainer {
   src: string;
@@ -87,7 +90,7 @@ export const addQContextMenuMain = async () => {
     log.error('addQContextMenuMain: Cannot find bodyElement, inject addQContextMenuMain failed');
     return;
   }
-  document.addEventListener('mouseup', (event) => {
+  document.addEventListener(mouseEventName, (event: MouseEvent) => {
     if (event.button === 2 && event.target instanceof HTMLImageElement) {
       isRightClick = true;
       imgEl = event.target;
