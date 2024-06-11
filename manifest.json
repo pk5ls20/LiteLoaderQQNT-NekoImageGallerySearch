@@ -21,5 +21,13 @@
     "renderer": "./renderer/renderer.mjs",
     "main": "./main/main.js",
     "preload": "./preload/preload.js"
+  },
+  "repository": {
+    "repo": "pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch",
+    "branch": "main",
+    "release": {
+      "tag": "v0.0.6",
+      "file": "LiteLoaderQQNT-NekoImage.zip"
+    }
   }
 }
