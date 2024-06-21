@@ -30,7 +30,8 @@ export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
               }
               const icon = openButton.getElementsByTagName('i')[0];
               icon.innerHTML = iconHtml;
-              openButton.addEventListener('click', () => {
+              openButton.addEventListener('click', async () => {
+                window.imageSearch.triggerSettingReq(null);
                 showIframe(iframeID);
               });
               funcBar.appendChild(openButton);

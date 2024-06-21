@@ -91,7 +91,7 @@ watch(
 
 const handleSettingChange = async (setting_data: string | null) => {
   // get setting
-  if (setting_data !== null) {
+  if (setting_data) {
     EnvAdapter.log('received setting data from arg');
     store.pluginSettingData = JSON.parse(setting_data);
   } else {

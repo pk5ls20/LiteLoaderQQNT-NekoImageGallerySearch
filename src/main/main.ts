@@ -59,13 +59,17 @@ ipcMain.on(channel.POST_APP_IMAGE_SEARCH_REQ, (event, file_buffer: Buffer | null
   event.sender.send(channel.POST_APP_IMAGE_SEARCH_RES, file_buffer);
 });
 
-ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting) => {
-  log.debug('Received updated settings');
+ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: object | null) => {
+  let settingStr: string | null = null;
+  if (setting) {
+    log.debug('Received updated settings');
+    settingStr = JSON.stringify(setting);
+  }
   // Since we have multiple windows (e.g. NTQQ setting window & NTQQ chat window),
   // we need to send the updated settings to all windows
   BrowserWindow.getAllWindows().forEach((win, index) => {
     log.debug('Sending updated settings to window:', index);
-    win.webContents.send(channel.TRIGGER_SETTING_RES, JSON.stringify(setting));
+    win.webContents.send(channel.TRIGGER_SETTING_RES, settingStr);
   });
 });
 

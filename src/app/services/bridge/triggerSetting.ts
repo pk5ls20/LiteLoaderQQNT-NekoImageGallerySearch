@@ -2,13 +2,13 @@
 // import { ipcRenderer } from 'electron';
 
 interface TriggerSettingService {
-  init(callback: (setting: string) => Promise<void>): void;
+  init(callback: (setting: string | null) => Promise<void>): void;
 
   reset(): void;
 }
 
 export class devTriggerSettingService implements TriggerSettingService {
-  init(callback: (setting: string) => Promise<void>): void {
+  init(callback: (setting: string | null) => Promise<void>): void {
     console.log('devTriggerSettingService init');
   }
 
@@ -18,8 +18,8 @@ export class devTriggerSettingService implements TriggerSettingService {
 }
 
 export class LLNTTriggerSettingService implements TriggerSettingService {
-  init(callback: (setting: string) => Promise<void>): void {
-    window.imageSearch.TriggerSetting(async (setting: string) => {
+  init(callback: (setting: string | null) => Promise<void>): void {
+    window.imageSearch.triggerSettingRes(async (setting: string | null) => {
       await callback(setting);
     });
   }
