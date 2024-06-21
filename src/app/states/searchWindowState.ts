@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
-import { SearchBasis } from '../Models/SearchBasis';
-import { AdvancedSearchMode } from '../Models/AdvancedSearchModel';
-import { pluginSettingsModel } from '../Models/pluginSettingsModel';
-import { fetchStatus, promptType, searchType } from '../Models/searchWindowEnum';
-import type { SearchQueryServices } from '../Services/search/searchQueryServices';
-import type { SearchResult } from '../Models/SearchResult';
+import { SearchBasis } from '../models/SearchBasis';
+import { AdvancedSearchMode } from '../models/AdvancedSearchModel';
+import { pluginSettingsModel } from '../models/pluginSettingsModel';
+import { fetchStatus, promptType, searchType } from '../models/searchWindowEnum';
+import type { SearchQueryServices } from '../services/search/searchQueryServices';
+import type { SearchResult } from '../models/SearchResult';
 
 export const useSearchStore = defineStore('search', {
   state: () => ({

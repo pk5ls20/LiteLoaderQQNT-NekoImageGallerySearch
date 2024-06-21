@@ -1,5 +1,5 @@
 import iconHtml from '../app/assets/logo.svg?raw';
-import { log } from '../logs';
+import { log } from '../common/logs';
 
 const menuID = 'nekoimg-i2i-menu';
 

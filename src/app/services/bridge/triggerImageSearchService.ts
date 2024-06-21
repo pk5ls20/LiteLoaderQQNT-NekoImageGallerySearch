@@ -9,11 +9,11 @@ interface TriggerImageSearchService {
 
 export class devTriggerImageSearchService implements TriggerImageSearchService {
   init(callback: (file_content: Buffer | null) => Promise<void>): void {
-    console.log('init', callback);
+    console.log('devTriggerImageSearchService init', callback);
   }
 
   reset(): void {
-    console.log('reset');
+    console.log('devTriggerImageSearchService reset');
   }
 }
 

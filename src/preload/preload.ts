@@ -1,11 +1,18 @@
-import { log } from '../logs';
+import { log } from '../common/logs';
 
 const { contextBridge, ipcRenderer } = require('electron');
 
 const imageSearch = {
   getSettings: () => ipcRenderer.invoke('LiteLoader.imageSearch.getSettings'),
 
-  setSettings: (content: any) => ipcRenderer.invoke('LiteLoader.imageSearch.setSettings', content),
+  setSettings: async (content: any) => {
+    try {
+      const response = await ipcRenderer.invoke('LiteLoader.imageSearch.setSettings', content);
+      ipcRenderer.send('LiteLoader.imageSearch.triggerSettingReq', response);
+    } catch (error) {
+      console.error('Error updating settings:', error);
+    }
+  },
 
   logToMain: (...args: any) => ipcRenderer.invoke('LiteLoader.imageSearch.logToMain', ...args),
 
@@ -40,6 +47,17 @@ const imageSearch = {
         await callback(response);
       } catch (error) {
         log.error('postAppImageSearchRes: Error processing image search response:', error);
+      }
+    });
+  },
+
+  TriggerSetting(callback: (setting: string) => Promise<void>): void {
+    ipcRenderer.on('LiteLoader.imageSearch.triggerSettingResponse', async (event, response) => {
+      try {
+        await callback(response);
+        log.debug('Callback successfully executed');
+      } catch (error) {
+        log.error('TriggerSetting: Error processing image search response:', error);
       }
     });
   },

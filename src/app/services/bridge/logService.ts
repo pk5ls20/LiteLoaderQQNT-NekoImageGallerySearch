@@ -1,5 +1,5 @@
 // @ts-ignore
-import { log } from '../../../logs';
+import { log } from '../../../common/logs';
 
 interface LogService {
   set(...args: any[]): void;

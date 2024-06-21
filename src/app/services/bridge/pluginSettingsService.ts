@@ -1,6 +1,6 @@
 /// <reference types="../../../global.d.ts" />
-import { pluginSettingsModel } from '../../Models/pluginSettingsModel';
-import { devEnvWrap } from '../../Utils/envFlag';
+import { pluginSettingsModel } from '../../models/pluginSettingsModel';
+import { devEnvWrap } from '../../utils/envFlag';
 
 interface pluginSettingsService {
   get(): Promise<pluginSettingsModel | null>;

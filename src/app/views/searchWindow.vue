@@ -48,18 +48,18 @@
 
 <script lang="ts" setup>
 import { onMounted, watch } from 'vue';
-import { EnvAdapter } from '../Adapter/EnvAdapter';
-import { fetchStatus, searchType, serverStatus, tabItem } from '../Models/searchWindowEnum';
-import { getClient } from '../Services/search/baseSearchService';
-import { useSearchStore } from '../States/searchWindowState';
-import { handleCatchError } from '../Utils/handleCatchError';
-import BasicSearchInputComponents from '../Components/basicSearchInput.vue';
-import imageSearchInputComponents from '../Components/imageSearchInput.vue';
-import AdvanceSearchInputComponents from '../Components/advanceSearchInput.vue';
-import SearchResultComponents from '../Components/searchResult.vue';
-import StatusDialogComponents from '../Components/statusDialog.vue';
-import StatusBarComponents from '../Components/statusBar.vue';
-import { sha256 } from '../Utils/sha256';
+import { EnvAdapter } from '../adapter/EnvAdapter';
+import { fetchStatus, searchType, serverStatus, tabItem } from '../models/searchWindowEnum';
+import { resetClient } from '../services/search/baseSearchService';
+import { useSearchStore } from '../states/searchWindowState';
+import BasicSearchInputComponents from '../components/basicSearchInput.vue';
+import imageSearchInputComponents from '../components/imageSearchInput.vue';
+import AdvanceSearchInputComponents from '../components/advanceSearchInput.vue';
+import SearchResultComponents from '../components/searchResult.vue';
+import StatusDialogComponents from '../components/statusDialog.vue';
+import StatusBarComponents from '../components/statusBar.vue';
+import { checkServer } from '../utils/checkServer';
+import { sha256 } from '../utils/sha256';
 
 const store = useSearchStore();
 
@@ -89,39 +89,27 @@ watch(
   }
 );
 
-const checkServer = async () => {
-  EnvAdapter.log('Start to checkServer...');
-  const remoteEndpoint = store.pluginSettingData.nekoimage_api;
-  if (remoteEndpoint !== '') {
-    try {
-      const client = getClient();
-      const response = await client.get(`${remoteEndpoint}/`); // TODO: maybe not suit for everybody
-      const data = await response.data;
-      if (data) {
-        store.serverStatusMsg = JSON.stringify(data);
-        const isAuthPass = !data.authorization.required || (data.authorization.required && data.authorization.passed);
-        return isAuthPass ? serverStatus.CONNECTED : serverStatus.UNAUTHORIZED;
-      }
-    } catch (e) {
-      store.serverStatusMsg = handleCatchError(e);
-      return serverStatus.DISCONNECTED;
-    }
-  }
-  return serverStatus.DISCONNECTED;
-};
-
-onMounted(async () => {
-  EnvAdapter.log('Search Window Mounted');
+const handleSettingChange = async (setting_data: string | null) => {
   // get setting
-  store.pluginSettingData = await EnvAdapter.getSettings();
+  if (setting_data !== null) {
+    EnvAdapter.log('received setting data from arg');
+    store.pluginSettingData = JSON.parse(setting_data);
+  } else {
+    EnvAdapter.log('setting_data is null, get setting from EnvAdapter.getSettings()');
+    store.pluginSettingData = await EnvAdapter.getSettings();
+  }
+  // reset client to use new setting
+  resetClient(store.pluginSettingData);
   // check status
   const outputSettingData = {
     nekoimage_api: store.pluginSettingData.nekoimage_api,
     nekoimage_access_token_sha256: await sha256(store.pluginSettingData.nekoimage_access_token),
     nekoimage_admin_token_sha256: await sha256(store.pluginSettingData.nekoimage_admin_token)
   };
-  EnvAdapter.log('store.pluginSettingData', JSON.stringify(outputSettingData));
-  store.serverStatus = await checkServer();
+  EnvAdapter.log('store.pluginSettingData', outputSettingData);
+  const checkStatusResult = await checkServer(store.pluginSettingData.nekoimage_api);
+  store.serverStatus = checkStatusResult.status;
+  store.serverStatusMsg = checkStatusResult.message;
   switch (store.serverStatus) {
     case serverStatus.CONNECTED:
       store.serverStatusMessage = 'Server Connected';
@@ -137,6 +125,12 @@ onMounted(async () => {
       break;
   }
   EnvAdapter.log('store.serverStatus', store.serverStatus);
+};
+
+onMounted(async () => {
+  EnvAdapter.log('Search Window Mounted');
+  await handleSettingChange(null);
+  EnvAdapter.triggerSettingService().init(handleSettingChange);
 });
 </script>
 

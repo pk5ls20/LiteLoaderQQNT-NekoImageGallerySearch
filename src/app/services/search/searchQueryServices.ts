@@ -1,8 +1,8 @@
-import { SearchBasis } from '../../Models/SearchBasis';
-import { SearchFilterOptions } from '../../Models/SearchFilterOptions';
+import { SearchBasis } from '../../models/SearchBasis';
+import { SearchFilterOptions } from '../../models/SearchFilterOptions';
+import type { SearchApiResponse } from '../../models/SearchApiResponse';
+import type { AdvancedSearchModel, CombinedSearchModel } from '../../models/AdvancedSearchModel';
 import { getClient } from './baseSearchService';
-import type { SearchApiResponse } from '../../Models/SearchApiResponse';
-import type { AdvancedSearchModel, CombinedSearchModel } from '../../Models/AdvancedSearchModel';
 
 export abstract class SearchQueryServices {
   public filterOptions: SearchFilterOptions | null = null;

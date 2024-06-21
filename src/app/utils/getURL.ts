@@ -1,5 +1,5 @@
-import { useSearchStore } from '../States/searchWindowState';
-import type { Image } from '../Models/Image';
+import { useSearchStore } from '../states/searchWindowState';
+import type { Image } from '../models/Image';
 
 export const getURL = (url: string) => {
   const store = useSearchStore();

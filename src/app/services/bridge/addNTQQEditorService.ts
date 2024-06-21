@@ -1,15 +1,15 @@
 interface addNTQQEditorService {
-  set(message: { src: string }): void;
+  set(message: { src: string; picSubType: number }): void;
 }
 
 export class devAddNTQQEditorService implements addNTQQEditorService {
-  set(message: { src: string }) {
+  set(message: { src: string; picSubType: number }) {
     console.log(JSON.stringify(message));
   }
 }
 
 export class LLNTAddNTQQEditorService implements addNTQQEditorService {
-  set(message: { src: string }) {
+  set(message: { src: string; picSubType: number }) {
     try {
       const selectors = '.ck.ck-content.ck-editor__editable';
       const ckeditorElement = document.querySelector(selectors);
@@ -22,7 +22,7 @@ export class LLNTAddNTQQEditorService implements addNTQQEditorService {
           const data = {
             type: 'pic',
             src: message.src,
-            picSubType: 0
+            picSubType: message.picSubType
           };
           const emojiData = {
             data: JSON.stringify(data)

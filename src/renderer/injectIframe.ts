@@ -1,4 +1,4 @@
-import { log } from '../logs';
+import { log } from '../common/logs';
 import AppEntry from '../app/appEntry';
 import {
   controlIframe,

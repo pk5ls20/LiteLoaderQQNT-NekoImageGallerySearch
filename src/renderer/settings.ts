@@ -1,4 +1,4 @@
-import { log } from '../logs';
+import { log } from '../common/logs';
 import iconHtml from '../app/assets/logo.svg?raw';
 
 // reference https://github.com/MUKAPP/LiteLoaderQQNT-DeepL/blob/main/src/renderer.js#L377
@@ -8,29 +8,28 @@ export const settings = async (view: any) => {
     const html_file_path = `local:///${plugin_path}/settings.html`;
     view.innerHTML = await (await fetch(html_file_path)).text();
     // TODO: seems not valid in newest NTQQ
-    document.querySelectorAll('.nav-item.liteloader').forEach((node) => {
-      if (node.textContent === 'Image Search') {
-        const qIcon = node.querySelector('.q-icon');
-        if (qIcon) {
-          qIcon.innerHTML = iconHtml;
-        }
-      }
-    });
+    // document.querySelectorAll('.nav-item.liteloader').forEach((node) => {
+    //   if (node.textContent === 'Image Search') {
+    //     const qIcon = node.querySelector('.q-icon');
+    //     if (qIcon) {
+    //       qIcon.innerHTML = iconHtml;
+    //     }
+    //   }
+    // });
     const settings = await window.imageSearch.getSettings();
-    log.debug('Settings:', JSON.stringify(settings));
     const api_input = view.querySelector('.image_search .api-input');
     const reset = view.querySelector('.image_search .reset');
     const apply = view.querySelector('.image_search .apply');
     api_input.value = settings.nekoimage_api;
-    apply.addEventListener('click', () => {
+    apply.addEventListener('click', async () => {
       settings.nekoimage_api = api_input.value;
-      window.imageSearch.setSettings(settings);
+      await window.imageSearch.setSettings(settings);
       alert('API Applied');
     });
-    reset.addEventListener('click', () => {
+    reset.addEventListener('click', async () => {
       api_input.value = '';
       settings.nekoimage_api = api_input.value;
-      window.imageSearch.setSettings(settings);
+      await window.imageSearch.setSettings(settings);
       alert('API Reset');
     });
     const nekoimage_access_token = view.querySelector('.image_search .right-target-lang');
@@ -42,26 +41,26 @@ export const settings = async (view: any) => {
 
     nekoimage_access_token.value = settings.nekoimage_admin_token;
     nekoimage_admin_token.value = settings.nekoimage_admin_token;
-    nekoimage_access_token_apply.addEventListener('click', () => {
+    nekoimage_access_token_apply.addEventListener('click', async () => {
       settings.nekoimage_access_token = nekoimage_access_token.value;
-      window.imageSearch.setSettings(settings);
+      await window.imageSearch.setSettings(settings);
       alert('Access Token Applied');
     });
-    nekoimage_access_token_reset.addEventListener('click', () => {
+    nekoimage_access_token_reset.addEventListener('click', async () => {
       nekoimage_access_token.value = '';
       settings.nekoimage_access_token = '';
-      window.imageSearch.setSettings(settings);
+      await window.imageSearch.setSettings(settings);
       alert('Access Token Reset');
     });
-    nekoimage_admin_token_apply.addEventListener('click', () => {
+    nekoimage_admin_token_apply.addEventListener('click', async () => {
       settings.nekoimage_admin_token = nekoimage_admin_token.value;
-      window.imageSearch.setSettings(settings);
+      await window.imageSearch.setSettings(settings);
       alert('Admin Token Applied');
     });
-    nekoimage_admin_token_reset.addEventListener('click', () => {
+    nekoimage_admin_token_reset.addEventListener('click', async () => {
       nekoimage_admin_token.value = '';
       settings.nekoimage_admin_token = '';
-      window.imageSearch.setSettings(settings);
+      await window.imageSearch.setSettings(settings);
       alert('Admin Token Reset');
     });
   } catch (error) {

@@ -39,12 +39,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { EnvAdapter } from '../Adapter/EnvAdapter';
-import { fetchStatus, fetchType } from '../Models/searchWindowEnum';
-import { SearchQueryServices, SimilarSearchQuery } from '../Services/search/searchQueryServices';
-import { performQuerySearchService } from '../Services/search/performQuerySearchService';
-import { useSearchStore } from '../States/searchWindowState';
-import { getPreviewURL, getURL } from '../Utils/getURL';
+import { EnvAdapter } from '../adapter/EnvAdapter';
+import { fetchStatus, fetchType } from '../models/searchWindowEnum';
+import { SearchQueryServices, SimilarSearchQuery } from '../services/search/searchQueryServices';
+import { performQuerySearchService } from '../services/search/performQuerySearchService';
+import { useSearchStore } from '../states/searchWindowState';
+import { getPreviewURL, getURL } from '../utils/getURL';
 
 const store = useSearchStore();
 
@@ -59,7 +59,7 @@ const performSimilarSearch = async (searchId: string, type: fetchType) => {
 };
 
 const handleImageClick = async (url: string, id: string) => {
-  const msg = { src: getURL(url) };
+  const msg = { src: getURL(url), picSubType: 0 }; // TODO: let user choose picSubType
   EnvAdapter.log('Adding editor', JSON.stringify(msg));
   EnvAdapter.log(`Image ID: ${id}`);
   EnvAdapter.addNTQQEditor(msg);

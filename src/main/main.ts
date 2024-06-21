@@ -1,15 +1,8 @@
 /// <reference path="../global.d.ts" />
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { log } from '../logs';
-import { ipcMain, shell } from 'electron';
-
-// TODO: rubbish
-function watchSettingsChange(webContents: Electron.WebContents, settingsPath: fs.PathLike) {
-  // fs.watch(settingsPath, "utf-8", debounce(() => {
-  //     updateStyle(webContents, settingsPath);
-  // }, 100));
-}
+import { log } from '../common/logs';
+import { ipcMain, shell, BrowserWindow } from 'electron';
 
 function openWeb(url: string) {
   shell.openExternal(url).then();
@@ -36,12 +29,6 @@ if (!fs.existsSync(settingsPath)) {
   const config = JSON.parse(data);
 }
 
-// TODO: rubbish
-ipcMain.on('LiteLoader.imageSearch.watchSettingsChange', (event, settingsPath) => {
-  // const window = BrowserWindow.fromWebContents(event.sender);
-  // watchSettingsChange(window.webContents, settingsPath);
-});
-
 ipcMain.handle('LiteLoader.imageSearch.getSettings', (event, message) => {
   try {
     const data = fs.readFileSync(settingsPath, 'utf-8');
@@ -56,8 +43,9 @@ ipcMain.handle('LiteLoader.imageSearch.setSettings', (event, content) => {
   try {
     const new_config = JSON.stringify(content);
     fs.writeFileSync(settingsPath, new_config, 'utf-8');
+    return content;
   } catch (error) {
-    log.error("Error occurred in ipcMain.handle('LiteLoader.imageSearch.setSettings')", error);
+    log.debug("Error occurred in ipcMain.handle('LiteLoader.imageSearch.setSettings')", content, error);
   }
 });
 
@@ -78,4 +66,12 @@ ipcMain.on('LiteLoader.imageSearch.postAppImageSearchReq', (event, file_buffer: 
 
 ipcMain.handle('LiteLoader.imageSearch.logToMain', (event, ...args) => {
   log.debug('Error occurred in LiteLoader.imageSearch.logToMain', ...args);
+});
+
+ipcMain.on('LiteLoader.imageSearch.triggerSettingReq', (event, setting) => {
+  log.debug('Received updated settings');
+  BrowserWindow.getAllWindows().forEach((win, index) => {
+    log.debug('Sending updated settings to window:', index);
+    win.webContents.send('LiteLoader.imageSearch.triggerSettingResponse', JSON.stringify(setting));
+  });
 });
