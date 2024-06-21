@@ -7,7 +7,6 @@ declare global {
     imageSearch: {
       getSettings: () => Promise<any>;
       setSettings: (content: any) => Promise<void>;
-      logToMain: (...args: any[]) => Promise<void>;
       getLocalFileAsBlob: (filePath: string) => Promise<Blob | null>;
       postAppImageSearchReq: (file_content: Blob | null) => void;
       postAppImageSearchRes: (callback: (file_content: Buffer | null) => Promise<void>) => void;
