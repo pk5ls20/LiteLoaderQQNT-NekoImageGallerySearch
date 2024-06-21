@@ -53,12 +53,12 @@ import { fetchStatus, searchType, serverStatus, tabItem } from '../Models/search
 import { getClient } from '../Services/search/baseSearchService';
 import { useSearchStore } from '../States/searchWindowState';
 import { handleCatchError } from '../Utils/handleCatchError';
-import BasicSearchInputComponents from './basicSearchInputComponents.vue';
-import imageSearchInputComponents from './imageSearchInputCompents.vue';
-import AdvanceSearchInputComponents from './advanceSearchInputComponents.vue';
-import SearchResultComponents from './searchResultComponents.vue';
-import StatusDialogComponents from './statusDialogComponents.vue';
-import StatusBarComponents from './statusBarComponents.vue';
+import BasicSearchInputComponents from '../Components/basicSearchInput.vue';
+import imageSearchInputComponents from '../Components/imageSearchInput.vue';
+import AdvanceSearchInputComponents from '../Components/advanceSearchInput.vue';
+import SearchResultComponents from '../Components/searchResult.vue';
+import StatusDialogComponents from '../Components/statusDialog.vue';
+import StatusBarComponents from '../Components/statusBar.vue';
 import { sha256 } from '../Utils/sha256';
 
 const store = useSearchStore();
