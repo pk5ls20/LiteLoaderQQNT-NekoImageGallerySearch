@@ -56,6 +56,8 @@ ipcMain.handle(channel.GET_LOCAL_FILE, (event, file_path) => {
 });
 
 ipcMain.on(channel.POST_APP_IMAGE_SEARCH_REQ, (event, file_buffer: Buffer | null) => {
+  // In the current situation, both the channel sending the signal and the channel receiving the signal
+  // are within the same window (i.e., the main NTQQ chat window), so the signal can be sent directly
   event.sender.send(channel.POST_APP_IMAGE_SEARCH_RES, file_buffer);
 });
 
@@ -65,7 +67,7 @@ ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: object | null) => {
     log.debug('Received updated settings');
     settingStr = JSON.stringify(setting);
   }
-  // Since we have multiple windows (e.g. NTQQ setting window & NTQQ chat window),
+  // Since we have multiple windows (i.e. NTQQ setting window & NTQQ chat window),
   // we need to send the updated settings to all windows
   BrowserWindow.getAllWindows().forEach((win, index) => {
     log.debug('Sending updated settings to window:', index);
