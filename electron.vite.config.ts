@@ -1,3 +1,4 @@
+// reference https://github.com/LLOneBot/LLOneBot/blob/main/electron.vite.config.ts
 import cp from 'vite-plugin-cp';
 import svgLoader from 'vite-svg-loader';
 import vue from '@vitejs/plugin-vue';
