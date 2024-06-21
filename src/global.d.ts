@@ -6,11 +6,12 @@ declare global {
   interface Window {
     imageSearch: {
       getSettings: () => Promise<any>;
-      setSettings: (content: any) => Promise<void>;
-      logToMain: (...args: any[]) => Promise<void>;
+      setSettings: (content: object) => Promise<void>;
       getLocalFileAsBlob: (filePath: string) => Promise<Blob | null>;
       postAppImageSearchReq: (file_content: Blob | null) => void;
       postAppImageSearchRes: (callback: (file_content: Buffer | null) => Promise<void>) => void;
+      triggerSettingReq: (setting: string | null) => void;
+      triggerSettingRes: (callback: (setting: string | null) => Promise<void>) => void;
       openWeb: (url: string) => void;
     };
   }

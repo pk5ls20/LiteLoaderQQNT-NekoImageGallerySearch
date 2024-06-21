@@ -58,4 +58,5 @@ cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 - https://github.com/xh321/LiteLoaderQQNT-QR-Decode
 - https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools
 - https://github.com/Night-stars-1/LiteLoaderQQNT-Plugin-LLAPI
+- https://github.com/LLOneBot/LLOneBot
 - https://github.com/darkreader/darkreader

@@ -1,6 +1,9 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
-  "include": ["vite.config.*", "Services/bridge/*.ts", "**/*.ts", "Components/imageSearchInputCompents.vue"],
+  "include": ["vite.config.*",
+    "services/bridge/*.ts", "**/*.ts",
+    "components/imageSearchInput.vue"
+  ],
   "exclude": ["appEntry.ts"],
   "compilerOptions": {
     "composite": true,

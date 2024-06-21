@@ -20,12 +20,12 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { EnvAdapter } from '../Adapter/EnvAdapter';
-import { searchType } from '../Models/searchWindowEnum';
-import { ImageSearchQuery } from '../Services/search/searchQueryServices';
-import { performQuerySearchService } from '../Services/search/performQuerySearchService';
-import { useSearchStore } from '../States/searchWindowState';
-import { displayErrorDialog } from '../Utils/handleCatchError';
+import { EnvAdapter } from '../adapter/EnvAdapter';
+import { searchType } from '../models/searchWindowEnum';
+import { ImageSearchQuery } from '../services/search/searchQueryServices';
+import { performQuerySearchService } from '../services/search/performQuerySearchService';
+import { useSearchStore } from '../states/searchWindowState';
+import { displayErrorDialog } from '../utils/handleCatchError';
 
 const store = useSearchStore();
 

@@ -1,7 +1,7 @@
 import iconHtml from '../app/assets/logo.svg?raw';
 import { setupIframe, iframeID } from './injectIframe';
 import { showIframe } from './controlIframe';
-import { log } from '../logs';
+import { log } from '../common/logs';
 
 // reference https://github.com/xtaw/LiteLoaderQQNT-Fake-Message/blob/master/src/renderer.js#L72
 export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
@@ -30,7 +30,8 @@ export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
               }
               const icon = openButton.getElementsByTagName('i')[0];
               icon.innerHTML = iconHtml;
-              openButton.addEventListener('click', () => {
+              openButton.addEventListener('click', async () => {
+                window.imageSearch.triggerSettingReq(null);
                 showIframe(iframeID);
               });
               funcBar.appendChild(openButton);

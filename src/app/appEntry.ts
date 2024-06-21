@@ -1,4 +1,4 @@
-import { isDevEnv } from './Utils/envFlag';
+import { isDevEnv } from './utils/envFlag';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import BalmUI from 'balm-ui';
@@ -7,7 +7,7 @@ import 'balm-ui-css';
 import './index.css';
 
 export default async function AppEntry(entryFile: string, entryId: string, docContext = document) {
-  const module = await import(`./Components/${entryFile}.vue`);
+  const module = await import(`./views/${entryFile}.vue`);
   const app = createApp(module.default);
   const pinia = createPinia();
   app.use(pinia).use(BalmUI).use(BalmUIPlus);

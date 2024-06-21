@@ -1,8 +1,8 @@
-import type { SearchResult } from '../../Models/SearchResult';
+import type { SearchResult } from '../../models/SearchResult';
 import { SearchQueryServices } from './searchQueryServices';
-import { fetchStatus, fetchType } from '../../Models/searchWindowEnum';
-import { useSearchStore } from '../../States/searchWindowState';
-import { displayErrorDialog } from '../../Utils/handleCatchError';
+import { fetchStatus, fetchType } from '../../models/searchWindowEnum';
+import { useSearchStore } from '../../states/searchWindowState';
+import { displayErrorDialog } from '../../utils/handleCatchError';
 
 export const performQuerySearchService = async (query: SearchQueryServices, type: fetchType) => {
   const store = useSearchStore();

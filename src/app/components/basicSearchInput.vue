@@ -13,11 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import { SearchBasis } from '../Models/SearchBasis';
-import { fetchType, searchType } from '../Models/searchWindowEnum';
-import { performQuerySearchService } from '../Services/search/performQuerySearchService';
-import { RandomSearchQuery, TextSearchQuery } from '../Services/search/searchQueryServices';
-import { useSearchStore } from '../States/searchWindowState';
+import { SearchBasis } from '../models/SearchBasis';
+import { fetchType, searchType } from '../models/searchWindowEnum';
+import { performQuerySearchService } from '../services/search/performQuerySearchService';
+import { RandomSearchQuery, TextSearchQuery } from '../services/search/searchQueryServices';
+import { useSearchStore } from '../states/searchWindowState';
 
 const store = useSearchStore();
 

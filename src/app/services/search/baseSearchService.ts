@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import { EnvAdapter } from '../../Adapter/EnvAdapter';
-import { pluginSettingsModel } from '../../Models/pluginSettingsModel';
+import { EnvAdapter } from '../../adapter/EnvAdapter';
+import { pluginSettingsModel } from '../../models/pluginSettingsModel';
 
 let apiClient: AxiosInstance | null;
 let pluginSettingData: pluginSettingsModel | null = new pluginSettingsModel('', '', '');
@@ -21,10 +21,12 @@ export function getClient() {
       headers: headers
     });
   }
-
   return apiClient;
 }
 
-export function resetClient() {
+export function resetClient(settingData?: pluginSettingsModel) {
+  if (settingData) {
+    pluginSettingData = settingData;
+  }
   apiClient = null;
 }
