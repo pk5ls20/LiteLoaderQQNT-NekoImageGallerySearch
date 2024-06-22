@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { log } from '../common/logs';
 
 export const iframeMaskClassName = 'nekoimage_mask';
@@ -9,35 +10,39 @@ export enum iframeStyleEnum {
   hide
 }
 
-const preShow = (ele: any) => {
-  ele.classList.add(iframePreShowClassName);
-  ele.classList.remove(iframePreHideClassName);
+const preShow = (ele: JQuery<HTMLElement>) => {
+  ele.addClass(iframePreShowClassName).removeClass(iframePreHideClassName);
 };
-const preHide = (ele: any) => {
-  ele.classList.add(iframePreHideClassName);
-  ele.classList.remove(iframePreShowClassName);
+
+const preHide = (ele: JQuery<HTMLElement>) => {
+  ele.addClass(iframePreHideClassName).removeClass(iframePreShowClassName);
 };
-export const controlIframe = (style: iframeStyleEnum, iframe: any) => {
+
+export const controlIframe = (style: iframeStyleEnum, iframe: JQuery<HTMLElement>) => {
   if (style === iframeStyleEnum.show) {
-    iframe.style.visibility = 'visible';
-    iframe.style.display = 'block';
+    iframe.css({
+      visibility: 'visible',
+      display: 'block'
+    });
   } else if (style === iframeStyleEnum.hide) {
-    iframe.style.visibility = 'hidden';
-    iframe.style.display = 'none';
+    iframe.css({
+      visibility: 'hidden',
+      display: 'none'
+    });
   } else {
     log.error('controlIframe: Bad style');
   }
 };
-export const controlMask = (style: string, mask?: any) => {
-  if (mask) {
-    mask.style.display = style;
-  } else {
-    const mask = document.getElementById(iframeMaskClassName);
-    if (mask) mask.style.display = style;
+
+export const controlMask = (style: string, mask?: JQuery<HTMLElement>) => {
+  if (!mask) {
+    mask = $(`.${iframeMaskClassName}`);
   }
+  mask.css('display', style);
 };
-export const showIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | null) => {
-  const targetIframe = iframe || document.getElementById(iframeID);
+
+export const showIframe = (iframeID: string = '', iframe?: JQuery<HTMLElement>) => {
+  const targetIframe = iframe || $(`#${iframeID}`);
   if (targetIframe) {
     controlMask('block');
     controlIframe(iframeStyleEnum.show, targetIframe);
@@ -51,8 +56,8 @@ export const showIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | n
   }
 };
 
-export const hideIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | null) => {
-  const targetIframe = iframe || document.getElementById(iframeID);
+export const hideIframe = (iframeID: string = '', iframe?: JQuery<HTMLElement>) => {
+  const targetIframe = iframe || $(`#${iframeID}`);
   if (targetIframe) {
     preShow(targetIframe);
     setTimeout(() => {

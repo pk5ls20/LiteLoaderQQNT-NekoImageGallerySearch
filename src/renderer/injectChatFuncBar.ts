@@ -1,44 +1,47 @@
+import $ from 'jquery';
 import iconHtml from '../app/assets/logo.svg?raw';
 import { setupIframe, iframeID } from './injectIframe';
 import { showIframe } from './controlIframe';
 import { log } from '../common/logs';
 
+export const nekoImageIconID = 'id-func-bar-neko-image';
+export const nekoImageIconAriaLabel = 'NekoImage';
+
 // reference https://github.com/xtaw/LiteLoaderQQNT-Fake-Message/blob/master/src/renderer.js#L72
 export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
-    for (const node of mutation.addedNodes) {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const element = node as Element;
-        if (element.classList.contains('chat-func-bar')) {
-          // inject iframe only once
-          if (document.getElementById(iframeID) === null) {
-            log.debug('injectChatFuncBarObserver: iframe not exists, prepare to inject');
-            setupIframe();
-          } else {
-            log.debug('injectChatFuncBarObserver: iframe already exists');
-          }
-          const funcBar = element.getElementsByTagName('div')[0];
-          if (funcBar) {
-            const lastElementChild = funcBar.lastElementChild;
-            if (lastElementChild) {
-              const openButton = lastElementChild.cloneNode(true) as Element;
-              // 查找并修改特定的嵌套 <div> 元素
-              const iconItem = openButton.querySelector('div.icon-item');
-              if (iconItem) {
-                iconItem.id = 'id-func-bar-neko-image';
-                iconItem.setAttribute('aria-label', 'NekoImage');
-              }
-              const icon = openButton.getElementsByTagName('i')[0];
-              icon.innerHTML = iconHtml;
-              openButton.addEventListener('click', async () => {
-                window.imageSearch.triggerSettingReq(null);
-                showIframe(iframeID);
-              });
-              funcBar.appendChild(openButton);
-            }
-          }
+    $(mutation.addedNodes)
+      .filter((index, node) => $(node).hasClass('chat-func-bar'))
+      .each(function () {
+        // inject iframe only once
+        if ($(`#${iframeID}`).length) {
+          log.debug('injectChatFuncBarObserver: iframe already exists');
+        } else {
+          log.debug('injectChatFuncBarObserver: iframe not exists, prepare to inject');
+          setupIframe();
         }
-      }
-    }
+        let funcBar = $(this).find('div:first');
+        if (funcBar.length) {
+          let lastElementChild = funcBar.children(':last');
+          if (lastElementChild.length) {
+            let openButton = lastElementChild.clone(true);
+            // 查找并修改特定的嵌套 <div> 元素
+            let iconItem = openButton.find('div.icon-item');
+            if (iconItem.length) {
+              iconItem.attr('id', nekoImageIconID).attr('aria-label', nekoImageIconAriaLabel);
+            }
+            openButton.find('i:first').html(iconHtml);
+            openButton.on('click', async function () {
+              window.imageSearch.triggerSettingReq(null);
+              showIframe(iframeID);
+            });
+            funcBar.append(openButton);
+          } else {
+            log.error('injectChatFuncBarObserver: Cannot find lastElementChild');
+          }
+        } else {
+          log.error('injectChatFuncBarObserver: Cannot find chat-func-bar');
+        }
+      });
   });
 });

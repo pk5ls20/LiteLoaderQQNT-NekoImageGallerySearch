@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import iconHtml from '../app/assets/logo.svg?raw';
 import { log } from '../common/logs';
 
@@ -44,56 +45,62 @@ class imageContainer {
 }
 
 // reference https://github.com/xh321/LiteLoaderQQNT-QR-Decode/blob/master/src/qContextMenu.js#L12
-const addQContextMenu = (qContextMenu: Element, icon: string, title: string, callback: Function) => {
-  if (qContextMenu.querySelector(`#${menuID}`) != null) return;
-  const tempEl = document.createElement('div');
-  const selectorFirst = 'a.q-context-menu-item--normal:not([disabled="true"])'; // priority find normal menu item
-  const selectorSecond = '.q-context-menu :not([disabled="true"])'; // rollback to find any menu item
-  const menuItem = document.querySelector(selectorFirst) || document.querySelector(selectorSecond);
-  if (menuItem) {
-    tempEl.innerHTML = menuItem.outerHTML.replace(/<!---->/g, '');
-  } else {
+const addQContextMenu = (qContextMenu: JQuery<Element>, icon: string, title: string, callback: Function): void => {
+  if (qContextMenu.find(`#${menuID}`).length) {
+    log.debug('addQContextMenu: Menu item already exists.');
+    return;
+  }
+  const selectorFirst = 'a.q-context-menu-item--normal:not([disabled="true"])'; // Priority find normal menu item
+  const selectorSecond = '.q-context-menu :not([disabled="true"])'; // Rollback to find any menu item
+  const menuItem = $(selectorFirst).length ? $(selectorFirst) : $(selectorSecond);
+  if (!menuItem.length) {
     log.error('addQContextMenu: No enabled menu item found.');
-    tempEl.innerHTML = '';
+    return;
   }
-  const item: HTMLElement = tempEl.firstChild as HTMLElement;
-  item.id = menuID;
-  const iconElement = item.querySelector('.q-icon');
-  if (iconElement) {
-    (iconElement as HTMLElement).innerHTML = icon;
+  const item = menuItem
+    .clone()
+    .removeAttr('id')
+    .prop('outerHTML')
+    .replace(/<!---->/g, '');
+  const newItem = $(item).attr('id', menuID);
+  const iconElement = newItem.find('.q-icon');
+  if (iconElement.length) {
+    iconElement.html(icon);
   }
-  if (item.classList.contains('q-context-menu-item__text')) {
-    item.innerText = title;
-  } else {
-    const textElement = item.querySelector('.q-context-menu-item__text');
-    if (textElement) {
-      (textElement as HTMLElement).innerText = title;
-    }
+  const textElement = newItem.find('.q-context-menu-item__text');
+  if (textElement.length) {
+    textElement.text(title);
+  } else if (newItem.hasClass('q-context-menu-item__text')) {
+    newItem.text(title);
   }
-  item.addEventListener('click', async () => {
+  newItem.on('click', async () => {
     await callback();
     qContextMenu.remove();
   });
-  const separator = qContextMenu.querySelector('.q-context-menu-separator');
-  separator === null ? qContextMenu.appendChild(item) : qContextMenu.insertBefore(item, separator);
+  const separator = qContextMenu.find('.q-context-menu-separator');
+  if (separator.length) {
+    separator.before(newItem);
+  } else {
+    qContextMenu.append(newItem);
+  }
 };
 
 export const addQContextMenuMain = async () => {
   let isRightClick: boolean = false;
   let imageObject: imageContainer | null = null;
   let imgEl: HTMLImageElement | null = null;
-  const bodyElement = document.querySelector('body');
+  const bodyElement = $('body');
   const haveImgContent = (): boolean => {
-    return imgEl !== null && imgEl.classList.contains('image-content') && !!imgEl.getAttribute('src');
+    return imgEl !== null && $(imgEl).hasClass('image-content') && !!$(imgEl).attr('src');
   };
-  if (bodyElement === null) {
-    log.error('addQContextMenuMain: Cannot find bodyElement, inject addQContextMenuMain failed');
+  if (bodyElement.length === 0) {
+    console.error('addQContextMenuMain: Cannot find bodyElement, inject addQContextMenuMain failed');
     return;
   }
-  document.addEventListener(mouseEventName, (event: MouseEvent) => {
-    if (event.button === 2 && event.target instanceof HTMLImageElement) {
+  $(document).on(mouseEventName, (mouseEvent: JQuery.TriggeredEvent) => {
+    if (mouseEvent.button === 2 && $(mouseEvent.target).is('img')) {
       isRightClick = true;
-      imgEl = event.target;
+      imgEl = mouseEvent.target as HTMLImageElement;
       if (haveImgContent()) {
         imageObject = new imageContainer(imgEl.src?.toString());
       } else {
@@ -102,11 +109,12 @@ export const addQContextMenuMain = async () => {
       }
     } else {
       isRightClick = false;
+      imgEl = null;
       imageObject = null;
     }
   });
   new MutationObserver(() => {
-    const qContextMenu = document.querySelector('.q-context-menu');
+    const qContextMenu = $('div.q-context-menu');
     if (qContextMenu && imageObject) {
       const currentImageObject = imageObject;
       addQContextMenu(qContextMenu, iconHtml, 'Image Search', async () => {
@@ -114,5 +122,5 @@ export const addQContextMenuMain = async () => {
         window.imageSearch.postAppImageSearchReq(fileBlobContent);
       });
     }
-  }).observe(bodyElement, { childList: true });
+  }).observe(bodyElement[0], { childList: true });
 };
