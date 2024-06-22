@@ -43,11 +43,11 @@ cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 
 > See [RoadMap](https://github.com/users/pk5ls20/projects/5) for more known issues and development roadmap.
 
-- The settings of this plugin need to restart QQ to take effect.
 
 ## Testing environment
 This plugin was developed and tested in the following environment:
-- Windows 11 + QQ >9.9.9-22920 + LiteLoaderQQNT 1.1.1
+- Windows 11 + QQ >9.9.9-22920 + LiteLoaderQQNT >1.1.1
+- Manjaro Linux + QQ >3.2.9-24568 + LiteLoaderQQNT >1.1.1
 
 
 ## Reference & Special Thanks

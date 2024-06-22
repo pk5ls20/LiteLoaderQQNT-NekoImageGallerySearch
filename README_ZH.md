@@ -42,11 +42,11 @@ cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 
 > 更多的已知问题以及开发路线图参见[RoadMap](https://github.com/users/pk5ls20/projects/5)
 
-- 本插件的设置需要重启QQ后才能生效
 
 ## 测试环境
 本插件在以下环境中开发并测试通过：
-- Windows 11 + QQ >9.9.9-22920 + LiteLoaderQQNT 1.1.1
+- Windows 11 + QQ >9.9.9-22920 + LiteLoaderQQNT >1.1.1
+- Manjaro Linux + QQ >3.2.9-24568 + LiteLoaderQQNT >1.1.1
 
 ## 参考及特别致谢
 
