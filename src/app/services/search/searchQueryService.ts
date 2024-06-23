@@ -1,10 +1,12 @@
+// reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Services/SearchQuery.ts
 import { SearchBasis } from '../../models/SearchBasis';
 import { SearchFilterOptions } from '../../models/SearchFilterOptions';
 import type { SearchApiResponse } from '../../models/SearchApiResponse';
+import type { Image } from '../../models/Image';
 import type { AdvancedSearchModel, CombinedSearchModel } from '../../models/AdvancedSearchModel';
 import { getClient } from './baseSearchService';
 
-export abstract class SearchQueryServices {
+export abstract class SearchQueryService {
   public filterOptions: SearchFilterOptions | null = null;
 
   abstract querySearch(count: number, skip: number): Promise<SearchApiResponse>;
@@ -14,7 +16,7 @@ export abstract class SearchQueryServices {
   }
 }
 
-export class TextSearchQuery extends SearchQueryServices {
+export class TextSearchQuery extends SearchQueryService {
   constructor(
     public query: string,
     public searchBasis: SearchBasis = SearchBasis.vision,
@@ -37,7 +39,7 @@ export class TextSearchQuery extends SearchQueryServices {
   }
 }
 
-export class ImageSearchQuery extends SearchQueryServices {
+export class ImageSearchQuery extends SearchQueryService {
   constructor(public image: Blob) {
     super();
   }
@@ -59,16 +61,16 @@ export class ImageSearchQuery extends SearchQueryServices {
   }
 }
 
-export class SimilarSearchQuery extends SearchQueryServices {
+export class SimilarSearchQuery extends SearchQueryService {
   constructor(
-    public id: string,
+    public img: Image,
     public searchBasis: SearchBasis = SearchBasis.vision
   ) {
     super();
   }
 
   async querySearch(count = 20, skip = 0): Promise<SearchApiResponse> {
-    const response = await getClient().get<SearchApiResponse>(`/search/similar/${encodeURIComponent(this.id)}`, {
+    const response = await getClient().get<SearchApiResponse>(`/search/similar/${encodeURIComponent(this.img.id)}`, {
       params: {
         count: count,
         skip: skip,
@@ -80,15 +82,21 @@ export class SimilarSearchQuery extends SearchQueryServices {
   }
 }
 
-export class RandomSearchQuery extends SearchQueryServices {
-  constructor() {
+export class RandomSearchQuery extends SearchQueryService {
+  public seed?: number;
+  constructor(reproducible = true) {
     super();
+    if (reproducible) {
+      this.seed = Math.floor(Math.random() * Math.pow(2, 31));
+    }
   }
 
-  async querySearch(count = 20): Promise<SearchApiResponse> {
+  async querySearch(count = 20, skip = 0): Promise<SearchApiResponse> {
     const response = await getClient().get<SearchApiResponse>(`/search/random`, {
       params: {
-        count: count,
+        seed: this.seed,
+        count,
+        skip,
         ...this.getFilterOptions()
       }
     });
@@ -96,7 +104,7 @@ export class RandomSearchQuery extends SearchQueryServices {
   }
 }
 
-export class AdvancedSearchQuery extends SearchQueryServices {
+export class AdvancedSearchQuery extends SearchQueryService {
   constructor(
     public searchModel: AdvancedSearchModel,
     public searchBasis: SearchBasis = SearchBasis.vision
@@ -117,7 +125,7 @@ export class AdvancedSearchQuery extends SearchQueryServices {
   }
 }
 
-export class CombinedSearchQuery extends SearchQueryServices {
+export class CombinedSearchQuery extends SearchQueryService {
   constructor(
     public searchModel: CombinedSearchModel,
     public searchBasis: SearchBasis = SearchBasis.vision

@@ -1,3 +1,4 @@
+// reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Models/Image.ts
 export interface Image {
   id: string;
   url: string;
@@ -8,4 +9,5 @@ export interface Image {
   height?: number;
   starred?: boolean;
   aspect_ratio?: number;
+  categories: string[];
 }

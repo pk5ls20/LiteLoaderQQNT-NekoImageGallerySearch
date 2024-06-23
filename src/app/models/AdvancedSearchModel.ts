@@ -1,3 +1,4 @@
+// reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Models/AdvancedSearchModel.ts
 export enum AdvancedSearchMode {
   average = 'average',
   best = 'best'

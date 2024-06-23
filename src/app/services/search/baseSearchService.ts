@@ -1,3 +1,4 @@
+// reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Services/Base.ts
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import { EnvAdapter } from '../../adapter/EnvAdapter';

@@ -10,7 +10,7 @@
       <ui-menu
         v-model="store.searchResultItemOpenStates[it.img.id]"
         :style="{ transform: 'scale(0.8)' }"
-        @selected="performSimilarSearch(it.img.id, fetchType.FIRST)"
+        @selected="performSimilarSearch(it.img, fetchType.FIRST)"
       >
         <ui-menuitem>
           <ui-menuitem-icon>
@@ -41,20 +41,21 @@
 <script setup lang="ts">
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import { fetchStatus, fetchType } from '../models/searchWindowEnum';
-import { SearchQueryServices, SimilarSearchQuery } from '../services/search/searchQueryServices';
+import { SearchQueryService, SimilarSearchQuery } from '../services/search/searchQueryService';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
 import { useSearchStore } from '../states/searchWindowState';
 import { getPreviewURL, getURL } from '../utils/getURL';
+import type { Image } from '../models/Image';
 
 const store = useSearchStore();
 
 const performLoadMoreSearch = async () => {
   // store.lastQueryEntry must not be null
-  await performQuerySearchService(store.lastQueryEntry as SearchQueryServices, fetchType.MORE);
+  await performQuerySearchService(store.lastQueryEntry as SearchQueryService, fetchType.MORE);
 };
 
-const performSimilarSearch = async (searchId: string, type: fetchType) => {
-  const query = new SimilarSearchQuery(searchId);
+const performSimilarSearch = async (searchImage: Image, type: fetchType) => {
+  const query = new SimilarSearchQuery(searchImage);
   await performQuerySearchService(query, type);
 };
 

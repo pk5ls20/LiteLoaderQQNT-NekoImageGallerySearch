@@ -52,7 +52,7 @@ import { SearchBasis } from '../models/SearchBasis';
 import { fetchType, promptType } from '../models/searchWindowEnum';
 import { AdvancedSearchMode } from '../models/AdvancedSearchModel';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
-import { AdvancedSearchQuery, CombinedSearchQuery } from '../services/search/searchQueryServices';
+import { AdvancedSearchQuery, CombinedSearchQuery } from '../services/search/searchQueryService';
 import { useSearchStore } from '../states/searchWindowState';
 
 const store = useSearchStore();

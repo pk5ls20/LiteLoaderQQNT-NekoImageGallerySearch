@@ -16,7 +16,7 @@
 import { SearchBasis } from '../models/SearchBasis';
 import { fetchType, searchType } from '../models/searchWindowEnum';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
-import { RandomSearchQuery, TextSearchQuery } from '../services/search/searchQueryServices';
+import { RandomSearchQuery, TextSearchQuery } from '../services/search/searchQueryService';
 import { useSearchStore } from '../states/searchWindowState';
 
 const store = useSearchStore();

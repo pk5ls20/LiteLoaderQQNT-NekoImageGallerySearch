@@ -1,10 +1,10 @@
 import type { SearchResult } from '../../models/SearchResult';
-import { SearchQueryServices } from './searchQueryServices';
+import { SearchQueryService } from './searchQueryService';
 import { fetchStatus, fetchType } from '../../models/searchWindowEnum';
 import { useSearchStore } from '../../states/searchWindowState';
 import { displayErrorDialog } from '../../utils/handleCatchError';
 
-export const performQuerySearchService = async (query: SearchQueryServices, type: fetchType) => {
+export const performQuerySearchService = async (query: SearchQueryService, type: fetchType) => {
   const store = useSearchStore();
   store.fetchingStatus = type === fetchType.FIRST ? fetchStatus.FIRST_FETCHING : fetchStatus.MORE_FETCHING;
   try {

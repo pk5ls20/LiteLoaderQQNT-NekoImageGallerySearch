@@ -3,13 +3,13 @@ import { SearchBasis } from '../models/SearchBasis';
 import { AdvancedSearchMode } from '../models/AdvancedSearchModel';
 import { pluginSettingsModel } from '../models/pluginSettingsModel';
 import { fetchStatus, promptType, searchType } from '../models/searchWindowEnum';
-import type { SearchQueryServices } from '../services/search/searchQueryServices';
+import type { SearchQueryService } from '../services/search/searchQueryService';
 import type { SearchResult } from '../models/SearchResult';
 
 export const useSearchStore = defineStore('search', {
   state: () => ({
     fetchingStatus: fetchStatus.NONE as fetchStatus,
-    lastQueryEntry: null as SearchQueryServices | null,
+    lastQueryEntry: null as SearchQueryService | null,
     isFetchError: false as boolean,
     fetchErrorMsg: '' as string,
     tabActiveItem: searchType.TEXT as searchType,

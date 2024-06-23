@@ -1,3 +1,4 @@
+// reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Models/HomeApiResponse.ts
 import type { NekoProtocol } from './ApiResponse';
 
 export interface HomeAuthorizationResponse {

@@ -22,7 +22,7 @@
 import { onMounted } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import { searchType } from '../models/searchWindowEnum';
-import { ImageSearchQuery } from '../services/search/searchQueryServices';
+import { ImageSearchQuery } from '../services/search/searchQueryService';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
 import { useSearchStore } from '../states/searchWindowState';
 import { displayErrorDialog } from '../utils/handleCatchError';
