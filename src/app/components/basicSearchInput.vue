@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { SearchBasis } from '../models/SearchBasis';
-import { fetchType, searchType } from '../models/searchWindowEnum';
+import { SearchBasis } from '../models/search/SearchBasis';
+import { fetchType, searchType } from '../models/search/SearchWindowEnum';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
 import { RandomSearchQuery, TextSearchQuery } from '../services/search/searchQueryService';
 import { useSearchStore } from '../states/searchWindowState';

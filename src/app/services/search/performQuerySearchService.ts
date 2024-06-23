@@ -1,6 +1,6 @@
-import type { SearchResult } from '../../models/SearchResult';
+import type { SearchResult } from '../../models/search/SearchResult';
 import { SearchQueryService } from './searchQueryService';
-import { fetchStatus, fetchType } from '../../models/searchWindowEnum';
+import { fetchStatus, fetchType } from '../../models/search/SearchWindowEnum';
 import { useSearchStore } from '../../states/searchWindowState';
 import { displayErrorDialog } from '../../utils/handleCatchError';
 

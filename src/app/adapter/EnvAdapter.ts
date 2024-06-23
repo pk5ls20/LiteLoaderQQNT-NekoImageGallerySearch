@@ -1,5 +1,5 @@
 import { isDevEnv } from '../utils/envFlag';
-import { pluginSettingsModel } from '../models/pluginSettingsModel';
+import { pluginSettingsModel } from '../models/search/PluginSettingsModel';
 import { devPluginSettingsService, LLNTPluginSettingsService } from '../services/bridge/pluginSettingsService';
 import { devAddNTQQEditorService, LLNTAddNTQQEditorService } from '../services/bridge/addNTQQEditorService';
 import { devAdjustVisibleService, LLNTAdjustVisibleService } from '../services/bridge/adjustVisibleService';
@@ -8,10 +8,11 @@ import {
   LLNTTriggerImageSearchService
 } from '../services/bridge/triggerImageSearchService';
 import { devLogService, LLNTLogService } from '../services/bridge/logService';
-import { devTriggerSettingService, LLNTTriggerSettingService } from '../services/bridge/triggerSetting';
+import { devTriggerSettingService, LLNTTriggerSettingService } from '../services/bridge/triggerSettingService';
+import { NTQQEditorMsg } from '../services/editor/editorMsgService';
 
 export class EnvAdapter {
-  static addNTQQEditor(message: { src: string; picSubType: number }): void {
+  static addNTQQEditor(message: NTQQEditorMsg[]): void {
     const service = isDevEnv ? new devAddNTQQEditorService() : new LLNTAddNTQQEditorService();
     return service.set(message);
   }
@@ -30,7 +31,7 @@ export class EnvAdapter {
     return isDevEnv ? new devTriggerImageSearchService() : new LLNTTriggerImageSearchService();
   }
 
-  static triggerSettingService(): any {
+  static triggerSettingService(): devTriggerSettingService | LLNTTriggerSettingService {
     return isDevEnv ? new devTriggerSettingService() : new LLNTTriggerSettingService();
   }
 

@@ -49,7 +49,7 @@
 <script lang="ts" setup>
 import { onMounted, watch } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import { fetchStatus, searchType, serverStatus, tabItem } from '../models/searchWindowEnum';
+import { fetchStatus, searchType, serverStatus, tabItem } from '../models/search/SearchWindowEnum';
 import { resetClient } from '../services/search/baseSearchService';
 import { useSearchStore } from '../states/searchWindowState';
 import BasicSearchInputComponents from '../components/basicSearchInput.vue';

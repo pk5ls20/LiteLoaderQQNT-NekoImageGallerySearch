@@ -1,5 +1,5 @@
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import { fetchStatus } from '../models/searchWindowEnum';
+import { fetchStatus } from '../models/search/SearchWindowEnum';
 import { useSearchStore } from '../states/searchWindowState';
 
 export const handleCatchError = (e: any) => {

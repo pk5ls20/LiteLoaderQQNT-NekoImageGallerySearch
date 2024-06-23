@@ -1,5 +1,5 @@
 /// <reference types="../../../global.d.ts" />
-import { pluginSettingsModel } from '../../models/pluginSettingsModel';
+import { pluginSettingsModel } from '../../models/search/PluginSettingsModel';
 import { devEnvWrap } from '../../utils/envFlag';
 
 interface pluginSettingsService {

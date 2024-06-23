@@ -4,7 +4,7 @@
       <img
         :alt="it.img.ocr_text"
         :src="getPreviewURL(it.img)"
-        @click="handleImageClick(it.img.url, it.img.id)"
+        @click="handleImageClick(it.img, it.img.id)"
         @contextmenu.prevent="handleImageRightClick(it.img.id)"
       />
       <ui-menu
@@ -40,12 +40,13 @@
 </template>
 <script setup lang="ts">
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import { fetchStatus, fetchType } from '../models/searchWindowEnum';
+import type { Image } from '../models/search/Image';
+import { fetchStatus, fetchType } from '../models/search/SearchWindowEnum';
 import { SearchQueryService, SimilarSearchQuery } from '../services/search/searchQueryService';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
 import { useSearchStore } from '../states/searchWindowState';
-import { getPreviewURL, getURL } from '../utils/getURL';
-import type { Image } from '../models/Image';
+import { getPreviewURL } from '../utils/getURL';
+import { EditorImageMsg, NTQQEditorImageMsg } from '../services/editor/editorMsgService';
 
 const store = useSearchStore();
 
@@ -59,11 +60,12 @@ const performSimilarSearch = async (searchImage: Image, type: fetchType) => {
   await performQuerySearchService(query, type);
 };
 
-const handleImageClick = async (url: string, id: string) => {
-  const msg = { src: getURL(url), picSubType: 0 }; // TODO: let user choose picSubType
-  EnvAdapter.log('Adding editor', JSON.stringify(msg));
+const handleImageClick = async (img: Image, id: string) => {
+  const editorImg = new EditorImageMsg(img, 0); // TODO: let user choose picSubType
+  const editorMsg = new NTQQEditorImageMsg(editorImg);
+  EnvAdapter.log('Adding editor', JSON.stringify(editorMsg));
   EnvAdapter.log(`Image ID: ${id}`);
-  EnvAdapter.addNTQQEditor(msg);
+  EnvAdapter.addNTQQEditor([editorMsg]);
   await EnvAdapter.adjustVisible(false);
 };
 

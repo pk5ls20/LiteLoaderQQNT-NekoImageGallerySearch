@@ -9,7 +9,7 @@ interface TriggerSettingService {
 
 export class devTriggerSettingService implements TriggerSettingService {
   init(callback: (setting: string | null) => Promise<void>): void {
-    console.log('devTriggerSettingService init');
+    console.log('devTriggerSettingService init with callback', callback);
   }
 
   reset(): void {

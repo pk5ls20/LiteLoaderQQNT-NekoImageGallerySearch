@@ -2,7 +2,7 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
-import { pluginSettingsModel } from '../../models/pluginSettingsModel';
+import { pluginSettingsModel } from '../../models/search/PluginSettingsModel';
 
 let apiClient: AxiosInstance | null;
 let pluginSettingData: pluginSettingsModel | null = new pluginSettingsModel('', '', '');

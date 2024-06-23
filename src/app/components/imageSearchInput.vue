@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import { searchType } from '../models/searchWindowEnum';
+import { searchType } from '../models/search/SearchWindowEnum';
 import { ImageSearchQuery } from '../services/search/searchQueryService';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
 import { useSearchStore } from '../states/searchWindowState';

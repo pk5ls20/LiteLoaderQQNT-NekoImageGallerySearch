@@ -20,6 +20,7 @@
     "vue": "^3.3.11"
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "@rushstack/eslint-patch": "^1.10.2",
     "@tsconfig/node20": "^20.1.4",
     "@vitejs/plugin-vue": "^5.0.4",

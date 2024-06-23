@@ -48,9 +48,9 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import { SearchBasis } from '../models/SearchBasis';
-import { fetchType, promptType } from '../models/searchWindowEnum';
-import { AdvancedSearchMode } from '../models/AdvancedSearchModel';
+import { SearchBasis } from '../models/search/SearchBasis';
+import { fetchType, promptType } from '../models/search/SearchWindowEnum';
+import { AdvancedSearchMode } from '../models/search/AdvancedSearchModel';
 import { performQuerySearchService } from '../services/search/performQuerySearchService';
 import { AdvancedSearchQuery, CombinedSearchQuery } from '../services/search/searchQueryService';
 import { useSearchStore } from '../states/searchWindowState';

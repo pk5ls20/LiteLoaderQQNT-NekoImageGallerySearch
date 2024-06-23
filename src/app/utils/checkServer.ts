@@ -1,6 +1,6 @@
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import { getClient } from '../services/search/baseSearchService';
-import { serverStatus } from '../models/searchWindowEnum';
+import { serverStatus } from '../models/search/SearchWindowEnum';
 import { handleCatchError } from './handleCatchError';
 
 type CheckServerResult = {

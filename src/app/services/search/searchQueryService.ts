@@ -1,9 +1,9 @@
 // reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Services/SearchQuery.ts
-import { SearchBasis } from '../../models/SearchBasis';
-import { SearchFilterOptions } from '../../models/SearchFilterOptions';
-import type { SearchApiResponse } from '../../models/SearchApiResponse';
-import type { Image } from '../../models/Image';
-import type { AdvancedSearchModel, CombinedSearchModel } from '../../models/AdvancedSearchModel';
+import { SearchBasis } from '../../models/search/SearchBasis';
+import { SearchFilterOptions } from '../../models/search/SearchFilterOptions';
+import type { SearchApiResponse } from '../../models/search/SearchApiResponse';
+import type { Image } from '../../models/search/Image';
+import type { AdvancedSearchModel, CombinedSearchModel } from '../../models/search/AdvancedSearchModel';
 import { getClient } from './baseSearchService';
 
 export abstract class SearchQueryService {
