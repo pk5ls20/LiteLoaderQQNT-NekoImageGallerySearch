@@ -9,6 +9,7 @@
         {{ tab.text }}
       </ui-tab>
     </ui-tab-bar>
+    <!--    <div class="bg-red-500 p-4 text-white">If you can see this text with a red background, Tailwind is working!</div>-->
     <div class="q-dialog-all" @click="handleDialogClick">
       <div v-show="isBasicSearch()" class="q-dialog-basic">
         <basic-search-input-components />

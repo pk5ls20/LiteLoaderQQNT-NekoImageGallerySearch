@@ -57,7 +57,8 @@ const config = {
       },
       rollupOptions: {
         input: 'src/renderer/renderer.ts'
-      }
+      },
+      cssCodeSplit: false
     },
     plugins: [
       cp({

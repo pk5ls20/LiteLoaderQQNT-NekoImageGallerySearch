@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: 'HarmonyOS Sans SC';
   src: url('assets/HarmonyOS_Sans_SC_Medium.subset.woff2') format('woff2');
