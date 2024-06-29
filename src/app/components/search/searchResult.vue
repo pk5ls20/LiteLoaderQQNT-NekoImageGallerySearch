@@ -16,14 +16,20 @@
           <ui-menuitem-icon>
             <ui-icon>search</ui-icon>
           </ui-menuitem-icon>
-          <ui-menuitem-text :style="{ transform: 'translateX(-20px)' }"> Similar Search </ui-menuitem-text>
+          <ui-menuitem-text :style="{ transform: 'translateX(-20px)' }">
+            {{ $t('search.searchResult.similarSearchLabel') }}
+          </ui-menuitem-text>
         </ui-menuitem>
         <ui-menuitem-divider />
         <ui-menuitem disabled>
-          <ui-menuitem-text> Score: {{ `${(it.score * 100).toFixed(2).toString()}%` }} </ui-menuitem-text>
+          <ui-menuitem-text>
+            {{ $t('search.searchResult.scoreLabel', [(it.score * 100).toFixed(2).toString()]) }}
+          </ui-menuitem-text>
         </ui-menuitem>
         <ui-menuitem disabled>
-          <ui-menuitem-text> Size: {{ `${it.img.width} x ${it.img.height}` }} </ui-menuitem-text>
+          <ui-menuitem-text>
+            {{ $t('search.searchResult.sizeLabel', [it.img.width, it.img.height]) }}
+          </ui-menuitem-text>
         </ui-menuitem>
       </ui-menu>
     </ui-menu-anchor>
@@ -33,7 +39,8 @@
       v-if="store.fetchingStatus === fetchStatus.FIRST_SUCCESS || store.fetchingStatus === fetchStatus.MORE_SUCCESS"
       class="q-search-load-more-button"
       @click="performLoadMoreSearch"
-      >LOAD MORE
+    >
+      {{ $t('search.searchResult.loadMoreLabel') }}
     </ui-button>
     <ui-spinner v-if="store.fetchingStatus === fetchStatus.MORE_FETCHING" active></ui-spinner>
   </div>

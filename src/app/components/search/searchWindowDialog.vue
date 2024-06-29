@@ -1,6 +1,8 @@
 <template>
   <ui-dialog v-model="store.isStatusDialogOpen" class="q-status-dialog">
-    <ui-dialog-title> Server Status</ui-dialog-title>
+    <ui-dialog-title>
+      {{ $t('search.searchWindowDialog.statusDialogTitle') }}
+    </ui-dialog-title>
     <ui-dialog-content v-if="store.pluginSettingData">
       {{ store.serverStatusMsg }}
     </ui-dialog-content>
@@ -9,7 +11,9 @@
     </ui-dialog-actions>
   </ui-dialog>
   <ui-dialog v-model="store.isFetchError" class="q-status-dialog">
-    <ui-dialog-title> 🤯Failed to fetch</ui-dialog-title>
+    <ui-dialog-title>
+      {{ $t('search.searchWindowDialog.fetchErrorDialogTitle') }}
+    </ui-dialog-title>
     <ui-dialog-content>
       {{ store.fetchErrorMsg }}
     </ui-dialog-content>
@@ -21,6 +25,5 @@
 
 <script lang="ts" setup>
 import { useSearchStore } from '../../states/searchWindowState';
-
 const store = useSearchStore();
 </script>

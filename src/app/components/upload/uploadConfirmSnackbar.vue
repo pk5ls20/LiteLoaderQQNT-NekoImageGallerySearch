@@ -1,9 +1,11 @@
 <template>
   <ui-snackbar v-model="uploadStore.uploadEndDialogOpen">
     {{
-      `Upload completed! finish ${uploadStore.finishedTasksCount} tasks,
-        which ${uploadStore.duplicateTasksCount} duplicate
-        and ${uploadStore.errorTasksCount} errors!`
+      $t('upload.uploadConfirmSnackbar.snackbarContent', [
+        uploadStore.finishedTasksCount,
+        uploadStore.duplicateTasksCount,
+        uploadStore.errorTasksCount
+      ])
     }}
   </ui-snackbar>
 </template>

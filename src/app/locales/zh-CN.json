@@ -1,0 +1,69 @@
+{
+  "search": {
+    "searchWindow": {
+      "serverConnectedStatusMessage": "",
+      "serverUnauthorizedStatusMessage": "",
+      "serverDisconnectedStatusMessage": ""
+    },
+    "basicSearchInput": {
+      "inputPlaceholder": ""
+    },
+    "imageSearchInput": {
+      "inputTip": "",
+      "uploadImageCountMoreThanOneTip": "",
+      "uploadImageCallbackErrorTip": ""
+    },
+    "advanceSearchInput": {
+      "promptTitle": "",
+      "modeSelectLabel": "",
+      "promptInputNoSelectedLabel": "",
+      "promptInputSelectedLabel": "",
+      "searchButtonLabel": ""
+    },
+    "filterDialog": {
+      "title": "",
+      "aspectRatioLabel": "",
+      "preferredAspectRatioLabel": "",
+      "ratioToleranceLabel": "",
+      "minSizeLabel": "",
+      "minWidthLabel": "",
+      "minHeightLabel": "",
+      "starredOnlyLabel": "",
+      "categoriesLabel": "",
+      "negativeCategoriesLabel": "",
+      "separateByCommaLabel": ""
+    },
+    "searchResult": {
+      "similarSearchLabel": "",
+      "scoreLabel": "",
+      "sizeLabel": "",
+      "loadMoreLabel": ""
+    },
+    "searchWindowDialog": {
+      "statusDialogTitle": "",
+      "fetchErrorDialogTitle": ""
+    }
+  },
+  "upload": {
+    "uploadWindow": {
+      "windowTitleUploadTip": "",
+      "windowTitleNotUploadTip": "",
+      "uploadButtonTitle": "",
+      "addFile": "",
+      "addFolder": "",
+      "likeTitle": "",
+      "disLikeTitle": "",
+      "skipOcrTitle": "",
+      "disSkipOcrTitle": "",
+      "categoriesDialogTitle": "",
+      "categoriesDialogContent": "",
+      "uncategorizedTip": "",
+      "noUploadTaskTip": "",
+      "errorDialogTitle": "",
+      "errorDialogNoFileContent": ""
+    },
+    "uploadConfirmSnackbar": {
+      "snackbarContent": ""
+    }
+  }
+}

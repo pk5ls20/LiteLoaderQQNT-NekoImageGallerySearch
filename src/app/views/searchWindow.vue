@@ -56,6 +56,7 @@
 
 <script lang="ts" setup>
 import { onMounted, watch, defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import SearchWindowDialog from '../components/search/searchWindowDialog.vue';
 import FilterDialog from '../components/search/filterDialog.vue';
@@ -70,10 +71,7 @@ import StatusBarComponents from '../components/search/statusBar.vue';
 import { checkServer } from '../utils/checkServer';
 import { sha256 } from '../utils/sha256';
 
-defineComponent({
-  name: 'searchWindow'
-});
-
+const { t } = useI18n();
 const store = useSearchStore();
 
 const isBasicSearch = () => searchType.TEXT <= store.tabActiveItem && store.tabActiveItem <= searchType.OCR;
@@ -125,15 +123,15 @@ const handleSettingChange = async (setting_data: string | null) => {
   store.serverStatusMsg = checkStatusResult.message;
   switch (store.serverStatus) {
     case serverStatus.CONNECTED:
-      store.serverStatusMessage = 'Server Connected';
+      store.serverStatusMessage = t('search.searchWindow.serverConnectedStatusMessage');
       store.serverStatusColor = 'green';
       break;
     case serverStatus.UNAUTHORIZED:
-      store.serverStatusMessage = 'Server Unauthorized';
+      store.serverStatusMessage = t('search.searchWindow.serverUnauthorizedStatusMessage');
       store.serverStatusColor = 'red';
       break;
     case serverStatus.DISCONNECTED:
-      store.serverStatusMessage = 'Server Disconnected';
+      store.serverStatusMessage = t('search.searchWindow.serverDisconnectedStatusMessage');
       store.serverStatusColor = 'grey';
       break;
   }
@@ -144,6 +142,10 @@ onMounted(async () => {
   EnvAdapter.log('Search Window Mounted');
   await handleSettingChange(null);
   EnvAdapter.triggerSettingService().init(handleSettingChange);
+});
+
+defineComponent({
+  name: 'searchWindow'
 });
 </script>
 

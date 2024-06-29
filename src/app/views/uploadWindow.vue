@@ -7,8 +7,8 @@
         <span class="upload-text">
           {{
             uploadStore.isUploading
-              ? `${(uploadStore.uploadProgress * 100).toFixed(0)}% Uploading (${uploadStore.finishedTasksCount} / ${uploadStore.totalTasksCount})`
-              : 'Upload New Images'
+              ? `${(uploadStore.uploadProgress * 100).toFixed(0)}% ${$t('upload.uploadWindow.windowTitleUploadTip')} (${uploadStore.finishedTasksCount} / ${uploadStore.totalTasksCount})`
+              : $t('upload.uploadWindow.windowTitleNotUploadTip')
           }}
         </span>
       </div>
@@ -19,20 +19,24 @@
           icon="upload"
           @click="startUpload"
         >
-          Upload
+          {{ $t('upload.uploadWindow.uploadButtonTitle') }}
         </ui-button>
       </div>
     </div>
     <div class="q-dialog-upload-select">
       <div class="q-dialog-upload-select-left">
-        <ui-button class="q-dialog-upload-select-add" raised @click="handleUploadFile">Add File</ui-button>
-        <ui-button class="q-dialog-upload-select-add2" raised @click="handleUploadFolder">Add Folder</ui-button>
+        <ui-button class="q-dialog-upload-select-add" raised @click="handleUploadFile">
+          {{ $t('upload.uploadWindow.addFile') }}
+        </ui-button>
+        <ui-button class="q-dialog-upload-select-add2" raised @click="handleUploadFolder">
+          {{ $t('upload.uploadWindow.addFolder') }}
+        </ui-button>
       </div>
       <div class="q-dialog-upload-select-right">
         <complex-button
           v-if="uploadStore.globalLikeSwitch"
           :disabled="!uploadStore.queue.some((e) => e.selected)"
-          :title="LikeTitle"
+          :title="$t('upload.uploadWindow.likeTitle')"
           icon="image"
           secondIcon="favorite"
           @click="uploadStore.queue.forEach((e) => (e.selected ? (e.starred = true) : e.starred))"
@@ -42,7 +46,7 @@
         <complex-button
           v-if="!uploadStore.globalLikeSwitch"
           :disabled="!uploadStore.queue.some((e) => e.selected)"
-          :title="DisLikeTitle"
+          :title="$t('upload.uploadWindow.disLikeTitle')"
           icon="image"
           secondIcon="favorite_border"
           @click="uploadStore.queue.forEach((e) => (e.selected ? (e.starred = false) : e.starred))"
@@ -52,7 +56,7 @@
         <complex-button
           v-if="uploadStore.globalSkipOcrSwitch"
           :disabled="!uploadStore.queue.some((e) => e.selected)"
-          :title="SkipOcrTitle"
+          :title="$t('upload.uploadWindow.skipOcrTitle')"
           icon="image"
           secondIcon="font_download"
           @click="uploadStore.queue.forEach((e) => (e.selected ? (e.skipOcr = false) : e.skipOcr))"
@@ -61,7 +65,7 @@
         <complex-button
           v-if="!uploadStore.globalSkipOcrSwitch"
           :disabled="!uploadStore.queue.some((e) => e.selected)"
-          :title="DisSkipOcrTitle"
+          :title="$t('upload.uploadWindow.notSkipOcrTitle')"
           icon="image"
           secondIcon="font_download_off"
           @click="uploadStore.queue.forEach((e) => (e.selected ? (e.skipOcr = true) : e.skipOcr))"
@@ -81,9 +85,11 @@
             )
           "
         >
-          <ui-dialog-title>Enter Categories of selection</ui-dialog-title>
+          <ui-dialog-title>{{ $t('upload.uploadWindow.categoriesDialogTitle') }}</ui-dialog-title>
           <ui-dialog-content>
-            <ui-textfield v-model="uploadStore.categoriesDialogContent"> Categories</ui-textfield>
+            <ui-textfield v-model="uploadStore.categoriesDialogContent">
+              {{ $t('upload.uploadWindow.categoriesDialogContent') }}
+            </ui-textfield>
           </ui-dialog-content>
           <ui-dialog-actions></ui-dialog-actions>
         </ui-dialog>
@@ -121,7 +127,7 @@
             <ui-item-text-content>
               <ui-item-text1>{{ item.file.name }}</ui-item-text1>
               <ui-item-text2>
-                {{ item.categories === '' ? 'Uncategorized' : '#' + item.categories }}
+                {{ item.categories === '' ? $t('upload.uploadWindow.uncategorizedTip') : '#' + item.categories }}
               </ui-item-text2>
             </ui-item-text-content>
             <ui-item-last-content>{{ humanReadableBytes(item.file.size) }}</ui-item-last-content>
@@ -146,10 +152,10 @@
       </RecycleScroller>
     </ui-list>
     <div v-if="!uploadStore.queue.length" v-ripple class="q-dialog-upload-list-none">
-      There are currently no upload tasks...
+      {{ $t('upload.uploadWindow.noUploadTaskTip') }}
     </div>
-    <ui-dialog v-model="uploadStore.errorDialogOpen" fullscreen>
-      <ui-dialog-title>🤯Error</ui-dialog-title>
+    <ui-dialog v-model="uploadStore.errorDialogOpen">
+      <ui-dialog-title>🤯{{ $t('upload.uploadWindow.errorDialogTitle') }}</ui-dialog-title>
       <ui-dialog-content> {{ uploadStore.errorDialogContent }}</ui-dialog-content>
       <ui-dialog-actions>
         <ui-button @click="uploadStore.errorDialogOpen = false">OK</ui-button>
@@ -159,6 +165,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
 import { defineComponent } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import SearchWindow from '../views/searchWindow.vue';
@@ -172,11 +179,7 @@ import { handleCatchError } from '../utils/handleCatchError';
 
 const mainWindowStore = useMainStore();
 const uploadStore = useUploadStore();
-
-const LikeTitle = 'Right-click me to switch dislike!';
-const DisLikeTitle = 'Right-click me to switch like!';
-const SkipOcrTitle = 'Right-click me to switch skip OCR!';
-const DisSkipOcrTitle = 'Right-click me to switch not skip OCR!';
+const { t } = useI18n();
 
 const changeComponent = () => {
   mainWindowStore.mainWindowShowMark = false;
@@ -223,7 +226,7 @@ const startUpload = () => {
     .map((t) => ({ ...t, status: UploadTaskStatus.Pending }));
   if (queue.length === 0) {
     uploadStore.isUploading = false;
-    uploadStore.errorDialogContent = '=w= Please select the file to upload!';
+    uploadStore.errorDialogContent = t('upload.uploadWindow.errorDialogNoFileContent');
     uploadStore.errorDialogOpen = true;
     return;
   }

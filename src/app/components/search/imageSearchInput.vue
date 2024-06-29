@@ -1,7 +1,7 @@
 <template>
   <div v-ripple class="q-dialog-image-input" @click="handleUploadImageQuery">
     <div v-if="store.queryImageInput === null" class="q-dialog-image-input-tip">
-      Click here to upload an image from your local device for image search...
+      {{ $t('search.imageSearchInput.inputTip') }}
     </div>
     <img v-if="store.queryImageInput !== null" :src="store.queryImageInput" class="q-dialog-image-input-image" />
     <ui-icon-button
@@ -25,6 +25,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
 import { onMounted } from 'vue';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { searchType } from '../../models/search/SearchWindowEnum';
@@ -34,13 +35,14 @@ import { useSearchStore } from '../../states/searchWindowState';
 import { displayErrorDialog } from '../../utils/handleCatchError';
 
 const store = useSearchStore();
+const { t } = useI18n();
 
 const handleUploadImageQuery = async () => {
   const imgList = await EnvAdapter.UploadAddFileService().selectFiles(false);
   // because it is not available to choose more, in theory, the IMG array should have only one element
   // but just check it =w=
   if (imgList.length > 1) {
-    displayErrorDialog('Please select only one image!');
+    displayErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
     return;
   }
   store.queryImageInput = URL.createObjectURL(imgList[0]);
@@ -57,7 +59,7 @@ const postAppImageSearchResCallBack = async (file_content: Buffer | null) => {
     const req = new ImageSearchQuery(blob);
     await performQuerySearchService(req, 0);
   } else {
-    displayErrorDialog('Error Fetching Local Picture!');
+    displayErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
   }
 };
 

@@ -1,6 +1,8 @@
 <template>
   <div class="q-dialog-advance-set">
-    <div class="q-dialog-advance-set-tip">Prompt</div>
+    <div class="q-dialog-advance-set-tip">
+      {{ $t('search.advanceSearchInput.promptTitle') }}
+    </div>
     <div class="q-dialog-advance-set-select">
       <ui-chips
         v-model="store.queryAdvanceChipsSelectVal"
@@ -14,7 +16,8 @@
         class="q-dialog-advance-set-select-mode"
         outlined
         @click.stop="handleClickStop"
-        >Mode
+      >
+        {{ $t('search.advanceSearchInput.modeSelectLabel') }}
       </ui-select>
     </div>
   </div>
@@ -26,8 +29,8 @@
       :disabled="store.queryAdvanceChipsSelectVal === ''"
       :label="
         store.queryAdvanceChipsSelectVal === ''
-          ? 'Please Select at least one prompt!'
-          : `Enter ${store.queryAdvanceChipsSelectVal} prompt...`
+          ? $t('search.advanceSearchInput.promptInputNoSelectedLabel')
+          : $t('search.advanceSearchInput.promptInputSelectedLabel', [store.queryAdvanceChipsSelectVal])
       "
       class="q-dialog-advance-input-text"
       outlined
@@ -44,7 +47,8 @@
       class="q-dialog-advance-input-search-button"
       raised
       @click="performAdvanceSearch(fetchType.FIRST)"
-      >GO🔍
+    >
+      {{ $t('search.advanceSearchInput.searchButtonLabel') }}
     </ui-button>
     <ui-icon-button class="q-dialog-advance-input-clear-button" icon="delete" @click="clearPrompt"> </ui-icon-button>
   </div>

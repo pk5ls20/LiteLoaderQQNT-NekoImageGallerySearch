@@ -1,0 +1,69 @@
+{
+  "search": {
+    "searchWindow": {
+      "serverConnectedStatusMessage": "Server connected",
+      "serverUnauthorizedStatusMessage": "Server unauthorized",
+      "serverDisconnectedStatusMessage": "Server disconnected"
+    },
+    "basicSearchInput": {
+      "inputPlaceholder": "Search..."
+    },
+    "imageSearchInput": {
+      "inputTip": "Click here to upload an image from your local device for image search...",
+      "uploadImageCountMoreThanOneTip": "Please select only one image!",
+      "uploadImageCallbackErrorTip": "Error Fetching Local Picture!"
+    },
+    "advanceSearchInput": {
+      "promptTitle": "Prompt",
+      "modeSelectLabel": "Mode",
+      "promptInputNoSelectedLabel": "Please Select at least one prompt!",
+      "promptInputSelectedLabel": "Enter {0} prompt...",
+      "searchButtonLabel": "GO\uD83D\uDD0D"
+    },
+    "filterDialog": {
+      "title": "Filter Options",
+      "aspectRatioLabel": "Aspect Ratio",
+      "preferredAspectRatioLabel": "Preferred Aspect Ratio",
+      "ratioToleranceLabel": "Ratio tolerance",
+      "minSizeLabel": "Min Size",
+      "minWidthLabel": "Min Width",
+      "minHeightLabel": "Min Height",
+      "starredOnlyLabel": "Starred Only",
+      "categoriesLabel": "Categories",
+      "negativeCategoriesLabel": "Negative Categories",
+      "separateByCommaLabel": "Separate by comma"
+    },
+    "searchResult": {
+      "similarSearchLabel": "Similar Search",
+      "scoreLabel": "Score: {0}%",
+      "sizeLabel": "Size: {0}x{1}",
+      "loadMoreLabel": "Load More"
+    },
+    "searchWindowDialog": {
+      "statusDialogTitle": " Server Status",
+      "fetchErrorDialogTitle": " \uD83E\uDD2FFailed to fetch"
+    }
+  },
+  "upload": {
+    "uploadWindow": {
+      "windowTitleUploadTip": "Uploading",
+      "windowTitleNotUploadTip": "Upload New Images",
+      "uploadButtonTitle": "Upload",
+      "addFile": "Add File",
+      "addFolder": "Add Folder",
+      "likeTitle": "Right-click me to switch dislike!",
+      "disLikeTitle": "Right-click me to switch like!",
+      "skipOcrTitle": "Right-click me to switch skip OCR!",
+      "disSkipOcrTitle": "Right-click me to switch not skip OCR!",
+      "categoriesDialogTitle": "Enter Categories of selection",
+      "categoriesDialogContent": " Categories",
+      "uncategorizedTip": "Uncategorized",
+      "noUploadTaskTip": "There are currently no upload tasks...",
+      "errorDialogTitle": "Error",
+      "errorDialogNoFileContent": "=w= Please select the file to upload!"
+    },
+    "uploadConfirmSnackbar": {
+      "snackbarContent": "Upload completed! finish {0} tasks, which {1} duplicate and {2} errors!"
+    }
+  }
+}

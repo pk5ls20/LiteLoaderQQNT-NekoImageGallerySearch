@@ -6,7 +6,7 @@
     outlined
     @keyup.enter="performBasicSearch(fetchType.FIRST)"
   >
-    Search...
+    {{ $t('search.basicSearchInput.inputPlaceholder') }}
     <template #after>
       <ui-textfield-icon @click="store.isFilterOptionsDialogOpen = true">
         {{ store.isEnableFilterOptions ? 'filter_alt' : 'filter_alt_off' }}
