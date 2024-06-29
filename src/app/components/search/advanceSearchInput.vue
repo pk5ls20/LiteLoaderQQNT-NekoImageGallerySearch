@@ -33,6 +33,11 @@
       outlined
       @keyup.enter="performAdvanceSearch(fetchType.FIRST)"
     >
+      <template #after>
+        <ui-textfield-icon @click="store.isFilterOptionsDialogOpen = true">
+          {{ store.isEnableFilterOptions ? 'filter_alt' : 'filter_alt_off' }}
+        </ui-textfield-icon>
+      </template>
     </ui-textfield>
     <ui-button
       :class="{ active: store.isQueryAdvanceModeClicked }"
@@ -47,16 +52,17 @@
 
 <script lang="ts" setup>
 import { watch } from 'vue';
-import { EnvAdapter } from '../adapter/EnvAdapter';
-import { SearchBasis } from '../models/search/SearchBasis';
-import { fetchType, promptType } from '../models/search/SearchWindowEnum';
-import { AdvancedSearchMode } from '../models/search/AdvancedSearchModel';
-import { performQuerySearchService } from '../services/search/performQuerySearchService';
-import { AdvancedSearchQuery, CombinedSearchQuery } from '../services/search/searchQueryService';
-import { useSearchStore } from '../states/searchWindowState';
+import { EnvAdapter } from '../../adapter/EnvAdapter';
+import { SearchBasis } from '../../models/search/SearchBasis';
+import { fetchType, promptType } from '../../models/search/SearchWindowEnum';
+import { AdvancedSearchMode } from '../../models/search/AdvancedSearchModel';
+import { performQuerySearchService } from '../../services/search/performQuerySearchService';
+import { AdvancedSearchQuery, CombinedSearchQuery } from '../../services/search/searchQueryService';
+import { useSearchStore } from '../../states/searchWindowState';
 
 const store = useSearchStore();
 
+// TODO: move this in store
 // perform chips render in tab 'advanced'
 watch(
   () => store.queryAdvanceChipsSelectVal,
@@ -176,16 +182,15 @@ const performAdvanceSearch = async (type: fetchType) => {
 .q-dialog-advance-input-text {
   padding: 8px;
   margin-right: 1em;
-  width: calc(70% - 35px);
+  width: calc(70% - 15px);
 }
 
 .q-dialog-advance-input-search-button {
   padding: 8px;
   height: 50px;
-  width: 150px;
+  width: 110px;
   cursor: pointer;
   margin-right: 1em;
-  transform: translateX(-8px);
 }
 
 .q-dialog-advance-input-search-button.active {

@@ -1,4 +1,4 @@
-import { log } from '../common/logs';
+import { log } from '../common/share/logs';
 
 export const iframeMaskClassName = 'nekoimage_mask';
 export const iframePreShowClassName = 'nekoimage_iframe_pre_show';

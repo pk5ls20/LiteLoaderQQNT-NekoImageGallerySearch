@@ -1,4 +1,4 @@
-import { log } from '../common/logs';
+import { log } from '../common/share/logs';
 import AppEntry from '../app/appEntry';
 import {
   controlIframe,
@@ -14,7 +14,6 @@ const iframeMaxWidth = 700;
 const iframeMaxHeight = 650;
 const mountID = 'nekoImagePluginView';
 const iframeClassName = 'nekoimage_iframe';
-const isDarkMode = () => document.body.getAttribute('q-theme') === 'dark';
 const adjustIframe = (iframe: any) => {
   const appDiv = document.getElementById('app');
   if (!appDiv) {
@@ -44,34 +43,22 @@ export const setupIframe = () => {
       innerGlobalCSSLink.rel = 'stylesheet';
       innerGlobalCSSLink.href = `local:///${LiteLoader.plugins['image_search'].path.plugin}/renderer/style.css`;
       iframeDocument.head.appendChild(innerGlobalCSSLink);
-      // inner css - Dark mode css
-      // TODO: dynamic adjust even manually switch dark mode
-      if (isDarkMode()) {
-        log.debug('setupIframe: DarkMode is detected');
-        const innerDarkCSSLink = document.createElement('link');
-        innerDarkCSSLink.rel = 'stylesheet';
-        innerDarkCSSLink.className = 'dark-mode-style';
-        innerDarkCSSLink.href = `local:///${LiteLoader.plugins['image_search'].path.plugin}/renderer/dark.css`;
-        iframeDocument.head.appendChild(innerDarkCSSLink);
-      } else {
-        log.debug('setupIframe: DarkMode is not detected');
-      }
       // outer css
       const outerCSSLink = document.createElement('link');
       outerCSSLink.rel = 'stylesheet';
       outerCSSLink.href = `local:///${LiteLoader.plugins['image_search'].path.plugin}/renderer/injectIframe.css`;
       document.head.appendChild(outerCSSLink);
       // inject vue app
-      // start work with LiteLoaderQQNT-lite_tools since commit
+      // start work with LiteLoaderQQNT-lite_tools since v2.23.2, ref commit
       // https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools/commit/49700bdbdd4a7d17466b125f301fe34b52433b53
       const mountPoint = iframeDocument.createElement('div');
       mountPoint.id = mountID;
       iframeDocument.body.appendChild(mountPoint);
-      AppEntry('searchWindow', `#${mountID}`, iframeDocument)
+      AppEntry('mainWindow', `#${mountID}`, iframeDocument)
         .then(() => log.debug('setupIframe: AppEntry Inject Success'))
         .catch((e) => log.debug('setupIframe: AppEntry Inject Failed', e.stack.toString()));
     } else {
-      log.debug('setupIframe: AppEntry Inject Cannot find iframeDocument!');
+      log.error('setupIframe: AppEntry Inject Cannot find iframeDocument!');
     }
   };
   iframe.src = 'about:blank';

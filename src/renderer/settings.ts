@@ -1,4 +1,4 @@
-import { log } from '../common/logs';
+import { log } from '../common/share/logs';
 import iconHtml from '../app/assets/logo.svg?raw';
 
 // reference https://github.com/MUKAPP/LiteLoaderQQNT-DeepL/blob/main/src/renderer.js#L377
@@ -17,6 +17,10 @@ export const settings = async (view: any) => {
     //   }
     // });
     const settings = await window.imageSearch.getSettings();
+    if (!settings) {
+      alert('Failed to get settings');
+      return;
+    }
     const api_input = view.querySelector('.image_search .api-input');
     const reset = view.querySelector('.image_search .reset');
     const apply = view.querySelector('.image_search .apply');

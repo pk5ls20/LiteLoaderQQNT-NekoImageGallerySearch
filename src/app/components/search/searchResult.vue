@@ -39,14 +39,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { EnvAdapter } from '../adapter/EnvAdapter';
-import type { Image } from '../models/search/Image';
-import { fetchStatus, fetchType } from '../models/search/SearchWindowEnum';
-import { SearchQueryService, SimilarSearchQuery } from '../services/search/searchQueryService';
-import { performQuerySearchService } from '../services/search/performQuerySearchService';
-import { useSearchStore } from '../states/searchWindowState';
-import { getPreviewURL } from '../utils/getURL';
-import { EditorImageMsg, NTQQEditorImageMsg } from '../services/editor/editorMsgService';
+import { EnvAdapter } from '../../adapter/EnvAdapter';
+import type { Image } from '../../models/search/Image';
+import { fetchStatus, fetchType } from '../../models/search/SearchWindowEnum';
+import { SearchQueryService, SimilarSearchQuery } from '../../services/search/searchQueryService';
+import { performQuerySearchService } from '../../services/search/performQuerySearchService';
+import { useSearchStore } from '../../states/searchWindowState';
+import { getPreviewURL } from '../../utils/getURL';
+import { EditorImageMsg, NTQQEditorImageMsg } from '../../services/editor/editorMsgService';
 
 const store = useSearchStore();
 

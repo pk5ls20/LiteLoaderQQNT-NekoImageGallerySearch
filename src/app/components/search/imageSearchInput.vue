@@ -1,5 +1,5 @@
 <template>
-  <div v-ripple class="q-dialog-image-input">
+  <div v-ripple class="q-dialog-image-input" @click="handleUploadImageQuery">
     <div v-if="store.queryImageInput === null" class="q-dialog-image-input-tip">
       Click here to upload an image from your local device for image search...
     </div>
@@ -8,26 +8,45 @@
       v-if="store.queryImageInput !== null"
       class="q-dialog-advance-input-clear-button"
       icon="clear"
-      @click="
+      @click.stop="
         () => {
           store.queryImageInput = null;
         }
       "
     >
     </ui-icon-button>
+    <ui-icon-button
+      :icon="store.isEnableFilterOptions ? 'filter_alt' : 'filter_alt_off'"
+      :style="{ right: store.queryImageInput === null ? '0px' : '50px' }"
+      class="q-dialog-advance-input-filter-button"
+      @click.stop="store.isFilterOptionsDialogOpen = true"
+    ></ui-icon-button>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { EnvAdapter } from '../adapter/EnvAdapter';
-import { searchType } from '../models/search/SearchWindowEnum';
-import { ImageSearchQuery } from '../services/search/searchQueryService';
-import { performQuerySearchService } from '../services/search/performQuerySearchService';
-import { useSearchStore } from '../states/searchWindowState';
-import { displayErrorDialog } from '../utils/handleCatchError';
+import { EnvAdapter } from '../../adapter/EnvAdapter';
+import { searchType } from '../../models/search/SearchWindowEnum';
+import { ImageSearchQuery } from '../../services/search/searchQueryService';
+import { performQuerySearchService } from '../../services/search/performQuerySearchService';
+import { useSearchStore } from '../../states/searchWindowState';
+import { displayErrorDialog } from '../../utils/handleCatchError';
 
 const store = useSearchStore();
+
+const handleUploadImageQuery = async () => {
+  const imgList = await EnvAdapter.UploadAddFileService().selectFiles(false);
+  // because it is not available to choose more, in theory, the IMG array should have only one element
+  // but just check it =w=
+  if (imgList.length > 1) {
+    displayErrorDialog('Please select only one image!');
+    return;
+  }
+  store.queryImageInput = URL.createObjectURL(imgList[0]);
+  const req = new ImageSearchQuery(imgList[0]);
+  await performQuerySearchService(req, 0);
+};
 
 const postAppImageSearchResCallBack = async (file_content: Buffer | null) => {
   store.tabActiveItem = searchType.IMAGE;
@@ -70,7 +89,15 @@ onMounted(() => {
   top: 0;
   right: 0;
   padding: 5px;
-  font-size: 16px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.q-dialog-advance-input-filter-button {
+  position: absolute;
+  top: 0;
+  padding: 5px;
+  font-size: 24px;
   cursor: pointer;
 }
 </style>

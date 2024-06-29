@@ -11,6 +11,7 @@ export const performQuerySearchService = async (query: SearchQueryService, type:
     if (type === fetchType.FIRST) {
       store.searchResults = <SearchResult[]>[]; // clear first
     }
+    query.filterOptions = store.filterOptions;
     const response = await query.querySearch(20, store.searchResults.length);
     store.lastQueryEntry = query; // load current query into lastQueryEntryRef, waiting for load more
     store.searchResults.push(...response.result.map((r) => r)); // append

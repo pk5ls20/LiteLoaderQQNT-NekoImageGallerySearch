@@ -1,16 +1,21 @@
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import { fetchStatus } from '../models/search/SearchWindowEnum';
 import { useSearchStore } from '../states/searchWindowState';
+import { AxiosError, AxiosResponse } from 'axios';
 
-export const handleCatchError = (e: any) => {
+export const handleCatchError = (e: AxiosError | Error | unknown) => {
   let errorMsg = '';
-  errorMsg += `${e.toString()}\n`;
-  if (e && e.isAxiosError && e.response && e.response.status && e.response.data) {
-    errorMsg += `${JSON.stringify(e.response.data)}\n`;
-  } else if ('stack' in e) {
-    errorMsg += `${e.stack.toString()}\n`;
-  } else {
-    errorMsg += `${e.toString()}\n`;
+  errorMsg += `${e?.toString()}\n`;
+  if (
+    e &&
+    (e as AxiosError).isAxiosError &&
+    (e as AxiosError).response &&
+    ((e as AxiosError).response as AxiosResponse).status &&
+    ((e as AxiosError).response as AxiosResponse).data
+  ) {
+    errorMsg += `${JSON.stringify(((e as AxiosError).response as AxiosResponse).data)}\n`;
+  } else if ((e as Error).stack) {
+    errorMsg += `${(e as Error).stack?.toString()}\n`;
   }
   EnvAdapter.log(errorMsg);
   return errorMsg;

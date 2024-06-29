@@ -1,19 +1,192 @@
 @font-face {
-  font-family: 'HarmonyOS Sans SC';
-  src: url('assets/HarmonyOS_Sans_SC_Medium.subset.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'HarmonyOS Sans SC';
+    src: url('assets/HarmonyOS_Sans_SC_Medium.subset.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
 }
 
-.q-dialog-main,
+.q-main,
 .q-dialog,
 .q-status-dialog,
 .mdc-floating-label {
-  font-family: 'HarmonyOS Sans SC', sans-serif;
-  --mdc-theme-primary: #5183de !important;
-  --mdc-theme-secondary: #5183de !important;
+    font-family: 'HarmonyOS Sans SC', sans-serif;
+    --mdc-theme-primary: #5183de !important;
+    --mdc-theme-secondary: #5183de !important;
 }
 
 .mdc-floating-label--float-above {
-  color: #5183de !important;
+    color: #5183de !important;
+}
+
+/* SPECIAL THANKS TO https://github.com/darkreader/darkreader */
+@media (prefers-color-scheme: dark) {
+    .q-main {
+        --mdc-theme-primary: rgba(81, 131, 222, 0.75) !important;
+        --mdc-theme-secondary: #5183de !important;
+        --mdc-theme-text-disabled-on-light: rgba(232, 230, 227, 0.5) !important;
+        background-color: #242525 !important;
+    }
+
+    .q-main {
+        color-scheme: dark !important;
+    }
+
+    .q-main {
+        background-color: #242525;
+    }
+
+    .q-main {
+        border-color: #776f62;
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--leading {
+        color: rgba(232, 230, 227, 0.6);
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background-color: rgb(30, 32, 33);
+    }
+
+    .mdc-checkbox__native-control {
+        color: #5183de !important;
+    }
+
+    .q-status-bar-upload {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .material-icons {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-notched-outline__leading {
+        border-color: rgba(140, 130, 115, 0.38) !important;
+    }
+
+    .mdc-notched-outline__notch {
+        border-color: rgba(140, 130, 115, 0.38) !important;
+    }
+
+    .mdc-notched-outline__trailing {
+        border-color: rgba(140, 130, 115, 0.38) !important;
+    }
+
+    .mdc-notched-outline,
+    .mdc-notched-outline--no-label,
+    .mdc-notched-outline--notched {
+        border-color: #303436 !important;
+    }
+
+    .mdc-notched-outline .mdc-floating-label--float-above {
+        color: #5183de !important;
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading {
+        border-color: #5183de !important;
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch {
+        border-color: #5183de !important;
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-color: #5183de !important;
+    }
+
+    .mdc-tab .mdc-tab__text-label {
+        color: rgba(232, 230, 227, 0.6) !important;
+    }
+
+    .mdc-floating-label {
+        color: rgba(232, 230, 227, 0.6) !important;
+    }
+
+    .mdc-button--raised:not(:disabled) {
+        color: rgb(255, 255, 255) !important;
+    }
+
+    .mdc-chip {
+        background-color: rgb(42, 45, 47);
+        color: rgba(232, 230, 227, 0.87);
+        outline-color: initial;
+    }
+
+    .mdc-chip-set--choice .mdc-chip--selected {
+        background-color: #181a1b;
+    }
+
+    .mdc-chip__text:hover,
+    .mdc-chip:hover {
+        color: rgba(232, 230, 227, 0.87) !important;
+    }
+
+    .mdc-select:not(.mdc-select--disabled) .mdc-select__selected-text {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-select:not(.mdc-select--disabled) .mdc-select__dropdown-icon {
+        fill: rgba(232, 230, 227, 0.54);
+    }
+
+    .mdc-select__menu .mdc-deprecated-list .mdc-deprecated-list-item--selected {
+        background-color: #5183de;
+        color: #e8e6e3;
+    }
+
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate="true"]) ~ .mdc-checkbox__background {
+        border-color: rgba(140, 130, 115, 0.54);
+    }
+
+    .mdc-deprecated-list-item__secondary-text {
+        color: rgba(232, 230, 227, 0.6) !important;
+    }
+
+    .mdc-menu-surface {
+        background-color: #242525;
+    }
+
+    .mdc-menu .mdc-deprecated-list-item__graphic {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-deprecated-list-item__text {
+        color: rgba(232, 230, 227, 0.87) !important;
+    }
+
+    .mdc-deprecated-list-item--disabled .mdc-deprecated-list-item__text {
+        color: rgba(232, 230, 227, 0.87) !important;
+    }
+
+    .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-dialog .mdc-dialog__surface {
+        background-color: #181a1b;
+    }
+
+    .mdc-dialog .mdc-dialog__title {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-dialog .mdc-dialog__content {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-dialog .mdc-dialog__close {
+        color: rgba(232, 230, 227, 0.87);
+    }
+
+    .mdc-linear-progress__buffer-bar {
+        background-color: #242525;
+    }
+
+    .mdc-deprecated-list-item__meta:not(.material-icons) {
+        color: rgba(232, 230, 227, 0.6);
+    }
+
+    .mdc-divider--horizontal.mdc-divider--no-text {
+        color: rgba(232, 230, 227, 0.6);
+    }
 }

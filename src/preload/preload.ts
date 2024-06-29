@@ -1,10 +1,21 @@
-import { log } from '../common/logs';
+import { log } from '../common/share/logs';
 import * as channel from '../common/channels';
+import { FileObject } from '../common/fileObject';
+import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 
 const { contextBridge, ipcRenderer } = require('electron');
 
+const handleSelectFile = async (fileList: FileObject[]): Promise<File[]> => {
+  return fileList.map((file: FileObject) => {
+    const blob = new Blob([file.content], { type: 'image/png' });
+    return new File([blob], file.name, {
+      type: 'image/png'
+    });
+  });
+};
+
 const imageSearch = {
-  async getSettings(): Promise<any> {
+  async getSettings(): Promise<pluginSettingsModel | null> {
     try {
       return await ipcRenderer.invoke(channel.GET_SETTING);
     } catch (error) {
@@ -13,7 +24,7 @@ const imageSearch = {
     }
   },
 
-  async setSettings(content: object): Promise<void> {
+  async setSettings(content: pluginSettingsModel): Promise<void> {
     try {
       const response = await ipcRenderer.invoke(channel.SET_SETTING, content);
       ipcRenderer.send(channel.TRIGGER_SETTING_REQ, response);
@@ -70,6 +81,26 @@ const imageSearch = {
         log.error('TriggerSetting await callback: Error processing image search response:', error);
       }
     });
+  },
+
+  async selectFiles(multiple: boolean, accept: string[]): Promise<File[]> {
+    try {
+      const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
+      return handleSelectFile(filesInfo);
+    } catch (error) {
+      console.error('Failed to select files:', error);
+      throw new Error('Failed to select files');
+    }
+  },
+
+  async selectDirectory(accept: string[] | null): Promise<File[]> {
+    try {
+      const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
+      return handleSelectFile(filesInfo);
+    } catch (error) {
+      console.error('Failed to select directory:', error);
+      throw new Error('Failed to select directory');
+    }
   },
 
   openWeb(url: string): void {

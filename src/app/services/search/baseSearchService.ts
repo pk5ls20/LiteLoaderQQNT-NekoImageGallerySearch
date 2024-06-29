@@ -2,11 +2,12 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
-import { pluginSettingsModel } from '../../models/search/PluginSettingsModel';
+import { sharedAdapter } from '../../adapter/SharedAdapter';
 
 let apiClient: AxiosInstance | null;
-let pluginSettingData: pluginSettingsModel | null = new pluginSettingsModel('', '', '');
+let pluginSettingData: sharedAdapter.PluginSettingsModelType | null = new sharedAdapter.PluginSettingsModel('', '', '');
 
+// TODO: rewrite
 EnvAdapter.getSettings().then((settings) => {
   pluginSettingData = settings;
 });
@@ -25,7 +26,7 @@ export function getClient() {
   return apiClient;
 }
 
-export function resetClient(settingData?: pluginSettingsModel) {
+export function resetClient(settingData?: sharedAdapter.PluginSettingsModelType) {
   if (settingData) {
     pluginSettingData = settingData;
   }

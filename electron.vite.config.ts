@@ -61,10 +61,7 @@ const config = {
     },
     plugins: [
       cp({
-        targets: [
-          { src: 'src/renderer/injectIframe.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' },
-          { src: 'src/app/dark.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' }
-        ]
+        targets: [{ src: 'src/renderer/injectIframe.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' }]
       }),
       vue(),
       svgLoader(),

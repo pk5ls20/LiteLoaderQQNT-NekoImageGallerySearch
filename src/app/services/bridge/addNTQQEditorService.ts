@@ -3,7 +3,6 @@ import type Model from '@ckeditor/ckeditor5-engine/src/model/model';
 import type DocumentSelection from '@ckeditor/ckeditor5-engine/src/model/documentselection';
 import type Writer from '@ckeditor/ckeditor5-engine/src/model/writer';
 import type Element from '@ckeditor/ckeditor5-engine/src/model/element';
-import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { NTQQEditorMsg } from '../editor/editorMsgService';
 
 interface addNTQQEditorService {
@@ -27,7 +26,7 @@ export class LLNTAddNTQQEditorService implements addNTQQEditorService {
         const editorSelection = editorModel.document.selection as DocumentSelection;
         const position = editorSelection.getFirstPosition();
         if (!position) {
-          EnvAdapter.log('LLNTAddNTQQEditorService: editorSelection.getFirstPosition() not found.');
+          console.log('LLNTAddNTQQEditorService: editorSelection.getFirstPosition() not found.');
           return;
         }
         editorModel.change((writer: Writer) => {

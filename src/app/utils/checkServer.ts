@@ -1,7 +1,7 @@
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import { getClient } from '../services/search/baseSearchService';
 import { serverStatus } from '../models/search/SearchWindowEnum';
 import { handleCatchError } from './handleCatchError';
+import { WelcomeApi } from '../services/search/WelcomeApi';
 
 type CheckServerResult = {
   status: serverStatus;
@@ -17,10 +17,7 @@ export const checkServer = async (endpoint: string): Promise<CheckServerResult> 
     };
   }
   try {
-    const client = getClient();
-    const response = await client.get(`${endpoint}/`);
-    const data = response.data;
-
+    const data = await WelcomeApi();
     const isAuthPass = !data.authorization?.required || data.authorization.passed;
     return {
       status: isAuthPass ? serverStatus.CONNECTED : serverStatus.UNAUTHORIZED,

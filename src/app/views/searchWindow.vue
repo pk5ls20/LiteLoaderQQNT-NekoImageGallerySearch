@@ -1,14 +1,16 @@
 <template>
-  <div id="search-dialog" class="q-dialog-main">
+  <div>
+    <!--tab-->
     <ui-tab-bar
       v-model="store.tabActiveItem"
       align="center"
       @update:model-value="EnvAdapter.log('activeIndex', $event)"
     >
-      <ui-tab v-for="(tab, index) in tabItem" :key="index" min-width>
+      <ui-tab v-for="(tab, index) in tabItem" :key="index" :icon="tab.icon" min-width type="textWithIcon">
         {{ tab.text }}
       </ui-tab>
     </ui-tab-bar>
+    <!--search area-->
     <div class="q-dialog-all" @click="handleDialogClick">
       <div v-show="isBasicSearch()" class="q-dialog-basic">
         <basic-search-input-components />
@@ -19,6 +21,7 @@
       <div v-show="store.tabActiveItem === searchType.ADVANCED" class="q-dialog-advance">
         <advance-search-input-components />
       </div>
+      <!--progress-->
       <figure>
         <ui-progress
           v-show="store.fetchingStatus == fetchStatus.FIRST_FETCHING"
@@ -28,38 +31,48 @@
         >
         </ui-progress>
       </figure>
+      <!--search result-->
       <div
         :class="{
           active: store.isQueryAdvanceModeClicked,
           basic_search: isBasicSearch(),
-          not_basic_search: !isBasicSearch()
+          advance_search: !isBasicSearch()
         }"
         class="q-search-results"
       >
         <search-result-components />
       </div>
+      <!--status bar-->
       <div class="q-status-bar">
         <status-bar-components />
       </div>
     </div>
+    <!-- search window status dialog-->
+    <search-window-dialog />
+    <!-- filter dialog-->
+    <filter-dialog />
   </div>
-  <status-dialog-components />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, defineComponent } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
+import SearchWindowDialog from '../components/search/searchWindowDialog.vue';
+import FilterDialog from '../components/search/filterDialog.vue';
 import { fetchStatus, searchType, serverStatus, tabItem } from '../models/search/SearchWindowEnum';
 import { resetClient } from '../services/search/baseSearchService';
 import { useSearchStore } from '../states/searchWindowState';
-import BasicSearchInputComponents from '../components/basicSearchInput.vue';
-import imageSearchInputComponents from '../components/imageSearchInput.vue';
-import AdvanceSearchInputComponents from '../components/advanceSearchInput.vue';
-import SearchResultComponents from '../components/searchResult.vue';
-import StatusDialogComponents from '../components/statusDialog.vue';
-import StatusBarComponents from '../components/statusBar.vue';
+import BasicSearchInputComponents from '../components/search/basicSearchInput.vue';
+import imageSearchInputComponents from '../components/search/imageSearchInput.vue';
+import AdvanceSearchInputComponents from '../components/search/advanceSearchInput.vue';
+import SearchResultComponents from '../components/search/searchResult.vue';
+import StatusBarComponents from '../components/search/statusBar.vue';
 import { checkServer } from '../utils/checkServer';
 import { sha256 } from '../utils/sha256';
+
+defineComponent({
+  name: 'searchWindow'
+});
 
 const store = useSearchStore();
 
@@ -135,19 +148,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.q-dialog-main {
-  transform: translate(0px, -20px);
-  margin: auto 10px;
-  transition: all 150ms ease-in;
-  padding: 16px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  height: 600px;
-  width: 650px;
-  overflow: auto;
-}
-
 .q-dialog-all {
   margin-top: 10px;
   margin-bottom: 16px;
@@ -175,7 +175,7 @@ onMounted(async () => {
 
 .q-status-bar {
   position: fixed;
-  left: 450px;
+  left: 400px;
   right: 0;
   bottom: 10px;
   width: auto;
@@ -198,7 +198,7 @@ onMounted(async () => {
   height: 400px;
 }
 
-.q-search-results.not_basic_search {
+.q-search-results.advance_search {
   height: 330px;
 }
 </style>
