@@ -55,12 +55,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch, defineComponent } from 'vue';
+import { onMounted, watch, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import SearchWindowDialog from '../components/search/searchWindowDialog.vue';
 import FilterDialog from '../components/search/filterDialog.vue';
-import { fetchStatus, searchType, serverStatus, tabItem } from '../models/search/SearchWindowEnum';
+import { fetchStatus, searchType, serverStatus } from '../models/search/SearchWindowEnum';
 import { resetClient } from '../services/search/baseSearchService';
 import { useSearchStore } from '../states/searchWindowState';
 import BasicSearchInputComponents from '../components/search/basicSearchInput.vue';
@@ -75,6 +75,13 @@ const { t } = useI18n();
 const store = useSearchStore();
 
 const isBasicSearch = () => searchType.TEXT <= store.tabActiveItem && store.tabActiveItem <= searchType.OCR;
+
+const tabItem = ref([
+  { text: t('search.searchWindow.tab.text'), icon: '' },
+  { text: t('search.searchWindow.tab.ocr'), icon: '' },
+  { text: t('search.searchWindow.tab.image'), icon: '' },
+  { text: t('search.searchWindow.tab.advance'), icon: '' }
+]);
 
 // Special handling of ui-select
 // [Non-ideal situation], When the user clicks elsewhere and the dropdown box closes, the handleDialogClick is triggered.

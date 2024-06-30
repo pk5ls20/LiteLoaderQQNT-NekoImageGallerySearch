@@ -1,10 +1,3 @@
-export const tabItem = [
-  { text: 'TEXT', icon: '' },
-  { text: 'OCR', icon: '' },
-  { text: 'IMAGE', icon: '' },
-  { text: 'ADVANCED', icon: '' }
-];
-
 export enum serverStatus {
   CONNECTED = 0,
   UNAUTHORIZED = 1,

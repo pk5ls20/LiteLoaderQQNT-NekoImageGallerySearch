@@ -1,6 +1,12 @@
 {
   "search": {
     "searchWindow": {
+      "tab": {
+        "text": "TEXT",
+        "ocr": "OCR",
+        "image": "IMAGE",
+        "advance": "ADVANCED"
+      },
       "serverConnectedStatusMessage": "Server connected",
       "serverUnauthorizedStatusMessage": "Server unauthorized",
       "serverDisconnectedStatusMessage": "Server disconnected"
@@ -17,7 +23,18 @@
       "promptTitle": "Prompt",
       "modeSelectLabel": "Mode",
       "promptInputNoSelectedLabel": "Please Select at least one prompt!",
-      "promptInputSelectedLabel": "Enter {0} prompt..."
+      "promptInputSelectedLabel": "Enter {0} prompt...",
+      "queryAdvanceChipsList": {
+        "positive": "Positive",
+        "negative": "Negative",
+        "combined": "Combined"
+      },
+      "queryAdvanceModes": {
+        "averageVision": "AverageVision",
+        "averageOCR": "AverageOCR",
+        "bestVision": "BestVision",
+        "bestOCR": "BestOCR"
+      }
     },
     "filterDialog": {
       "title": "Filter Options",
@@ -39,8 +56,10 @@
       "loadMoreLabel": "Load More"
     },
     "searchWindowDialog": {
-      "statusDialogTitle": " Server Status",
-      "fetchErrorDialogTitle": " \uD83E\uDD2FFailed to fetch"
+      "statusDialogTitle": "Server Status",
+      "fetchErrorDialogTitle": "Failed to fetch",
+      "serverStatusMsg": "Loading...",
+      "serverStatusMessage": "Checking server..."
     }
   },
   "upload": {
@@ -50,10 +69,10 @@
       "uploadButtonTitle": "Upload",
       "addFile": "Add File",
       "addFolder": "Add Folder",
-      "likeTitle": "Right-click me to switch dislike!",
-      "disLikeTitle": "Right-click me to switch like!",
-      "skipOcrTitle": "Right-click me to switch skip OCR!",
-      "disSkipOcrTitle": "Right-click me to switch not skip OCR!",
+      "likeTitle": "Right-click me to switch select dislike!",
+      "disLikeTitle": "Right-click me to switch select like!",
+      "skipOcrTitle": "Right-click me to switch select skip OCR!",
+      "disSkipOcrTitle": "Right-click me to switch select not skip OCR!",
       "categoriesDialogTitle": "Enter Categories of selection",
       "categoriesDialogContent": " Categories",
       "uncategorizedTip": "Uncategorized",

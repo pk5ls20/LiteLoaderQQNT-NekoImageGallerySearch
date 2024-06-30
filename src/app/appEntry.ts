@@ -1,7 +1,7 @@
-import { isDevEnv } from './utils/envFlag';
+import { devEnvWrap, isDevEnv } from './utils/envFlag';
 import { createApp } from 'vue';
-import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
+import { createPinia } from 'pinia';
 import enUS from './locales/en-US.json';
 import zhCN from './locales/zh-CN.json';
 import BalmUI from 'balm-ui';
@@ -21,7 +21,6 @@ export default async function AppEntry(
 ) {
   const module = await import(`./views/${entryFile}.vue`);
   const app = createApp(module.default);
-  const pinia = createPinia();
   const i18n = createI18n<[MessageSchema], 'en-US' | 'zh-CN'>({
     legacy: false,
     locale: locale,
@@ -31,7 +30,8 @@ export default async function AppEntry(
       'zh-CN': zhCN
     }
   });
-  app.use(pinia).use(i18n).use(BalmUI).use(BalmUIPlus).use(VueVirtualScroller);
+  const pinia = createPinia();
+  app.use(i18n).use(pinia).use(BalmUI).use(BalmUIPlus).use(VueVirtualScroller);
   const mountPoint = docContext.querySelector(entryId);
   if (!mountPoint) {
     console.error(`Failed to find mount point: ${entryId} in the provided document context.`);
@@ -41,5 +41,5 @@ export default async function AppEntry(
 }
 
 if (isDevEnv) {
-  await AppEntry('mainWindow', '#app', document, 'zh-CN');
+  await AppEntry('mainWindow', '#app', document, devEnvWrap('LANG') as 'en-US' | 'zh-CN' | undefined);
 }

@@ -6,13 +6,13 @@
     <div class="q-dialog-advance-set-select">
       <ui-chips
         v-model="store.queryAdvanceChipsSelectVal"
-        :options="store.queryAdvanceChipsList"
+        :options="queryAdvanceChipsList"
         class="q-dialog-advance-set-select-chips"
         type="choice"
       ></ui-chips>
       <ui-select
         v-model="store.queryAdvanceModeBind"
-        :options="store.queryAdvanceModes"
+        :options="queryAdvanceModes"
         class="q-dialog-advance-set-select-mode"
         outlined
         @click.stop="handleClickStop"
@@ -30,7 +30,9 @@
       :label="
         store.queryAdvanceChipsSelectVal === ''
           ? $t('search.advanceSearchInput.promptInputNoSelectedLabel')
-          : $t('search.advanceSearchInput.promptInputSelectedLabel', [store.queryAdvanceChipsSelectVal])
+          : $t('search.advanceSearchInput.promptInputSelectedLabel', [
+              promptTypeDisplayTextMap.get(store.queryAdvanceChipsSelectVal as promptType) ?? ''
+            ])
       "
       class="q-dialog-advance-input-text"
       outlined
@@ -55,7 +57,8 @@
 </template>
 
 <script lang="ts" setup>
-import { watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { SearchBasis } from '../../models/search/SearchBasis';
 import { fetchType, promptType } from '../../models/search/SearchWindowEnum';
@@ -64,14 +67,72 @@ import { performQuerySearchService } from '../../services/search/performQuerySea
 import { AdvancedSearchQuery, CombinedSearchQuery } from '../../services/search/searchQueryService';
 import { useSearchStore } from '../../states/searchWindowState';
 
+const { t } = useI18n();
 const store = useSearchStore();
 
-// TODO: move this in store
+const promptTypeDisplayTextMap = new Map([
+  [promptType.POSITIVE, t('search.advanceSearchInput.queryAdvanceChipsList.positive')],
+  [promptType.NEGATIVE, t('search.advanceSearchInput.queryAdvanceChipsList.negative')],
+  [promptType.COMBINED, t('search.advanceSearchInput.queryAdvanceChipsList.combined')]
+]);
+
+const queryAdvanceChipsList = ref<{ label: string; value: promptType }[]>([
+  { label: t('search.advanceSearchInput.queryAdvanceChipsList.positive'), value: promptType.POSITIVE },
+  { label: t('search.advanceSearchInput.queryAdvanceChipsList.negative'), value: promptType.NEGATIVE },
+  { label: t('search.advanceSearchInput.queryAdvanceChipsList.combined'), value: promptType.COMBINED }
+]);
+
+const queryAdvanceModes = [
+  {
+    label: t('search.advanceSearchInput.queryAdvanceModes.averageVision'),
+    value: '0',
+    mode: [AdvancedSearchMode.average, SearchBasis.vision]
+  },
+  {
+    label: t('search.advanceSearchInput.queryAdvanceModes.averageOCR'),
+    value: '1',
+    mode: [AdvancedSearchMode.average, SearchBasis.ocr]
+  },
+  {
+    label: t('search.advanceSearchInput.queryAdvanceModes.bestVision'),
+    value: '2',
+    mode: [AdvancedSearchMode.best, SearchBasis.vision]
+  },
+  {
+    label: t('search.advanceSearchInput.queryAdvanceModes.bestOCR'),
+    value: '3',
+    mode: [AdvancedSearchMode.best, SearchBasis.ocr]
+  }
+];
+
+const queryAdvanceLookUp = computed(() => {
+  return (
+    queryAdvanceModes.find((item) => item.value === store.queryAdvanceModeBind)?.mode ?? [
+      AdvancedSearchMode.average,
+      SearchBasis.vision
+    ]
+  );
+});
+
 // perform chips render in tab 'advanced'
 watch(
   () => store.queryAdvanceChipsSelectVal,
   (newVal, oldVal) => {
-    store.updateQueryAdvanceChipsList(newVal, oldVal);
+    // store.updateQueryAdvanceChipsList(newVal, oldVal);
+    queryAdvanceChipsList.value = queryAdvanceChipsList.value.map((item: { label: string; value: promptType }) => {
+      EnvAdapter.log(item);
+      if (item.value === oldVal) {
+        const shouldAddStar = item.label.indexOf('⭐') === -1 && store.queryAdvanceInput !== '';
+        const shouldRemoveStar = item.label.indexOf('⭐') !== -1 && store.queryAdvanceInput === '';
+        if (shouldAddStar) {
+          item.label = `⭐${item.label}`;
+        } else if (shouldRemoveStar) {
+          item.label = item.label.replace('⭐', '');
+        }
+      }
+      return item;
+    });
+    store.queryAdvanceInput = store.queryAdvanceInputPromptMap.get(newVal) || '';
   },
   { deep: true }
 );
@@ -99,7 +160,7 @@ const handleClickStop = (event: MouseEvent) => {
 const clearPrompt = () => {
   store.queryAdvanceInputPromptMap.clear();
   store.queryAdvanceInput = '';
-  store.queryAdvanceChipsList.map((item: { label: string; value: string }) => {
+  queryAdvanceChipsList.value.map((item: { label: string; value: string }) => {
     if (item.label.indexOf('⭐') !== -1) item.label = item.label.replace('⭐', '');
   });
 };
@@ -115,9 +176,9 @@ const performAdvanceSearch = async (type: fetchType) => {
         extra_prompt: store.queryAdvanceInputPromptMap.get(promptType.COMBINED) ?? '',
         criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE) ?? ''], // TODO: split ' '
         negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE) ?? ''],
-        mode: store.queryAdvanceLookUp?.at(0) as AdvancedSearchMode
+        mode: queryAdvanceLookUp?.value[0] as AdvancedSearchMode
       },
-      store.queryAdvanceLookUp?.at(1) as SearchBasis
+      queryAdvanceLookUp?.value[1] as SearchBasis
     );
   } else if (
     store.queryAdvanceInputPromptMap.has(promptType.POSITIVE) ||
@@ -128,9 +189,9 @@ const performAdvanceSearch = async (type: fetchType) => {
       {
         criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE) ?? ''],
         negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE) ?? ''],
-        mode: store.queryAdvanceLookUp?.at(0) as AdvancedSearchMode
+        mode: queryAdvanceLookUp?.value[0] as AdvancedSearchMode
       },
-      store.queryAdvanceLookUp?.at(1) as SearchBasis
+      queryAdvanceLookUp?.value[1] as SearchBasis
     );
   }
   if (query) {
