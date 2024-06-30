@@ -7,7 +7,7 @@
   >
     <ui-menu-anchor>
       <div class="q-search-result-item-image-container">
-        <img
+        <progressive-image
           v-if="!store.searchResultPicLoadFailedMap.get(it.img.id)"
           :alt="it.img.ocr_text"
           :src="getPreviewURL(it.img)"
@@ -83,6 +83,7 @@ import { getPreviewURL } from '../../utils/getURL';
 import { EditorImageMsg, NTQQEditorImageMsg } from '../../services/editor/editorMsgService';
 import { deleteImage, updateOpt } from '../../services/search/AdminApi';
 import { useI18n } from 'vue-i18n';
+import progressiveImage from '../utils/progressiveImage.vue';
 
 const store = useSearchStore();
 const { t } = useI18n();
