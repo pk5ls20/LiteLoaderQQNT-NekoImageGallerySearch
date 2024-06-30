@@ -17,8 +17,7 @@
       "promptTitle": "Prompt",
       "modeSelectLabel": "Mode",
       "promptInputNoSelectedLabel": "Please Select at least one prompt!",
-      "promptInputSelectedLabel": "Enter {0} prompt...",
-      "searchButtonLabel": "GO\uD83D\uDD0D"
+      "promptInputSelectedLabel": "Enter {0} prompt..."
     },
     "filterDialog": {
       "title": "Filter Options",

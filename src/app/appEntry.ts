@@ -41,5 +41,5 @@ export default async function AppEntry(
 }
 
 if (isDevEnv) {
-  await AppEntry('mainWindow', '#app');
+  await AppEntry('mainWindow', '#app', document, 'zh-CN');
 }

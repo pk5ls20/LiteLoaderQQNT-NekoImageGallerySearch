@@ -1,69 +1,68 @@
 {
   "search": {
     "searchWindow": {
-      "serverConnectedStatusMessage": "",
-      "serverUnauthorizedStatusMessage": "",
-      "serverDisconnectedStatusMessage": ""
+      "serverConnectedStatusMessage": "已连接服务器",
+      "serverUnauthorizedStatusMessage": "服务器认证失败",
+      "serverDisconnectedStatusMessage": "未连接服务器"
     },
     "basicSearchInput": {
-      "inputPlaceholder": ""
+      "inputPlaceholder": "搜索..."
     },
     "imageSearchInput": {
-      "inputTip": "",
-      "uploadImageCountMoreThanOneTip": "",
-      "uploadImageCallbackErrorTip": ""
+      "inputTip": "点击此处，从本地上传用于以图搜图的图片...",
+      "uploadImageCountMoreThanOneTip": "只能上传一张图片哦",
+      "uploadImageCallbackErrorTip": "拉取本地图片时发生错误！"
     },
     "advanceSearchInput": {
-      "promptTitle": "",
-      "modeSelectLabel": "",
-      "promptInputNoSelectedLabel": "",
-      "promptInputSelectedLabel": "",
-      "searchButtonLabel": ""
+      "promptTitle": "提示词",
+      "modeSelectLabel": "模式",
+      "promptInputNoSelectedLabel": "请至少输入一个提示词！",
+      "promptInputSelectedLabel": "输入 {0} 提示词..."
     },
     "filterDialog": {
-      "title": "",
-      "aspectRatioLabel": "",
-      "preferredAspectRatioLabel": "",
-      "ratioToleranceLabel": "",
-      "minSizeLabel": "",
-      "minWidthLabel": "",
-      "minHeightLabel": "",
-      "starredOnlyLabel": "",
-      "categoriesLabel": "",
-      "negativeCategoriesLabel": "",
-      "separateByCommaLabel": ""
+      "title": "筛选选项",
+      "aspectRatioLabel": "宽高比",
+      "preferredAspectRatioLabel": "首选宽高比",
+      "ratioToleranceLabel": "比例容忍度",
+      "minSizeLabel": "最小尺寸",
+      "minWidthLabel": "最小宽度",
+      "minHeightLabel": "最小高度",
+      "starredOnlyLabel": "仅限标星",
+      "categoriesLabel": "类别",
+      "negativeCategoriesLabel": "排除类别",
+      "separateByCommaLabel": "逗号分隔"
     },
     "searchResult": {
-      "similarSearchLabel": "",
-      "scoreLabel": "",
-      "sizeLabel": "",
-      "loadMoreLabel": ""
+      "similarSearchLabel": "相似搜索",
+      "scoreLabel": "相似度: {0}%",
+      "sizeLabel": "大小: {0}x{1}",
+      "loadMoreLabel": "加载更多"
     },
     "searchWindowDialog": {
-      "statusDialogTitle": "",
-      "fetchErrorDialogTitle": ""
+      "statusDialogTitle": " 服务器状态",
+      "fetchErrorDialogTitle": " \uD83E\uDD2F请求失败"
     }
   },
   "upload": {
     "uploadWindow": {
-      "windowTitleUploadTip": "",
-      "windowTitleNotUploadTip": "",
-      "uploadButtonTitle": "",
-      "addFile": "",
-      "addFolder": "",
-      "likeTitle": "",
-      "disLikeTitle": "",
-      "skipOcrTitle": "",
-      "disSkipOcrTitle": "",
-      "categoriesDialogTitle": "",
-      "categoriesDialogContent": "",
-      "uncategorizedTip": "",
-      "noUploadTaskTip": "",
-      "errorDialogTitle": "",
-      "errorDialogNoFileContent": ""
+      "windowTitleUploadTip": "正在上传",
+      "windowTitleNotUploadTip": "上传新图片",
+      "uploadButtonTitle": "上传",
+      "addFile": "添加文件",
+      "addFolder": "添加文件夹",
+      "likeTitle": "右键点击我切换到不喜欢！",
+      "disLikeTitle": "右键点击我切换到喜欢！",
+      "skipOcrTitle": "右键点击我切换到跳过OCR！",
+      "disSkipOcrTitle": "右键点击我切换到不跳过OCR！",
+      "categoriesDialogTitle": "输入选择的类别",
+      "categoriesDialogContent": "类别",
+      "uncategorizedTip": "无分类",
+      "noUploadTaskTip": "当前没有上传任务...",
+      "errorDialogTitle": "错误",
+      "errorDialogNoFileContent": "=w= 请选择要上传的文件！"
     },
     "uploadConfirmSnackbar": {
-      "snackbarContent": ""
+      "snackbarContent": "上传完成！共上传 {0} 张，其中重复 {1} 张， {2} 张上传失败！"
     }
   }
 }

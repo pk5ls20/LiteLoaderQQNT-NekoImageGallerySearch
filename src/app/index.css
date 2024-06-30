@@ -5,11 +5,14 @@
     font-style: normal;
 }
 
+:root {
+    --mdc-typography-font-family: 'HarmonyOS Sans SC', sans-serif;
+}
+
 .q-main,
 .q-dialog,
 .q-status-dialog,
 .mdc-floating-label {
-    font-family: 'HarmonyOS Sans SC', sans-serif;
     --mdc-theme-primary: #5183de !important;
     --mdc-theme-secondary: #5183de !important;
 }

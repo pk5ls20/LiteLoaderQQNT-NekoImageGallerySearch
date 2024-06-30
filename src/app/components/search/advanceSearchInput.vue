@@ -48,7 +48,7 @@
       raised
       @click="performAdvanceSearch(fetchType.FIRST)"
     >
-      {{ $t('search.advanceSearchInput.searchButtonLabel') }}
+      GO🔍
     </ui-button>
     <ui-icon-button class="q-dialog-advance-input-clear-button" icon="delete" @click="clearPrompt"> </ui-icon-button>
   </div>
