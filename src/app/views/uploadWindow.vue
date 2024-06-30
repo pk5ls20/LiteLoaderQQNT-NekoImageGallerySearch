@@ -245,7 +245,12 @@ const startUpload = () => {
     .upload()
     .then(() => {
       uploadStore.isUploading = false;
-      uploadStore.uploadEndDialogOpen = true;
+      uploadStore.uploadSnackbarContent = t('upload.uploadConfirmSnackbar.snackbarContent', [
+        uploadStore.finishedTasksCount,
+        uploadStore.duplicateTasksCount,
+        uploadStore.errorTasksCount
+      ]);
+      uploadStore.uploadSnackbarOpen = true;
     })
     .catch((e) => {
       uploadStore.errorDialogContent = handleCatchError(e);

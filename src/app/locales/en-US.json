@@ -54,7 +54,18 @@
       "similarSearchLabel": "Similar Search",
       "scoreLabel": "Score: {0}%",
       "sizeLabel": "Size: {0}x{1}",
-      "loadMoreLabel": "Load More"
+      "loadMoreLabel": "Load More",
+      "likeLabel": "Like",
+      "dislikeLabel": "Dislike",
+      "likeSuccessText": "Image {0} liked successfully",
+      "dislikeSuccessText": "Image {0} disliked successfully",
+      "likeErrorText": "Error occurred while operating liking image",
+      "deleteLabel": "Delete",
+      "deleteConfirmTitle": "Delete Confirm",
+      "deleteConfirmContent": "Are you sure you want to delete this image?",
+      "deleteCancelText": "Deleted canceled by user!",
+      "deleteSuccessText": "Image {0} deleted successfully!",
+      "deleteErrorText": "Error occurred while deleting image!"
     },
     "searchWindowDialog": {
       "statusDialogTitle": "Server Status",

@@ -4,12 +4,14 @@
       <component :is="store.mainWindowActiveComponent" key="store.mainWindowActiveComponent"></component>
     </Transition>
     <div v-if="store.mainWindowShowMark" class="spread-mask"></div>
+    <search-snackbar />
     <upload-confirm-snackbar />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useMainStore } from '../states/mainWindowState';
+import SearchSnackbar from '../components/search/searchSnackbar.vue';
 import UploadConfirmSnackbar from '../components/upload/uploadConfirmSnackbar.vue';
 
 const store = useMainStore();

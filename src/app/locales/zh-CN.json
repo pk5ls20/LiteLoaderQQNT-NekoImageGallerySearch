@@ -54,7 +54,18 @@
       "similarSearchLabel": "相似搜索",
       "scoreLabel": "相似度: {0}%",
       "sizeLabel": "大小: {0}x{1}",
-      "loadMoreLabel": "加载更多"
+      "loadMoreLabel": "加载更多",
+      "likeLabel": "喜欢",
+      "dislikeLabel": "取消喜欢",
+      "likeSuccessText": "成功为图片 {0} 设置喜欢！",
+      "dislikeSuccessText": "成功取消图片 {0} 的喜欢！",
+      "likeErrorText": "在设置喜欢中出现错误！",
+      "deleteLabel": "删除",
+      "deleteConfirmTitle": "删除确认",
+      "deleteConfirmContent": "确定要删除这张图片吗？",
+      "deleteCancelText": "删除操作被用户取消！",
+      "deleteSuccessText": "成功删除图片 {0}！",
+      "deleteErrorText": "删除中出现错误！"
     },
     "searchWindowDialog": {
       "statusDialogTitle": "服务器状态",

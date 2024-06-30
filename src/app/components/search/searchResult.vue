@@ -7,12 +7,8 @@
         @click="handleImageClick(it.img, it.img.id)"
         @contextmenu.prevent="handleImageRightClick(it.img.id)"
       />
-      <ui-menu
-        v-model="store.searchResultItemOpenStates[it.img.id]"
-        :style="{ transform: 'scale(0.8)' }"
-        @selected="performSimilarSearch(it.img, fetchType.FIRST)"
-      >
-        <ui-menuitem>
+      <ui-menu v-model="store.searchResultItemOpenStates[it.img.id]" :style="{ transform: 'scale(0.8)' }">
+        <ui-menuitem @click="performSimilarSearch(it.img, fetchType.FIRST)">
           <ui-menuitem-icon>
             <ui-icon>search</ui-icon>
           </ui-menuitem-icon>
@@ -31,6 +27,23 @@
             {{ $t('search.searchResult.sizeLabel', [it.img.width, it.img.height]) }}
           </ui-menuitem-text>
         </ui-menuitem>
+        <ui-menuitem-divider v-if="store.serverAdminAvailable" />
+        <ui-menuitem v-if="store.serverAdminAvailable" @click="handleLikeClick(it.img)">
+          <ui-menuitem-icon>
+            <ui-icon>{{ it.img.starred ? 'favorite' : 'favorite_border' }}</ui-icon>
+          </ui-menuitem-icon>
+          <ui-menuitem-text :style="{ transform: 'translateX(-20px)' }">
+            {{ it.img.starred ? $t('search.searchResult.dislikeLabel') : $t('search.searchResult.likeLabel') }}
+          </ui-menuitem-text>
+        </ui-menuitem>
+        <ui-menuitem v-if="store.serverAdminAvailable" @click="handleDeleteClick(it.img)">
+          <ui-menuitem-icon>
+            <ui-icon :style="{ color: 'red' }">delete_outline</ui-icon>
+          </ui-menuitem-icon>
+          <ui-menuitem-text :style="{ transform: 'translateX(-20px)', color: 'red !important' }">
+            {{ $t('search.searchResult.deleteLabel') }}
+          </ui-menuitem-text>
+        </ui-menuitem>
       </ui-menu>
     </ui-menu-anchor>
   </div>
@@ -44,6 +57,11 @@
     </ui-button>
     <ui-spinner v-if="store.fetchingStatus === fetchStatus.MORE_FETCHING" active></ui-spinner>
   </div>
+  <ui-dialog v-model="store.confirmDeleteDialogOpen" class="q-fetch-common-dialog" @confirm="handleConfirmDelete">
+    <ui-dialog-title> {{ $t('search.searchResult.deleteConfirmTitle') }}</ui-dialog-title>
+    <ui-dialog-content> {{ $t('search.searchResult.deleteConfirmContent') }}</ui-dialog-content>
+    <ui-dialog-actions></ui-dialog-actions>
+  </ui-dialog>
 </template>
 <script setup lang="ts">
 import { EnvAdapter } from '../../adapter/EnvAdapter';
@@ -54,8 +72,11 @@ import { performQuerySearchService } from '../../services/search/performQuerySea
 import { useSearchStore } from '../../states/searchWindowState';
 import { getPreviewURL } from '../../utils/getURL';
 import { EditorImageMsg, NTQQEditorImageMsg } from '../../services/editor/editorMsgService';
+import { deleteImage, updateOpt } from '../../services/search/AdminApi';
+import { useI18n } from 'vue-i18n';
 
 const store = useSearchStore();
+const { t } = useI18n();
 
 const performLoadMoreSearch = async () => {
   // store.lastQueryEntry must not be null
@@ -65,6 +86,39 @@ const performLoadMoreSearch = async () => {
 const performSimilarSearch = async (searchImage: Image, type: fetchType) => {
   const query = new SimilarSearchQuery(searchImage);
   await performQuerySearchService(query, type);
+};
+
+const handleLikeClick = async (img: Image) => {
+  try {
+    await updateOpt(img.id, !img.starred);
+    store.snackbarContent = img.starred
+      ? t('search.searchResult.dislikeSuccessText', [img.id])
+      : t('search.searchResult.likeSuccessText', [img.id]);
+    img.starred = !img.starred;
+  } catch (e) {
+    store.snackbarContent = t('search.searchResult.likeErrorText');
+  }
+  store.snackbarOpen = true;
+};
+
+const handleDeleteClick = async (img: Image) => {
+  store.confirmDeleteImage = img;
+  store.confirmDeleteDialogOpen = true;
+};
+
+const handleConfirmDelete = async (confirmed: boolean) => {
+  if (!confirmed) {
+    store.snackbarContent = t('search.searchResult.deleteCancelText');
+    store.snackbarOpen = true;
+    return;
+  }
+  try {
+    await deleteImage(store.confirmDeleteImage?.id as string);
+    store.snackbarContent = t('search.searchResult.deleteSuccessText');
+  } catch (e) {
+    store.snackbarContent = t('search.searchResult.deleteErrorText');
+  }
+  store.snackbarOpen = true;
 };
 
 const handleImageClick = async (img: Image, id: string) => {

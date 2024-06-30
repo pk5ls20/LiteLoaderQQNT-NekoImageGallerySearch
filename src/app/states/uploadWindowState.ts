@@ -17,7 +17,8 @@ export const useUploadStore = defineStore('upload', {
     globalSkipOcrSwitch: true as boolean,
     errorDialogOpen: false as boolean,
     errorDialogContent: '' as string,
-    uploadEndDialogOpen: false as boolean
+    uploadSnackbarOpen: false as boolean,
+    uploadSnackbarContent: '' as string
   }),
   getters: {
     progressColor: (state) => {

@@ -36,7 +36,7 @@
       <ui-button @click="store.isStatusDialogOpen = false">OK</ui-button>
     </ui-dialog-actions>
   </ui-dialog>
-  <ui-dialog v-model="store.isFetchError" class="q-status-dialog">
+  <ui-dialog v-model="store.isFetchError" class="q-fetch-error-dialog">
     <ui-dialog-title> 🤯{{ $t('search.searchWindowDialog.fetchErrorDialogTitle') }}</ui-dialog-title>
     <ui-dialog-content>
       {{ store.fetchErrorMsg }}

@@ -11,6 +11,7 @@ import type { SearchQueryService } from '../services/search/searchQueryService';
 import type { SearchResult } from '../models/search/SearchResult';
 import type { HomeApiResponse } from '../models/search/HomeApiResponse';
 import { SearchFilterOptions } from '../models/search/SearchFilterOptions';
+import type { Image } from '../models/search/Image';
 
 export const useSearchStore = defineStore('search', {
   state: () => ({
@@ -43,7 +44,11 @@ export const useSearchStore = defineStore('search', {
     filterAspectRatioEnabled: false as boolean,
     minSizeEnabled: false as boolean,
     categoriesEnabled: false as boolean,
-    negativeCategoriesEnabled: false as boolean
+    negativeCategoriesEnabled: false as boolean,
+    snackbarOpen: false as boolean,
+    snackbarContent: '' as string,
+    confirmDeleteDialogOpen: false as boolean,
+    confirmDeleteImage: null as Image | null
   }),
   getters: {
     isEnableFilterOptions: (state) => {
