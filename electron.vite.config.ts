@@ -69,7 +69,7 @@ const config = {
     ],
     resolve: {
       alias: {
-        vue: 'vue/dist/vue.esm-bundler.js',
+        vue: 'vue/dist/vue.runtime.esm-bundler.js',
         'balm-ui-plus': 'balm-ui/dist/balm-ui-plus.esm.js',
         'balm-ui-css': 'balm-ui/dist/balm-ui.css'
       }
