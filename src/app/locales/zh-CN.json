@@ -12,7 +12,8 @@
       "serverDisconnectedStatusMessage": "未连接服务器"
     },
     "basicSearchInput": {
-      "inputPlaceholder": "搜索..."
+      "inputPlaceholder": "搜索...",
+      "inputPlaceholderDisabled": "由于配置限制，文搜图目前不可用"
     },
     "imageSearchInput": {
       "inputTip": "点击此处，从本地上传用于以图搜图的图片...",
@@ -59,13 +60,33 @@
       "statusDialogTitle": "服务器状态",
       "fetchErrorDialogTitle": "请求失败",
       "serverStatusMsg": "加载中...",
-      "serverStatusMessage": "正在检查服务器连接..."
+      "serverStatusMessage": "正在检查服务器连接...",
+      "ocrAvailableText": "OCR服务可用性： {0}",
+      "authStatusText": "服务器认证状态： {0}",
+      "adminAPIStatusText": "Admin API状态：{0}",
+      "ocrAvailableMessage": [
+        "可用",
+        "不可用"
+      ],
+      "authStatusMessage": [
+        "需要，已通过",
+        "需要，未通过",
+        "不需要，已通过",
+        "不需要，未通过"
+      ],
+      "adminAPIStatusMessage": [
+        "可用，已通过",
+        "可用，未通过",
+        "不可用，已通过",
+        "不可用，未通过"
+      ],
+      "rawOutputLabel": "原始输出"
     }
   },
   "upload": {
     "uploadWindow": {
       "windowTitleUploadTip": "正在上传",
-      "windowTitleNotUploadTip": "上传新图片",
+      "windowTitleNotUploadTip": "上传图片",
       "uploadButtonTitle": "上传",
       "addFile": "添加文件",
       "addFolder": "添加文件夹",
@@ -77,11 +98,12 @@
       "categoriesDialogContent": "类别",
       "uncategorizedTip": "无分类",
       "noUploadTaskTip": "当前没有上传任务...",
+      "adminUnavailableTip": "由于Admin API的限制，上传图片当前不可用...",
       "errorDialogTitle": "错误",
       "errorDialogNoFileContent": "=w= 请选择要上传的文件！"
     },
     "uploadConfirmSnackbar": {
-      "snackbarContent": "上传完成！共上传 {0} 张，其中{1}张重复，{2} 张上传失败！"
+      "snackbarContent": "上传完成！共上传 {0} 张，其中 {1} 张重复，{2} 张上传失败！"
     }
   }
 }

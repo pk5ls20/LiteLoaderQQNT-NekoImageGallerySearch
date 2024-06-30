@@ -2,10 +2,12 @@ import { EnvAdapter } from '../adapter/EnvAdapter';
 import { serverStatus } from '../models/search/SearchWindowEnum';
 import { handleCatchError } from './handleCatchError';
 import { WelcomeApi } from '../services/search/WelcomeApi';
+import type { HomeApiResponse } from '../models/search/HomeApiResponse';
 
 type CheckServerResult = {
   status: serverStatus;
   message: string;
+  raw?: HomeApiResponse;
 };
 
 export const checkServer = async (endpoint: string): Promise<CheckServerResult> => {
@@ -21,7 +23,8 @@ export const checkServer = async (endpoint: string): Promise<CheckServerResult> 
     const isAuthPass = !data.authorization?.required || data.authorization.passed;
     return {
       status: isAuthPass ? serverStatus.CONNECTED : serverStatus.UNAUTHORIZED,
-      message: JSON.stringify(data)
+      message: JSON.stringify(data),
+      raw: data
     };
   } catch (error) {
     return {

@@ -13,29 +13,24 @@
         </span>
       </div>
       <div class="q-dialog-upload-bottom-right">
-        <ui-button
-          :disabled="uploadStore.isUploading"
-          class="q-dialog-upload-select-add"
-          icon="upload"
-          @click="startUpload"
-        >
+        <ui-button :disabled="isUINotAvailable" class="q-dialog-upload-select-add" icon="upload" @click="startUpload">
           {{ $t('upload.uploadWindow.uploadButtonTitle') }}
         </ui-button>
       </div>
     </div>
     <div class="q-dialog-upload-select">
       <div class="q-dialog-upload-select-left">
-        <ui-button class="q-dialog-upload-select-add" raised @click="handleUploadFile">
+        <ui-button :disabled="isUINotAvailable" class="q-dialog-upload-select-add" raised @click="handleUploadFile">
           {{ $t('upload.uploadWindow.addFile') }}
         </ui-button>
-        <ui-button class="q-dialog-upload-select-add2" raised @click="handleUploadFolder">
+        <ui-button :disabled="isUINotAvailable" class="q-dialog-upload-select-add2" raised @click="handleUploadFolder">
           {{ $t('upload.uploadWindow.addFolder') }}
         </ui-button>
       </div>
       <div class="q-dialog-upload-select-right">
         <complex-button
           v-if="uploadStore.globalLikeSwitch"
-          :disabled="!uploadStore.queue.some((e) => e.selected)"
+          :disabled="isUINotAvailable || !uploadStore.queue.some((e) => e.selected)"
           :title="$t('upload.uploadWindow.likeTitle')"
           icon="image"
           secondIcon="favorite"
@@ -45,7 +40,7 @@
         </complex-button>
         <complex-button
           v-if="!uploadStore.globalLikeSwitch"
-          :disabled="!uploadStore.queue.some((e) => e.selected)"
+          :disabled="isUINotAvailable || !uploadStore.queue.some((e) => e.selected)"
           :title="$t('upload.uploadWindow.disLikeTitle')"
           icon="image"
           secondIcon="favorite_border"
@@ -55,7 +50,7 @@
         </complex-button>
         <complex-button
           v-if="uploadStore.globalSkipOcrSwitch"
-          :disabled="!uploadStore.queue.some((e) => e.selected)"
+          :disabled="isUINotAvailable || !uploadStore.queue.some((e) => e.selected)"
           :title="$t('upload.uploadWindow.skipOcrTitle')"
           icon="image"
           secondIcon="font_download"
@@ -64,7 +59,7 @@
         ></complex-button>
         <complex-button
           v-if="!uploadStore.globalSkipOcrSwitch"
-          :disabled="!uploadStore.queue.some((e) => e.selected)"
+          :disabled="isUINotAvailable || !uploadStore.queue.some((e) => e.selected)"
           :title="$t('upload.uploadWindow.notSkipOcrTitle')"
           icon="image"
           secondIcon="font_download_off"
@@ -72,7 +67,7 @@
           @contextmenu.prevent="uploadStore.globalSkipOcrSwitch = !uploadStore.globalSkipOcrSwitch"
         ></complex-button>
         <complex-button
-          :disabled="!uploadStore.queue.some((e) => e.selected)"
+          :disabled="isUINotAvailable || !uploadStore.queue.some((e) => e.selected)"
           icon="image"
           secondIcon="add_to_photos"
           @click="uploadStore.categoriesDialogOpen = true"
@@ -93,12 +88,22 @@
           </ui-dialog-content>
           <ui-dialog-actions></ui-dialog-actions>
         </ui-dialog>
-        <ui-icon-button icon="done_all" @click="uploadStore.queue.forEach((e) => (e.selected = true))"></ui-icon-button>
+        <ui-icon-button
+          :disabled="isUINotAvailable"
+          icon="done_all"
+          @click="uploadStore.queue.forEach((e) => (e.selected = true))"
+        >
+        </ui-icon-button>
         <ui-icon-button
           icon="remove_done"
           @click="uploadStore.queue.forEach((e) => (e.selected = false))"
+          :disabled="isUINotAvailable"
         ></ui-icon-button>
-        <ui-icon-button icon="playlist_remove" @click="uploadStore.queue = []"></ui-icon-button>
+        <ui-icon-button
+          :disabled="isUINotAvailable"
+          icon="playlist_remove"
+          @click="uploadStore.queue.splice(0, uploadStore.queue.length)"
+        ></ui-icon-button>
       </div>
     </div>
     <UiProgress :buffer="1" :progress="uploadStore.uploadProgress" class="q-dialog-upload-divider" />
@@ -152,7 +157,7 @@
       </RecycleScroller>
     </ui-list>
     <div v-if="!uploadStore.queue.length" v-ripple class="q-dialog-upload-list-none">
-      {{ $t('upload.uploadWindow.noUploadTaskTip') }}
+      {{ isUINotAvailable ? $t('upload.uploadWindow.adminUnavailableTip') : $t('upload.uploadWindow.noUploadTaskTip') }}
     </div>
     <ui-dialog v-model="uploadStore.errorDialogOpen">
       <ui-dialog-title>🤯{{ $t('upload.uploadWindow.errorDialogTitle') }}</ui-dialog-title>
@@ -166,7 +171,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import SearchWindow from '../views/searchWindow.vue';
 import complexButton from '../components/utils/complexButton.vue';
@@ -174,12 +179,16 @@ import { UploadService } from '../services/search/UploadService';
 import { UploadTask, UploadTaskStatus } from '../models/search/UploadTaskModel';
 import { useUploadStore } from '../states/uploadWindowState';
 import { useMainStore } from '../states/mainWindowState';
+import { useSearchStore } from '../states/searchWindowState';
 import { humanReadableBytes } from '../utils/StringUtils';
 import { handleCatchError } from '../utils/handleCatchError';
 
 const mainWindowStore = useMainStore();
+const searchStore = useSearchStore();
 const uploadStore = useUploadStore();
 const { t } = useI18n();
+
+const isUINotAvailable = computed(() => uploadStore.isUploading || !searchStore.serverAdminAvailable);
 
 const changeComponent = () => {
   mainWindowStore.mainWindowShowMark = false;

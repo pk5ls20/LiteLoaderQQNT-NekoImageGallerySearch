@@ -3,8 +3,34 @@
     <ui-dialog-title>
       {{ $t('search.searchWindowDialog.statusDialogTitle') }}
     </ui-dialog-title>
-    <ui-dialog-content v-if="store.pluginSettingData">
-      {{ store.serverStatusMsg }}
+    <ui-dialog-content v-if="store.pluginSettingData" class="q-status-dialog-content">
+      <div>
+        {{
+          $t('search.searchWindowDialog.ocrAvailableText', [
+            $t(`search.searchWindowDialog.ocrAvailableMessage[${store.serverOCRAvailable ? 1 : 0}]`)
+          ])
+        }}
+      </div>
+      <div>
+        {{
+          $t('search.searchWindowDialog.authStatusText', [
+            $t(`search.searchWindowDialog.authStatusMessage[${store.serverAuthorizationRenderItem}]`)
+          ])
+        }}
+      </div>
+      <div>
+        {{
+          $t('search.searchWindowDialog.adminAPIStatusText', [
+            $t(`search.searchWindowDialog.adminAPIStatusMessage[${store.serverAdminAPIRenderItem}]`)
+          ])
+        }}
+      </div>
+      <ui-collapse ripple with-icon>
+        <template #toggle>
+          <div>{{ $t('search.searchWindowDialog.rawOutputLabel') }}</div>
+        </template>
+        <div>{{ store.serverStatusMsg }}</div>
+      </ui-collapse>
     </ui-dialog-content>
     <ui-dialog-actions>
       <ui-button @click="store.isStatusDialogOpen = false">OK</ui-button>
@@ -37,3 +63,13 @@ onMounted(() => {
     : t('search.searchWindowDialog.serverStatusMessage');
 });
 </script>
+
+<style scoped>
+.q-status-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 500px;
+  line-height: 1.6;
+}
+</style>

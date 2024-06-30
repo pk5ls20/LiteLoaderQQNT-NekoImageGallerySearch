@@ -29,3 +29,17 @@ export enum fetchStatus {
   MORE_FETCHING = 3,
   MORE_SUCCESS = 4
 }
+
+export enum serverAuthStatus {
+  REQUIRE_PASSED = 0,
+  REQUIRE_NOT_PASSED = 1,
+  NOT_REQUIRE_PASSED = 2,
+  NOT_REQUIRE_NOT_PASSED = 3
+}
+
+export enum serverAdminAPIStatus {
+  AVAILABLE_PASSED = 0,
+  AVAILABLE_NOT_PASSED = 1,
+  NOT_AVAILABLE_PASSED = 2,
+  NOT_AVAILABLE_NOT_PASSED = 3
+}

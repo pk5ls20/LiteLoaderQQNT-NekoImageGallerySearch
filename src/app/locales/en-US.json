@@ -12,7 +12,8 @@
       "serverDisconnectedStatusMessage": "Server disconnected"
     },
     "basicSearchInput": {
-      "inputPlaceholder": "Search..."
+      "inputPlaceholder": "Search...",
+      "inputPlaceholderDisabled": "Due to config's restrictions, OCR search is unavailable"
     },
     "imageSearchInput": {
       "inputTip": "Click here to upload an image from your local device for image search...",
@@ -59,13 +60,33 @@
       "statusDialogTitle": "Server Status",
       "fetchErrorDialogTitle": "Failed to fetch",
       "serverStatusMsg": "Loading...",
-      "serverStatusMessage": "Checking server..."
+      "serverStatusMessage": "Checking server...",
+      "ocrAvailableText": "OCR Service Available: {0}",
+      "ocrAvailableMessage": [
+        "True",
+        "False"
+      ],
+      "authStatusText": "Authorization Status: {0}",
+      "authStatusMessage": [
+        "Required, Passed",
+        "Required, Not passed",
+        "Not Required, Passed",
+        "Not Required, Not Passed"
+      ],
+      "adminAPIStatusText": "Admin API Status: {0}",
+      "adminAPIStatusMessage": [
+        "Available, Passed",
+        "Available, Not Passed",
+        "Not Available, Passed",
+        "Not Available, Not Passed"
+      ],
+      "rawOutputLabel": "Raw Output"
     }
   },
   "upload": {
     "uploadWindow": {
       "windowTitleUploadTip": "Uploading",
-      "windowTitleNotUploadTip": "Upload New Images",
+      "windowTitleNotUploadTip": "Upload Images",
       "uploadButtonTitle": "Upload",
       "addFile": "Add File",
       "addFolder": "Add Folder",
@@ -77,6 +98,7 @@
       "categoriesDialogContent": " Categories",
       "uncategorizedTip": "Uncategorized",
       "noUploadTaskTip": "There are currently no upload tasks...",
+      "adminUnavailableTip": "Due to restrictions in the Admin API, uploading images is currently unavailable...",
       "errorDialogTitle": "Error",
       "errorDialogNoFileContent": "=w= Please select the file to upload!"
     },

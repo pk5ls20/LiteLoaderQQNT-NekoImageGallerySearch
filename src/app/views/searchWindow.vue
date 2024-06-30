@@ -126,6 +126,7 @@ const handleSettingChange = async (setting_data: string | null) => {
   };
   EnvAdapter.log('store.pluginSettingData', outputSettingData);
   const checkStatusResult = await checkServer(store.pluginSettingData.nekoimage_api);
+  store.serverCheckResult = checkStatusResult.raw ?? null;
   store.serverStatus = checkStatusResult.status;
   store.serverStatusMsg = checkStatusResult.message;
   switch (store.serverStatus) {
