@@ -7,7 +7,7 @@
       <div>
         {{
           $t('search.searchWindowDialog.ocrAvailableText', [
-            $t(`search.searchWindowDialog.ocrAvailableMessage[${store.serverOCRAvailable ? 1 : 0}]`)
+            $t(`search.searchWindowDialog.ocrAvailableMessage[${store.serverOCRAvailable ? 0 : 1}]`)
           ])
         }}
       </div>
