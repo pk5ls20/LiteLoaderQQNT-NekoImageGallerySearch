@@ -13,6 +13,7 @@
 .q-dialog,
 .q-status-dialog,
 .mdc-floating-label {
+    font-family: 'HarmonyOS Sans SC', sans-serif;
     --mdc-theme-primary: #5183de !important;
     --mdc-theme-secondary: #5183de !important;
 }
