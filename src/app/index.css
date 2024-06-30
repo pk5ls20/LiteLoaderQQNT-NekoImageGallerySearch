@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'HarmonyOS Sans SC';
-    src: url('assets/HarmonyOS_Sans_SC_Medium.subset.woff2') format('woff2');
+    src: url('../../node_modules/@lobehub/webfont-harmony-sans/fonts/HarmonyOS_Sans_Medium.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }

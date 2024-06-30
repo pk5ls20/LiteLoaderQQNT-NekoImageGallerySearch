@@ -14,6 +14,7 @@
     "remote-plugin-build": "electron-vite build && scp -r LiteLoaderQQNT-NekoImage/* pk5ls@pk5ls-vm:/home/pk5ls/LiteLoaderQQNT/plugins/LiteLoaderQQNT-NekoImage/"
   },
   "dependencies": {
+    "@lobehub/webfont-harmony-sans": "^1.0.0",
     "axios": "^1.6.8",
     "balm-ui": "^10.28.2",
     "file-type": "^19.0.0",

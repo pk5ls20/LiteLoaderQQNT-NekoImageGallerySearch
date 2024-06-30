@@ -1314,6 +1314,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@lobehub/webfont-harmony-sans@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@lobehub/webfont-harmony-sans/-/webfont-harmony-sans-1.0.0.tgz#d2c04610d2219057be6b51b137746cf243fdf4ea"
+  integrity sha512-Cv/QCUWJk9+aUm8AwYaoaOwR/3r9I2Gg1iW0VmLDO3Ur/IVi6KRmzCmoMi49QD4l42mH8JjQ/gK0X0IF5F00QA==
+
 "@material/animation@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@material/animation/-/animation-14.0.0.tgz#f23fbe38deb6a48829dcdb0b7580017a4217e94b"
