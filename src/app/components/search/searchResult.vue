@@ -1,12 +1,21 @@
 <template>
-  <div v-for="it in store.searchResults" :key="it.img.id" class="q-search-result-item">
+  <div
+    v-for="it in store.searchResults"
+    :key="it.img.id"
+    class="q-search-result-item"
+    @contextmenu.prevent="handleImageRightClick(it.img.id)"
+  >
     <ui-menu-anchor>
-      <img
-        :alt="it.img.ocr_text"
-        :src="getPreviewURL(it.img)"
-        @click="handleImageClick(it.img, it.img.id)"
-        @contextmenu.prevent="handleImageRightClick(it.img.id)"
-      />
+      <div class="q-search-result-item-image-container">
+        <img
+          v-if="!store.searchResultPicLoadFailedMap.get(it.img.id)"
+          :alt="it.img.ocr_text"
+          :src="getPreviewURL(it.img)"
+          @click="handleImageClick(it.img, it.img.id)"
+          @error="store.searchResultPicLoadFailedMap.set(it.img.id, true)"
+        />
+        <div v-else class="material-icons placeholder">broken_image</div>
+      </div>
       <ui-menu v-model="store.searchResultItemOpenStates[it.img.id]" :style="{ transform: 'scale(0.8)' }">
         <ui-menuitem @click="performSimilarSearch(it.img, fetchType.FIRST)">
           <ui-menuitem-icon>
@@ -141,17 +150,17 @@ const handleImageRightClick = (id: string) => {
 
 <style scoped>
 .q-search-result-item {
-  width: 100%;
-  height: auto;
+  height: 100px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .q-search-result-item img {
-  max-width: 100%;
-  max-height: 100px;
-  object-fit: cover;
+  height: 100px;
+  width: 100px;
+  object-fit: contain;
 }
 
 .q-search-load-more-button-container {

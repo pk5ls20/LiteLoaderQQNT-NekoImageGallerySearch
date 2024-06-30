@@ -13,10 +13,10 @@
     },
     "basicSearchInput": {
       "inputPlaceholder": "搜索...",
-      "inputPlaceholderDisabled": "由于配置限制，文搜图目前不可用"
+      "inputPlaceholderDisabled": "由于服务端配置限制，文搜图目前不可用"
     },
     "imageSearchInput": {
-      "inputTip": "点击此处，从本地上传用于以图搜图的图片...",
+      "inputTip": "点击此处从本地上传用于以图搜图的图片...",
       "uploadImageCountMoreThanOneTip": "只能上传一张图片哦",
       "uploadImageCallbackErrorTip": "拉取本地图片时发生错误！"
     },
@@ -109,7 +109,7 @@
       "categoriesDialogContent": "类别",
       "uncategorizedTip": "无分类",
       "noUploadTaskTip": "当前没有上传任务...",
-      "adminUnavailableTip": "由于Admin API的限制，上传图片当前不可用...",
+      "adminUnavailableTip": "由于服务端Admin API的配置限制，上传图片当前不可用...",
       "errorDialogTitle": "错误",
       "errorDialogNoFileContent": "=w= 请选择要上传的文件！"
     },

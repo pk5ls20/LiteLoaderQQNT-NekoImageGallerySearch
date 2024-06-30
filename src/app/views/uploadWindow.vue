@@ -308,6 +308,7 @@ defineComponent({
   justify-content: center;
   align-items: center;
   height: 200px;
+  background-color: rgba(29, 30, 30, 0.21);
 }
 
 .q-dialog-upload-list-scroller {

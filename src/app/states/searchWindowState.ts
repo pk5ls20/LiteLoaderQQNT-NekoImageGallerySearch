@@ -28,6 +28,7 @@ export const useSearchStore = defineStore('search', {
     queryAdvanceInputPromptMap: new Map() as Map<string, string>,
     queryAdvanceModeBind: '0' as string,
     isQueryAdvanceModeClicked: false as boolean,
+    searchResultPicLoadFailedMap: new Map() as Map<string, boolean>,
     searchResultItemOpenStates: {} as {
       [key: string]: boolean;
     },
