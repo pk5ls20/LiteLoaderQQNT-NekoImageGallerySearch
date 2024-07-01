@@ -72,6 +72,7 @@
       "fetchErrorDialogTitle": "Failed to fetch",
       "serverStatusMsg": "Loading...",
       "serverStatusMessage": "Checking server...",
+      "serverLastCheckTimeText": "Last Check: {0} (server time)",
       "ocrAvailableText": "OCR Service Available: {0}",
       "ocrAvailableMessage": [
         "True",

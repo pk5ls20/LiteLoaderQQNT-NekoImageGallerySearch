@@ -4,21 +4,26 @@
       {{ $t('search.searchWindowDialog.statusDialogTitle') }}
     </ui-dialog-title>
     <ui-dialog-content v-if="store.pluginSettingData" class="q-status-dialog-content">
-      <div>
+      <div v-if="store.serverStatus != serverStatus.DISCONNECTED">
+        {{
+          $t('search.searchWindowDialog.serverLastCheckTimeText', [store.serverCheckResult?.server_time ?? 'unknown'])
+        }}
+      </div>
+      <div v-if="store.serverStatus != serverStatus.DISCONNECTED">
         {{
           $t('search.searchWindowDialog.ocrAvailableText', [
             $t(`search.searchWindowDialog.ocrAvailableMessage[${store.serverOCRAvailable ? 0 : 1}]`)
           ])
         }}
       </div>
-      <div>
+      <div v-if="store.serverStatus != serverStatus.DISCONNECTED">
         {{
           $t('search.searchWindowDialog.authStatusText', [
             $t(`search.searchWindowDialog.authStatusMessage[${store.serverAuthorizationRenderItem}]`)
           ])
         }}
       </div>
-      <div>
+      <div v-if="store.serverStatus != serverStatus.DISCONNECTED">
         {{
           $t('search.searchWindowDialog.adminAPIStatusText', [
             $t(`search.searchWindowDialog.adminAPIStatusMessage[${store.serverAdminAPIRenderItem}]`)
@@ -51,6 +56,7 @@
 import { onMounted } from 'vue';
 import { useSearchStore } from '../../states/searchWindowState';
 import { useI18n } from 'vue-i18n';
+import { serverStatus } from '../../models/search/SearchWindowEnum';
 const store = useSearchStore();
 const { t } = useI18n();
 

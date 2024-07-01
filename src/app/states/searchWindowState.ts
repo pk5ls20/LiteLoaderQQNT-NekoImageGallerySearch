@@ -33,7 +33,7 @@ export const useSearchStore = defineStore('search', {
       [key: string]: boolean;
     },
     isStatusDialogOpen: false as boolean,
-    serverStatus: 0 as number,
+    serverStatus: 2 as number,
     serverStatusMsg: null as string | null,
     serverStatusMessage: null as string | null,
     serverStatusColor: 'grey' as string,

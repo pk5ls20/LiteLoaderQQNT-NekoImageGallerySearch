@@ -58,7 +58,7 @@
 import { onMounted, watch, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EnvAdapter } from '../adapter/EnvAdapter';
-import SearchWindowDialog from '../components/search/searchWindowDialog.vue';
+import SearchWindowDialog from '../components/search/searchWindowStatusDialog.vue';
 import FilterDialog from '../components/search/filterDialog.vue';
 import { fetchStatus, searchType, serverStatus } from '../models/search/SearchWindowEnum';
 import { resetClient } from '../services/search/baseSearchService';
