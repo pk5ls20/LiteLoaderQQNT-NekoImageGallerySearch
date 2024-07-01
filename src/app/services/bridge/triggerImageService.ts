@@ -15,11 +15,11 @@ export class devTriggerImageSearchService implements TriggerImageService {
     callback: (file_content: Uint8Array | null) => Promise<void>,
     registerNum: sharedAdapter.TriggerImageRegisterNameType[keyof sharedAdapter.TriggerImageRegisterNameType]
   ): void {
-    console.log('devTriggerImageSearchService init with registerNum', callback, registerNum);
+    sharedAdapter.Log.debug('devTriggerImageSearchService init with registerNum', callback, registerNum);
   }
 
   reset(): void {
-    console.log('devTriggerImageSearchService reset');
+    sharedAdapter.Log.debug('devTriggerImageSearchService reset');
   }
 }
 

@@ -111,11 +111,11 @@ const readDirectory = async (paths: string[], allow_mine: string[]): Promise<Fil
 
 const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: string[]): Promise<FileObject[]> => {
   if (result.canceled) {
-    console.log('No directory selected');
+    log.debug('No directory selected');
     // TODO: not reject
     return Promise.reject(new Error('No directory selected'));
   } else {
-    console.log('Selected directory:', JSON.stringify(result.filePaths));
+    log.debug('Selected directory:', JSON.stringify(result.filePaths));
     return await readDirectory(result.filePaths, accept);
   }
 };

@@ -7,7 +7,7 @@ interface pluginSettingsService {
 
 export class devPluginSettingsService implements pluginSettingsService {
   async get(): Promise<sharedAdapter.PluginSettingsModelType> {
-    console.log('isDevEnv=', true);
+    sharedAdapter.Log.debug('isDevEnv=', true);
     return new sharedAdapter.PluginSettingsModel(
       devEnvWrap('NEKOIMAGE_API') ?? '',
       devEnvWrap('ACCESS_TOKEN') ?? '',
@@ -28,7 +28,7 @@ export class LLNTPluginSettingsService implements pluginSettingsService {
         settingsData.nekoimage_admin_token
       );
     } catch (error) {
-      console.error('Error fetching plugin settings:', error);
+      sharedAdapter.Log.error('Error fetching plugin settings:', error);
       return blankSettings;
     }
   }

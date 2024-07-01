@@ -8,7 +8,7 @@ let mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32'
 // reference https://github.com/xh321/LiteLoaderQQNT-QR-Decode/blob/master/src/qContextMenu.js#L12
 const addQContextMenu = (qContextMenu: Element, icon: string, title: string, menuID: string, callback: Function) => {
   if (qContextMenu.querySelector(`#${menuID}`) != null) {
-    console.log(`addQContextMenu: ${menuID} already exists.`);
+    log.debug(`addQContextMenu: ${menuID} already exists.`);
     return;
   }
   const tempEl = document.createElement('div');

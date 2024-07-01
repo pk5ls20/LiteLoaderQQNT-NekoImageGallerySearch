@@ -1,10 +1,12 @@
+import { sharedAdapter } from '../../adapter/SharedAdapter';
+
 interface adjustVisibleService {
   set(state: boolean): Promise<void>;
 }
 
 export class devAdjustVisibleService implements adjustVisibleService {
   async set(state: boolean): Promise<void> {
-    console.log(`Switched to ${state.toString()}`);
+    sharedAdapter.Log.debug(`Switched to ${state.toString()}`);
   }
 }
 
