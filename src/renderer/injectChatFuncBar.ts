@@ -4,8 +4,8 @@ import { showIframe } from './controlIframe';
 import { log } from '../common/share/logs';
 
 // reference https://github.com/xtaw/LiteLoaderQQNT-Fake-Message/blob/master/src/renderer.js#L72
-export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
+export const injectChatFuncBarObserver = new MutationObserver(async (mutations) => {
+  for (const mutation of mutations) {
     for (const node of mutation.addedNodes) {
       if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as Element;
@@ -13,7 +13,7 @@ export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
           // inject iframe only once
           if (document.getElementById(iframeID) === null) {
             log.debug('injectChatFuncBarObserver: iframe not exists, prepare to inject');
-            setupIframe();
+            await setupIframe();
           } else {
             log.debug('injectChatFuncBarObserver: iframe already exists');
           }
@@ -40,5 +40,5 @@ export const injectChatFuncBarObserver = new MutationObserver((mutations) => {
         }
       }
     }
-  });
+  }
 });

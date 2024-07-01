@@ -32,8 +32,9 @@ const adjustIframe = (iframe: any) => {
   iframe.style.top = `${centerY}px`;
 };
 
-export const setupIframe = () => {
+export const setupIframe = async () => {
   const iframe = document.createElement('iframe');
+  const settings = await window.imageSearch.getSettings();
   iframe.id = iframeID;
   iframe.onload = () => {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
@@ -54,7 +55,7 @@ export const setupIframe = () => {
       const mountPoint = iframeDocument.createElement('div');
       mountPoint.id = mountID;
       iframeDocument.body.appendChild(mountPoint);
-      AppEntry('mainWindow', `#${mountID}`, iframeDocument)
+      AppEntry('mainWindow', `#${mountID}`, iframeDocument, settings?.nekoimage_lang)
         .then(() => log.debug('setupIframe: AppEntry Inject Success'))
         .catch((e) => log.debug('setupIframe: AppEntry Inject Failed', e.stack.toString()));
     } else {
