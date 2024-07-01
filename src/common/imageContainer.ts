@@ -5,7 +5,7 @@ export class imageContainer {
     this.src = src;
   }
 
-  async toBlob(): Promise<Blob | null> {
+  async toBlob(): Promise<Uint8Array | null> {
     if (this.src.startsWith('data:')) {
       return this.convertBase64ToBlob();
     } else if (this.src.startsWith('appimg://')) {
@@ -15,7 +15,7 @@ export class imageContainer {
     }
   }
 
-  convertBase64ToBlob() {
+  convertBase64ToBlob(): Uint8Array | null {
     try {
       const base64Content = this.src.split(';base64,').pop();
       const binary = atob(base64Content ?? '');
@@ -24,14 +24,14 @@ export class imageContainer {
       for (let i = 0; i < length; i++) {
         bytes[i] = binary.charCodeAt(i);
       }
-      return new Blob([bytes], { type: 'image/png' });
+      return bytes;
     } catch (e) {
       return null;
     }
   }
 
-  async convertImageUrlToBlob() {
+  async convertImageUrlToBlob(): Promise<Uint8Array | null> {
     const pathContent = this.src.split('appimg://').pop();
-    return await window.imageSearch.getLocalFileAsBlob(decodeURIComponent(pathContent ?? ''));
+    return await window.imageSearch.getLocalFileAsUInt8Array(decodeURIComponent(pathContent ?? ''));
   }
 }

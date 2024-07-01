@@ -63,7 +63,6 @@
 
 <script lang="ts" setup>
 import { useSearchStore } from '../../states/searchWindowState';
-
 const store = useSearchStore();
 </script>
 

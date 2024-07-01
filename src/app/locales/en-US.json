@@ -116,6 +116,10 @@
     },
     "uploadConfirmSnackbar": {
       "snackbarContent": "Upload completed! finish {0} tasks, which {1} duplicate and {2} errors!"
+    },
+    "uploadTriggerHelper": {
+      "noFileContentTip": "No file content!",
+      "noServerAdminTip": "Due to restrictions in the Admin API, uploading images is currently unavailable!"
     }
   }
 }

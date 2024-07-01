@@ -171,7 +171,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, onMounted } from 'vue';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import SearchWindow from '../views/searchWindow.vue';
 import complexButton from '../components/utils/complexButton.vue';
@@ -260,6 +260,11 @@ const startUpload = () => {
 
 defineComponent({
   name: 'uploadWindow'
+});
+
+onMounted(() => {
+  EnvAdapter.log('uploadWindow mounted');
+  uploadStore.markMounted();
 });
 </script>
 

@@ -3,10 +3,11 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import * as channel from '../common/channels';
-import { log } from '../common/share/logs';
 import { FileObject } from '../common/fileObject';
 import { fileTypeFromBuffer } from 'file-type';
+import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
+import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
 
 const pluginDataPath = LiteLoader.plugins['image_search'].path.data;
 const settingsPath = path.join(pluginDataPath, 'settings.json');
@@ -52,11 +53,14 @@ ipcMain.handle(channel.GET_LOCAL_FILE, (event, file_path: string) => {
   }
 });
 
-ipcMain.on(channel.POST_APP_IMAGE_SEARCH_REQ, (event, file_buffer: Buffer | null) => {
-  // In the current situation, both the channel sending the signal and the channel receiving the signal
-  // are within the same window (i.e., the main NTQQ chat window), so the signal can be sent directly
-  event.sender.send(channel.POST_APP_IMAGE_SEARCH_RES, file_buffer);
-});
+ipcMain.on(
+  channel.POST_APP_IMAGE_SEARCH_REQ,
+  (event, file_buffer: Uint8Array | null, registerNum: TriggerImageRegisterName) => {
+    // In the current situation, both the channel sending the signal and the channel receiving the signal
+    // are within the same window (i.e., the main NTQQ chat window), so the signal can be sent directly
+    event.sender.send(channel.POST_APP_IMAGE_SEARCH_RES, file_buffer, registerNum);
+  }
+);
 
 ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: pluginSettingsModel | null) => {
   let settingStr: string | null = null;

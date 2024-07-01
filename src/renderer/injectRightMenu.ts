@@ -1,14 +1,16 @@
 import iconHtml from '../app/assets/logo.svg?raw';
-import { log } from '../common/share/logs';
 import { imageContainer } from '../common/imageContainer';
-
-const menuID = 'nekoimg-i2i-menu';
+import { log } from '../common/share/logs';
+import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
 
 let mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32' ? 'mouseup' : 'mousedown';
 
 // reference https://github.com/xh321/LiteLoaderQQNT-QR-Decode/blob/master/src/qContextMenu.js#L12
-const addQContextMenu = (qContextMenu: Element, icon: string, title: string, callback: Function) => {
-  if (qContextMenu.querySelector(`#${menuID}`) != null) return;
+const addQContextMenu = (qContextMenu: Element, icon: string, title: string, menuID: string, callback: Function) => {
+  if (qContextMenu.querySelector(`#${menuID}`) != null) {
+    console.log(`addQContextMenu: ${menuID} already exists.`);
+    return;
+  }
   const tempEl = document.createElement('div');
   const selectorFirst = 'a.q-context-menu-item--normal:not([disabled="true"])'; // priority find normal menu item
   const selectorSecond = '.q-context-menu :not([disabled="true"])'; // rollback to find any menu item
@@ -68,13 +70,17 @@ export const addQContextMenuMain = async () => {
       imageObject = null;
     }
   });
-  new MutationObserver(() => {
+  new MutationObserver(async () => {
     const qContextMenu = document.querySelector('.q-context-menu');
     if (qContextMenu && imageObject) {
-      const currentImageObject = imageObject;
-      addQContextMenu(qContextMenu, iconHtml, 'Image Search', async () => {
-        const fileBlobContent = await currentImageObject.toBlob();
-        window.imageSearch.postAppImageSearchReq(fileBlobContent);
+      const fileBlobContent = await imageObject.toBlob();
+      addQContextMenu(qContextMenu, iconHtml, 'Image Search', 'nekoimg-i2i-menu', async () => {
+        log.debug('Image Search');
+        window.imageSearch.postAppImageReq(fileBlobContent, TriggerImageRegisterName.IMAGE_SEARCH);
+      });
+      addQContextMenu(qContextMenu, iconHtml, 'Image Upload', 'nekoimg-upload-menu', async () => {
+        log.debug('Image Upload');
+        window.imageSearch.postAppImageReq(fileBlobContent, TriggerImageRegisterName.IMAGE_UPLOAD);
       });
     }
   }).observe(bodyElement, { childList: true });

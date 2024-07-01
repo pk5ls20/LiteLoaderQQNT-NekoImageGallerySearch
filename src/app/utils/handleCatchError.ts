@@ -1,6 +1,7 @@
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import { fetchStatus } from '../models/search/SearchWindowEnum';
 import { useSearchStore } from '../states/searchWindowState';
+import { useUploadStore } from '../states/uploadWindowState';
 import { AxiosError, AxiosResponse } from 'axios';
 
 export const handleCatchError = (e: AxiosError | Error | unknown) => {
@@ -21,9 +22,15 @@ export const handleCatchError = (e: AxiosError | Error | unknown) => {
   return errorMsg;
 };
 
-export const displayErrorDialog = (e: any) => {
-  const store = useSearchStore();
-  store.isFetchError = true;
-  store.fetchingStatus = fetchStatus.NONE;
-  store.fetchErrorMsg = handleCatchError(e);
+export const displaySearchErrorDialog = (e: any) => {
+  const searchStore = useSearchStore();
+  searchStore.isFetchError = true;
+  searchStore.fetchingStatus = fetchStatus.NONE;
+  searchStore.fetchErrorMsg = handleCatchError(e);
+};
+
+export const displayUploadErrorDialog = (message: string) => {
+  const uploadStore = useUploadStore();
+  uploadStore.errorDialogContent = handleCatchError(message);
+  uploadStore.errorDialogOpen = true;
 };

@@ -19,6 +19,7 @@
     "balm-ui": "^10.28.2",
     "file-type": "^19.0.0",
     "pinia": "^2.1.7",
+    "uuid": "^10.0.0",
     "vue": "^3.3.11",
     "vue-i18n": "9",
     "vue-virtual-scroller": "^2.0.0-beta.8"
@@ -27,6 +28,7 @@
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "@rushstack/eslint-patch": "^1.10.2",
     "@tsconfig/node20": "^20.1.4",
+    "@types/uuid": "^10.0.0",
     "@types/vue-virtual-scroller": "npm:@earltp/vue-virtual-scroller",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/devtools": "^6.6.3",

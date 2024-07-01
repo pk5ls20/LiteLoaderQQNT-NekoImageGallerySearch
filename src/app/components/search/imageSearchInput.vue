@@ -1,25 +1,29 @@
 <template>
   <div v-ripple class="q-dialog-image-input" @click="handleUploadImageQuery">
-    <div v-if="store.queryImageInput === null" class="q-dialog-image-input-tip">
+    <div v-if="searchStore.queryImageInput === null" class="q-dialog-image-input-tip">
       {{ $t('search.imageSearchInput.inputTip') }}
     </div>
-    <img v-if="store.queryImageInput !== null" :src="store.queryImageInput" class="q-dialog-image-input-image" />
+    <img
+      v-if="searchStore.queryImageInput !== null"
+      :src="searchStore.queryImageInput"
+      class="q-dialog-image-input-image"
+    />
     <ui-icon-button
-      v-if="store.queryImageInput !== null"
+      v-if="searchStore.queryImageInput !== null"
       class="q-dialog-advance-input-clear-button"
       icon="clear"
       @click.stop="
         () => {
-          store.queryImageInput = null;
+          searchStore.queryImageInput = null;
         }
       "
     >
     </ui-icon-button>
     <ui-icon-button
-      :icon="store.isEnableFilterOptions ? 'filter_alt' : 'filter_alt_off'"
-      :style="{ right: store.queryImageInput === null ? '0px' : '50px' }"
+      :icon="searchStore.isEnableFilterOptions ? 'filter_alt' : 'filter_alt_off'"
+      :style="{ right: searchStore.queryImageInput === null ? '0px' : '50px' }"
       class="q-dialog-advance-input-filter-button"
-      @click.stop="store.isFilterOptionsDialogOpen = true"
+      @click.stop="searchStore.isFilterOptionsDialogOpen = true"
     ></ui-icon-button>
   </div>
 </template>
@@ -28,13 +32,17 @@
 import { useI18n } from 'vue-i18n';
 import { onMounted } from 'vue';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
+import { sharedAdapter } from '../../adapter/SharedAdapter';
 import { searchType } from '../../models/search/SearchWindowEnum';
 import { ImageSearchQuery } from '../../services/search/searchQueryService';
 import { performQuerySearchService } from '../../services/search/performQuerySearchService';
 import { useSearchStore } from '../../states/searchWindowState';
-import { displayErrorDialog } from '../../utils/handleCatchError';
+import { displaySearchErrorDialog } from '../../utils/handleCatchError';
+import { useMainStore } from '../../states/mainWindowState';
+import SearchWindow from '../../views/searchWindow.vue';
 
-const store = useSearchStore();
+const mainStore = useMainStore();
+const searchStore = useSearchStore();
 const { t } = useI18n();
 
 const handleUploadImageQuery = async () => {
@@ -42,29 +50,34 @@ const handleUploadImageQuery = async () => {
   // because it is not available to choose more, in theory, the IMG array should have only one element
   // but just check it =w=
   if (imgList.length > 1) {
-    displayErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
+    displaySearchErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
     return;
   }
-  store.queryImageInput = URL.createObjectURL(imgList[0]);
+  searchStore.queryImageInput = URL.createObjectURL(imgList[0]);
   const req = new ImageSearchQuery(imgList[0]);
   await performQuerySearchService(req, 0);
 };
 
-const postAppImageSearchResCallBack = async (file_content: Buffer | null) => {
-  store.tabActiveItem = searchType.IMAGE;
+const postAppImageSearchResCallBack = async (file_content: Uint8Array | null) => {
+  searchStore.tabActiveItem = searchType.IMAGE;
+  mainStore.mainWindowActiveComponent = SearchWindow;
   await EnvAdapter.adjustVisible(true);
   if (file_content !== null) {
+    // TODO: return real file type
     const blob = new Blob([file_content], { type: 'image/png' });
-    store.queryImageInput = URL.createObjectURL(blob);
+    searchStore.queryImageInput = URL.createObjectURL(blob);
     const req = new ImageSearchQuery(blob);
     await performQuerySearchService(req, 0);
   } else {
-    displayErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
+    displaySearchErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
   }
 };
 
 onMounted(() => {
-  EnvAdapter.triggerImageSearchService().init(postAppImageSearchResCallBack);
+  EnvAdapter.triggerImageService().init(
+    postAppImageSearchResCallBack,
+    sharedAdapter.TriggerImageRegisterName.IMAGE_SEARCH
+  );
   EnvAdapter.log('imageSearchInputComponents mounted');
 });
 </script>

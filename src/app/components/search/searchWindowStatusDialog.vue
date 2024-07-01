@@ -57,6 +57,7 @@ import { onMounted } from 'vue';
 import { useSearchStore } from '../../states/searchWindowState';
 import { useI18n } from 'vue-i18n';
 import { serverStatus } from '../../models/search/SearchWindowEnum';
+
 const store = useSearchStore();
 const { t } = useI18n();
 

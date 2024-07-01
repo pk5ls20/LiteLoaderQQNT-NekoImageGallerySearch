@@ -3,6 +3,7 @@
   "include": ["vite.config.*",
     "services/bridge/*.ts", "**/*.ts",
     "components/search/imageSearchInput.vue",
+    "components/upload/uploadTriggerHelper.vue",
     "../common/share/*.ts"
   ],
   "exclude": ["appEntry.ts"],

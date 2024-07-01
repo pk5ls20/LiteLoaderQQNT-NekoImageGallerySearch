@@ -72,6 +72,7 @@
       "fetchErrorDialogTitle": "请求失败",
       "serverStatusMsg": "加载中...",
       "serverStatusMessage": "正在检查服务器连接...",
+      "serverLastCheckTimeText": "上次检查于: {0} （服务器时间）",
       "ocrAvailableText": "OCR服务可用性： {0}",
       "authStatusText": "服务器认证状态： {0}",
       "adminAPIStatusText": "Admin API状态：{0}",
@@ -115,6 +116,10 @@
     },
     "uploadConfirmSnackbar": {
       "snackbarContent": "上传完成！共上传 {0} 张，其中 {1} 张重复，{2} 张上传失败！"
+    },
+    "uploadTriggerHelper": {
+      "noFileContentTip": "缺少文件内容！",
+      "noServerAdminTip": "由于服务端Admin API的配置限制，上传图片当前不可用！"
     }
   }
 }

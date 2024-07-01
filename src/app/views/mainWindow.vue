@@ -1,8 +1,12 @@
 <template>
   <div class="q-main">
     <Transition :name="store.mainWindowUseCSSAnimate ? 'component' : ''" mode="out-in">
-      <component :is="store.mainWindowActiveComponent" key="store.mainWindowActiveComponent"></component>
+      <keep-alive>
+        <search-window v-if="store.mainWindowActiveComponent === SearchWindow" key="searchWindow" />
+        <upload-window v-else key="uploadWindow" />
+      </keep-alive>
     </Transition>
+    <upload-trigger-helper :style="{ display: 'none' }" />
     <div v-if="store.mainWindowShowMark" class="spread-mask"></div>
     <search-snackbar />
     <upload-confirm-snackbar />
@@ -13,6 +17,9 @@
 import { useMainStore } from '../states/mainWindowState';
 import SearchSnackbar from '../components/search/searchSnackbar.vue';
 import UploadConfirmSnackbar from '../components/upload/uploadConfirmSnackbar.vue';
+import SearchWindow from './searchWindow.vue';
+import UploadWindow from './uploadWindow.vue';
+import UploadTriggerHelper from '../components/upload/uploadTriggerHelper.vue';
 
 const store = useMainStore();
 </script>

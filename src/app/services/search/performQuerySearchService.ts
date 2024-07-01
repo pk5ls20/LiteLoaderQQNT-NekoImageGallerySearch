@@ -2,7 +2,7 @@ import type { SearchResult } from '../../models/search/SearchResult';
 import { SearchQueryService } from './searchQueryService';
 import { fetchStatus, fetchType } from '../../models/search/SearchWindowEnum';
 import { useSearchStore } from '../../states/searchWindowState';
-import { displayErrorDialog } from '../../utils/handleCatchError';
+import { displaySearchErrorDialog } from '../../utils/handleCatchError';
 
 export const performQuerySearchService = async (query: SearchQueryService, type: fetchType) => {
   const store = useSearchStore();
@@ -20,6 +20,6 @@ export const performQuerySearchService = async (query: SearchQueryService, type:
     }); // add ref
     store.fetchingStatus = type === fetchType.FIRST ? fetchStatus.FIRST_SUCCESS : fetchStatus.MORE_SUCCESS;
   } catch (e) {
-    displayErrorDialog(e);
+    displaySearchErrorDialog(e);
   }
 };
