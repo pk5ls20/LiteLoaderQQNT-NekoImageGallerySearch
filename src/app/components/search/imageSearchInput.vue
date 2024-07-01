@@ -31,6 +31,7 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
 import { onMounted } from 'vue';
+import { type MimeType } from 'file-type';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { sharedAdapter } from '../../adapter/SharedAdapter';
 import { searchType } from '../../models/search/SearchWindowEnum';
@@ -58,13 +59,12 @@ const handleUploadImageQuery = async () => {
   await performQuerySearchService(req, 0);
 };
 
-const postAppImageSearchResCallBack = async (file_content: Uint8Array | null) => {
+const postAppImageSearchResCallBack = async (file_content: Uint8Array | null, file_mine: MimeType) => {
   searchStore.tabActiveItem = searchType.IMAGE;
   mainStore.mainWindowActiveComponent = SearchWindow;
   await EnvAdapter.adjustVisible(true);
   if (file_content !== null) {
-    // TODO: return real file type
-    const blob = new Blob([file_content], { type: 'image/png' });
+    const blob = new Blob([file_content], { type: file_mine });
     searchStore.queryImageInput = URL.createObjectURL(blob);
     const req = new ImageSearchQuery(blob);
     await performQuerySearchService(req, 0);

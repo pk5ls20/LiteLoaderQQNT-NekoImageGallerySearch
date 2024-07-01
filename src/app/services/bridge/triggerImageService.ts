@@ -1,9 +1,10 @@
 /// <reference types="../../../global.d.ts" />
 import { sharedAdapter } from '../../adapter/SharedAdapter';
+import { type MimeType } from 'file-type';
 
 interface TriggerImageService {
   init(
-    callback: (file_content: Uint8Array | null) => Promise<void>,
+    callback: (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>,
     registerNum: sharedAdapter.TriggerImageRegisterNameType[keyof sharedAdapter.TriggerImageRegisterNameType]
   ): void;
 
@@ -12,7 +13,7 @@ interface TriggerImageService {
 
 export class devTriggerImageSearchService implements TriggerImageService {
   init(
-    callback: (file_content: Uint8Array | null) => Promise<void>,
+    callback: (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>,
     registerNum: sharedAdapter.TriggerImageRegisterNameType[keyof sharedAdapter.TriggerImageRegisterNameType]
   ): void {
     sharedAdapter.Log.debug('devTriggerImageSearchService init with registerNum', callback, registerNum);
@@ -25,11 +26,11 @@ export class devTriggerImageSearchService implements TriggerImageService {
 
 export class LLNTTriggerImageSearchService implements TriggerImageService {
   init(
-    callback: (file_content: Uint8Array | null) => Promise<void>,
+    callback: (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>,
     registerNum: sharedAdapter.TriggerImageRegisterNameType[keyof sharedAdapter.TriggerImageRegisterNameType]
   ): void {
-    window.imageSearch.postAppImageRes(async (file_content: Uint8Array | null) => {
-      await callback(file_content);
+    window.imageSearch.postAppImageRes(async (file_content: Uint8Array | null, file_mine: MimeType) => {
+      await callback(file_content, file_mine);
     }, registerNum);
   }
 

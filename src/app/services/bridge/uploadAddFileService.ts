@@ -1,20 +1,23 @@
-export const imageFileTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+import { type MimeType } from 'file-type';
+
+export const imageFileTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] as MimeType[];
 
 interface UploadAddFileService {
-  selectFiles: (multiple?: boolean, accept?: string[]) => Promise<File[]>;
-  selectDirectory: (accept?: string[] | null) => Promise<File[]>;
+  selectFiles: (multiple?: boolean, accept?: MimeType[]) => Promise<File[]>;
+  selectDirectory: (accept?: MimeType[] | null) => Promise<File[]>;
 }
 
-// TODO: refactor this use file-type
 export class devUploadAddFileService implements UploadAddFileService {
-  selectFiles = (multiple: boolean = true, accept: string[] = imageFileTypes): Promise<File[]> => {
+  selectFiles = (multiple: boolean = true, accept: MimeType[] = imageFileTypes): Promise<File[]> => {
     return new Promise((resolve, reject) => {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = accept.join(', ');
       input.multiple = multiple;
       input.onchange = () => {
-        const files = input.files ? Array.from(input.files).filter((file) => accept.includes(file.type)) : [];
+        const files = input.files
+          ? Array.from(input.files).filter((file) => accept.includes(file.type as MimeType))
+          : [];
         if (files.length > 0) {
           resolve(files);
         } else {
@@ -25,7 +28,7 @@ export class devUploadAddFileService implements UploadAddFileService {
     });
   };
 
-  selectDirectory = (accept: string[] | null = imageFileTypes): Promise<File[]> => {
+  selectDirectory = (accept: MimeType[] | null = imageFileTypes): Promise<File[]> => {
     return new Promise((resolve, reject) => {
       const input = document.createElement('input');
       input.type = 'file';
@@ -33,7 +36,7 @@ export class devUploadAddFileService implements UploadAddFileService {
       input.accept = accept ? accept.join(', ') : '';
       input.onchange = () => {
         const files = input.files
-          ? Array.from(input.files).filter((file) => accept === null || accept.includes(file.type))
+          ? Array.from(input.files).filter((file) => accept === null || accept.includes(file.type as MimeType))
           : [];
         if (files.length > 0) {
           resolve(files);
@@ -47,11 +50,11 @@ export class devUploadAddFileService implements UploadAddFileService {
 }
 
 export class LLNTUploadAddFileService implements UploadAddFileService {
-  selectFiles = (multiple: boolean = true, accept: string[] = imageFileTypes): Promise<File[]> => {
+  selectFiles = (multiple: boolean = true, accept: MimeType[] = imageFileTypes): Promise<File[]> => {
     return window.imageSearch.selectFiles(multiple, accept);
   };
 
-  selectDirectory = (accept: string[] | null = imageFileTypes): Promise<File[]> => {
+  selectDirectory = (accept: MimeType[] | null = imageFileTypes): Promise<File[]> => {
     return window.imageSearch.selectDirectory(accept);
   };
 }

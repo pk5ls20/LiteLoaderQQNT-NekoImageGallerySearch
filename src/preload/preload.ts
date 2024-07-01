@@ -1,4 +1,5 @@
 import * as channel from '../common/channels';
+import { type MimeType } from 'file-type';
 import { FileObject } from '../common/fileObject';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
@@ -7,17 +8,22 @@ import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterNa
 const { contextBridge, ipcRenderer } = require('electron');
 
 const handleSelectFile = async (fileList: FileObject[]): Promise<File[]> => {
-  return fileList.map((file: FileObject) => {
-    // TODO: real file types
-    const blob = new Blob([file.content], { type: 'image/png' });
-    return new File([blob], file.name, {
-      type: 'image/png'
-    });
-  });
+  return await Promise.all(
+    fileList.map(async (file: FileObject) => {
+      const mine = await ipcRenderer.invoke(channel.CALCULATE_FILE_TYPE, file.content);
+      const blob = new Blob([file.content], { type: mine });
+      return new File([blob], file.name, {
+        type: mine
+      });
+    })
+  );
 };
 
 let hasPostAppImageResRegistered = false;
-const postAppImageCallBackDict = new Map<number, (file_content: Uint8Array | null) => Promise<void>>();
+const postAppImageCallBackDict = new Map<
+  number,
+  (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>
+>();
 
 const imageSearch = {
   async getSettings(): Promise<pluginSettingsModel | null> {
@@ -64,7 +70,7 @@ const imageSearch = {
   },
 
   postAppImageRes(
-    callback: (file_content: Uint8Array | null) => Promise<void>,
+    callback: (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>,
     registerNum: TriggerImageRegisterName
   ): void {
     postAppImageCallBackDict.set(registerNum, callback);
@@ -73,20 +79,27 @@ const imageSearch = {
       return;
     }
     hasPostAppImageResRegistered = true;
-    ipcRenderer.on(channel.POST_APP_IMAGE_SEARCH_RES, async (event, response, registerName) => {
-      try {
-        log.debug('postAppImageSearchRes: Received image search response:', response, registerName);
-        const callback = postAppImageCallBackDict.get(registerName);
-        if (callback) {
-          log.debug('postAppImageSearchRes: Found callback for the registerName:', registerName);
-          await callback(response);
-        } else {
-          log.error('postAppImageSearchRes: No callback found for the registerName:', registerName);
+    ipcRenderer.on(
+      channel.POST_APP_IMAGE_SEARCH_RES,
+      async (event, response: Uint8Array | null, mine_type: MimeType, registerName) => {
+        try {
+          log.debug('postAppImageSearchRes: Received image search response:', response, registerName);
+          const callback = postAppImageCallBackDict.get(registerName);
+          if (callback && response) {
+            log.debug('postAppImageSearchRes: Found callback for the registerName:', registerName);
+            await callback(response, mine_type);
+          } else {
+            log.error(
+              'postAppImageSearchRes: No callback or No content found for the registerName:',
+              registerName,
+              response
+            );
+          }
+        } catch (error) {
+          log.error('postAppImageSearchRes await callback: Error processing image search response:', error);
         }
-      } catch (error) {
-        log.error('postAppImageSearchRes await callback: Error processing image search response:', error);
       }
-    });
+    );
   },
 
   triggerSettingReq(setting: string | null): void {
@@ -104,7 +117,7 @@ const imageSearch = {
     });
   },
 
-  async selectFiles(multiple: boolean, accept: string[]): Promise<File[]> {
+  async selectFiles(multiple: boolean, accept: MimeType[]): Promise<File[]> {
     try {
       const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
       return handleSelectFile(filesInfo);
@@ -114,7 +127,7 @@ const imageSearch = {
     }
   },
 
-  async selectDirectory(accept: string[] | null): Promise<File[]> {
+  async selectDirectory(accept: MimeType[] | null): Promise<File[]> {
     try {
       const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
       return handleSelectFile(filesInfo);

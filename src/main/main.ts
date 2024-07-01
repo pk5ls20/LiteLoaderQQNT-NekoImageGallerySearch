@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import * as channel from '../common/channels';
 import { FileObject } from '../common/fileObject';
-import { fileTypeFromBuffer } from 'file-type';
+import { fileTypeFromBuffer, type MimeType } from 'file-type';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
@@ -23,7 +23,7 @@ if (!fs.existsSync(settingsPath)) {
 }
 
 // ipcMain handle
-ipcMain.handle(channel.GET_SETTING, (event) => {
+ipcMain.handle(channel.GET_SETTING, (event): pluginSettingsModel | null => {
   try {
     const data = fs.readFileSync(settingsPath, 'utf-8');
     return JSON.parse(data);
@@ -33,7 +33,7 @@ ipcMain.handle(channel.GET_SETTING, (event) => {
   }
 });
 
-ipcMain.handle(channel.SET_SETTING, (event, content: pluginSettingsModel) => {
+ipcMain.handle(channel.SET_SETTING, (event, content: pluginSettingsModel): pluginSettingsModel | {} => {
   try {
     const new_config = JSON.stringify(content);
     fs.writeFileSync(settingsPath, new_config, 'utf-8');
@@ -44,7 +44,7 @@ ipcMain.handle(channel.SET_SETTING, (event, content: pluginSettingsModel) => {
   }
 });
 
-ipcMain.handle(channel.GET_LOCAL_FILE, (event, file_path: string) => {
+ipcMain.handle(channel.GET_LOCAL_FILE, (event, file_path: string): Buffer | null => {
   try {
     return fs.readFileSync(file_path);
   } catch (error) {
@@ -55,14 +55,20 @@ ipcMain.handle(channel.GET_LOCAL_FILE, (event, file_path: string) => {
 
 ipcMain.on(
   channel.POST_APP_IMAGE_SEARCH_REQ,
-  (event, file_buffer: Uint8Array | null, registerNum: TriggerImageRegisterName) => {
+  async (event, file_buffer: Uint8Array | null, registerNum: TriggerImageRegisterName): Promise<void> => {
     // In the current situation, both the channel sending the signal and the channel receiving the signal
     // are within the same window (i.e., the main NTQQ chat window), so the signal can be sent directly
-    event.sender.send(channel.POST_APP_IMAGE_SEARCH_RES, file_buffer, registerNum);
+    // calculate mine type
+    if (!file_buffer) {
+      log.debug('No file buffer received');
+      return;
+    }
+    const type = await fileTypeFromBuffer(file_buffer);
+    event.sender.send(channel.POST_APP_IMAGE_SEARCH_RES, file_buffer, type?.mime ?? 'image/png', registerNum);
   }
 );
 
-ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: pluginSettingsModel | null) => {
+ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: pluginSettingsModel | null): void => {
   let settingStr: string | null = null;
   if (setting) {
     log.debug('Received updated settings');
@@ -77,7 +83,7 @@ ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: pluginSettingsModel | n
 });
 
 // TODO: add callback for vue app show warning for failure
-const readDirectory = async (paths: string[], allow_mine: string[]): Promise<FileObject[]> => {
+const readDirectory = async (paths: string[], allow_mine: MimeType[]): Promise<FileObject[]> => {
   log.debug(allow_mine);
   const filePromises: Promise<FileObject[]>[] = [];
   for (const singlePath of paths) {
@@ -109,10 +115,9 @@ const readDirectory = async (paths: string[], allow_mine: string[]): Promise<Fil
   return filesArrays.flat();
 };
 
-const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: string[]): Promise<FileObject[]> => {
+const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: MimeType[]): Promise<FileObject[]> => {
   if (result.canceled) {
     log.debug('No directory selected');
-    // TODO: not reject
     return Promise.reject(new Error('No directory selected'));
   } else {
     log.debug('Selected directory:', JSON.stringify(result.filePaths));
@@ -120,18 +125,23 @@ const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: 
   }
 };
 
-ipcMain.handle(channel.SELECT_FILE, async (event, multiple: boolean, accept: string[]) => {
+ipcMain.handle(channel.SELECT_FILE, async (event, multiple: boolean, accept: MimeType[]): Promise<FileObject[]> => {
   const result = await dialog.showOpenDialog({
     properties: multiple ? ['openFile', 'multiSelections'] : ['openFile']
   });
   return handleOpenDialog(result, accept);
 });
 
-ipcMain.handle(channel.SELECT_FOLDER, async (event, accept: string[]) => {
+ipcMain.handle(channel.SELECT_FOLDER, async (event, accept: MimeType[]): Promise<FileObject[]> => {
   const result = await dialog.showOpenDialog({
     properties: ['openDirectory', 'multiSelections']
   });
   return handleOpenDialog(result, accept);
+});
+
+ipcMain.handle(channel.CALCULATE_FILE_TYPE, async (event, file_content: Uint8Array): Promise<MimeType> => {
+  const res = await fileTypeFromBuffer(file_content);
+  return res?.mime ?? 'image/png';
 });
 
 ipcMain.on(channel.OPEN_WEB, (event, url: string) => shell.openExternal(url).then());

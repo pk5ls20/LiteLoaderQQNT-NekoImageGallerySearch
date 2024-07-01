@@ -1,6 +1,7 @@
 import 'vite/client';
 import { pluginSettingsModel } from './common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from './common/share/triggerImageRegisterName';
+import { type MimeType } from 'file-type';
 
 declare global {
   interface Window {
@@ -10,7 +11,7 @@ declare global {
       getLocalFileAsUInt8Array: (filePath: string) => Promise<Uint8Array | null>;
       postAppImageReq: (file_content: Uint8Array | null, registerNum: TriggerImageRegisterName) => void;
       postAppImageRes: (
-        callback: (file_content: Uint8Array | null) => Promise<void>,
+        callback: (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>,
         registerNum: TriggerImageRegisterName
       ) => void;
       triggerSettingReq: (setting: string | null) => void;

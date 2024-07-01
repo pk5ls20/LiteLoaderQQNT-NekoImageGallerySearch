@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { type MimeType } from 'file-type';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { sharedAdapter } from '../../adapter/SharedAdapter';
 import { displayUploadErrorDialog } from '../../utils/handleCatchError';
@@ -26,7 +27,7 @@ const waitAndDisplayUploadErrorDialog = async (e: any) => {
   displayUploadErrorDialog(e);
 };
 
-const postAppImageSearchResCallBack = async (file_content: Uint8Array | null) => {
+const postAppImageSearchResCallBack = async (file_content: Uint8Array | null, file_mine: MimeType) => {
   await switchToUploadWindow();
   try {
     if (file_content === null) {
@@ -35,8 +36,8 @@ const postAppImageSearchResCallBack = async (file_content: Uint8Array | null) =>
       await waitAndDisplayUploadErrorDialog(t('upload.uploadTriggerHelper.noServerAdminTip'));
     } else {
       const uuid = await sharedAdapter.generateUUID(file_content);
-      // TODO: return real file type
-      uploadStore.queue.push(new UploadTask(new File([file_content], `${uuid}.png`)));
+      const ext = file_mine.split('/')[1];
+      uploadStore.queue.push(new UploadTask(new File([file_content], `${uuid}.${ext}`)));
     }
   } catch (e: any) {
     await waitAndDisplayUploadErrorDialog(e);

@@ -10,3 +10,4 @@ export const POST_APP_IMAGE_SEARCH_REQ = 'LiteLoader.imageSearch.postAppImageSea
 export const POST_APP_IMAGE_SEARCH_RES = 'LiteLoader.imageSearch.imageSearchResponse';
 export const TRIGGER_SETTING_REQ = 'LiteLoader.imageSearch.triggerSettingReq';
 export const TRIGGER_SETTING_RES = 'LiteLoader.imageSearch.triggerSettingResponse';
+export const CALCULATE_FILE_TYPE = 'LiteLoader.imageSearch.calculateFileType';
