@@ -61,10 +61,7 @@ const config = {
     },
     plugins: [
       cp({
-        targets: [
-          { src: 'src/renderer/injectIframe.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' },
-          { src: 'src/app/dark.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' }
-        ]
+        targets: [{ src: 'src/renderer/injectIframe.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' }]
       }),
       vue(),
       svgLoader(),
@@ -72,7 +69,7 @@ const config = {
     ],
     resolve: {
       alias: {
-        vue: 'vue/dist/vue.esm-bundler.js',
+        vue: 'vue/dist/vue.runtime.esm-bundler.js',
         'balm-ui-plus': 'balm-ui/dist/balm-ui-plus.esm.js',
         'balm-ui-css': 'balm-ui/dist/balm-ui.css'
       }

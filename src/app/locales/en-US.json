@@ -1,0 +1,125 @@
+{
+  "search": {
+    "searchWindow": {
+      "tab": {
+        "text": "TEXT",
+        "ocr": "OCR",
+        "image": "IMAGE",
+        "advance": "ADVANCED"
+      },
+      "serverConnectedStatusMessage": "Server connected",
+      "serverUnauthorizedStatusMessage": "Server unauthorized",
+      "serverDisconnectedStatusMessage": "Server disconnected"
+    },
+    "basicSearchInput": {
+      "inputPlaceholder": "Search...",
+      "inputPlaceholderDisabled": "Due to config's restrictions, OCR search is unavailable"
+    },
+    "imageSearchInput": {
+      "inputTip": "Click here to upload an image from your local device for image search...",
+      "uploadImageCountMoreThanOneTip": "Please select only one image!",
+      "uploadImageCallbackErrorTip": "Error Fetching Local Picture!"
+    },
+    "advanceSearchInput": {
+      "promptTitle": "Prompt",
+      "modeSelectLabel": "Mode",
+      "promptInputNoSelectedLabel": "Please Select at least one prompt!",
+      "promptInputSelectedLabel": "Enter {0} prompt...",
+      "queryAdvanceChipsList": {
+        "positive": "Positive",
+        "negative": "Negative",
+        "combined": "Combined"
+      },
+      "queryAdvanceModes": {
+        "averageVision": "AverageVision",
+        "averageOCR": "AverageOCR",
+        "bestVision": "BestVision",
+        "bestOCR": "BestOCR"
+      }
+    },
+    "filterDialog": {
+      "title": "Filter Options",
+      "aspectRatioLabel": "Aspect Ratio",
+      "preferredAspectRatioLabel": "Preferred Aspect Ratio",
+      "ratioToleranceLabel": "Ratio tolerance",
+      "minSizeLabel": "Min Size",
+      "minWidthLabel": "Min Width",
+      "minHeightLabel": "Min Height",
+      "starredOnlyLabel": "Starred Only",
+      "categoriesLabel": "Categories",
+      "negativeCategoriesLabel": "Negative Categories",
+      "separateByCommaLabel": "Separate by comma"
+    },
+    "searchResult": {
+      "similarSearchLabel": "Similar Search",
+      "scoreLabel": "Score: {0}%",
+      "sizeLabel": "Size: {0}x{1}",
+      "loadMoreLabel": "Load More",
+      "likeLabel": "Like",
+      "dislikeLabel": "Dislike",
+      "likeSuccessText": "Image {0} liked successfully",
+      "dislikeSuccessText": "Image {0} disliked successfully",
+      "likeErrorText": "Error occurred while operating liking image",
+      "deleteLabel": "Delete",
+      "deleteConfirmTitle": "Delete Confirm",
+      "deleteConfirmContent": "Are you sure you want to delete this image?",
+      "deleteCancelText": "Deleted canceled by user!",
+      "deleteSuccessText": "Image {0} deleted successfully!",
+      "deleteErrorText": "Error occurred while deleting image!"
+    },
+    "searchWindowDialog": {
+      "statusDialogTitle": "Server Status",
+      "fetchErrorDialogTitle": "Failed to fetch",
+      "serverStatusMsg": "Loading...",
+      "serverStatusMessage": "Checking server...",
+      "serverLastCheckTimeText": "Last Check: {0} (server time)",
+      "ocrAvailableText": "OCR Service Available: {0}",
+      "ocrAvailableMessage": [
+        "True",
+        "False"
+      ],
+      "authStatusText": "Authorization Status: {0}",
+      "authStatusMessage": [
+        "Required, Passed",
+        "Required, Not passed",
+        "Not Required, Passed",
+        "Not Required, Not Passed"
+      ],
+      "adminAPIStatusText": "Admin API Status: {0}",
+      "adminAPIStatusMessage": [
+        "Available, Passed",
+        "Available, Not Passed",
+        "Not Available, Passed",
+        "Not Available, Not Passed"
+      ],
+      "rawOutputLabel": "Raw Output"
+    }
+  },
+  "upload": {
+    "uploadWindow": {
+      "windowTitleUploadTip": "Uploading",
+      "windowTitleNotUploadTip": "Upload Images",
+      "uploadButtonTitle": "Upload",
+      "addFile": "Add File",
+      "addFolder": "Add Folder",
+      "likeTitle": "Right-click me to switch select dislike!",
+      "disLikeTitle": "Right-click me to switch select like!",
+      "skipOcrTitle": "Right-click me to switch select skip OCR!",
+      "disSkipOcrTitle": "Right-click me to switch select not skip OCR!",
+      "categoriesDialogTitle": "Enter Categories of selection",
+      "categoriesDialogContent": " Categories",
+      "uncategorizedTip": "Uncategorized",
+      "noUploadTaskTip": "There are currently no upload tasks...",
+      "adminUnavailableTip": "Due to restrictions in the Admin API, uploading images is currently unavailable...",
+      "errorDialogTitle": "Error",
+      "errorDialogNoFileContent": "=w= Please select the file to upload!"
+    },
+    "uploadConfirmSnackbar": {
+      "snackbarContent": "Upload completed! finish {0} tasks, which {1} duplicate and {2} errors!"
+    },
+    "uploadTriggerHelper": {
+      "noFileContentTip": "No file content!",
+      "noServerAdminTip": "Due to restrictions in the Admin API, uploading images is currently unavailable!"
+    }
+  }
+}

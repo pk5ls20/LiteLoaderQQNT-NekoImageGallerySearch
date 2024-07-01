@@ -1,15 +1,13 @@
 import { isDevEnv } from '../utils/envFlag';
-import { pluginSettingsModel } from '../models/search/PluginSettingsModel';
+import { sharedAdapter } from './SharedAdapter';
 import { devPluginSettingsService, LLNTPluginSettingsService } from '../services/bridge/pluginSettingsService';
 import { devAddNTQQEditorService, LLNTAddNTQQEditorService } from '../services/bridge/addNTQQEditorService';
 import { devAdjustVisibleService, LLNTAdjustVisibleService } from '../services/bridge/adjustVisibleService';
-import {
-  devTriggerImageSearchService,
-  LLNTTriggerImageSearchService
-} from '../services/bridge/triggerImageSearchService';
+import { devTriggerImageSearchService, LLNTTriggerImageSearchService } from '../services/bridge/triggerImageService';
 import { devLogService, LLNTLogService } from '../services/bridge/logService';
 import { devTriggerSettingService, LLNTTriggerSettingService } from '../services/bridge/triggerSettingService';
 import { NTQQEditorMsg } from '../services/editor/editorMsgService';
+import { devUploadAddFileService, LLNTUploadAddFileService } from '../services/bridge/uploadAddFileService';
 
 export class EnvAdapter {
   static addNTQQEditor(message: NTQQEditorMsg[]): void {
@@ -22,12 +20,16 @@ export class EnvAdapter {
     return service.set(state);
   }
 
-  static getSettings(): Promise<pluginSettingsModel> {
+  static getSettings(): Promise<sharedAdapter.PluginSettingsModelType> {
     const service = isDevEnv ? new devPluginSettingsService() : new LLNTPluginSettingsService();
     return service.get();
   }
 
-  static triggerImageSearchService(): devTriggerImageSearchService | LLNTTriggerImageSearchService {
+  static UploadAddFileService(): devUploadAddFileService | LLNTUploadAddFileService {
+    return isDevEnv ? new devUploadAddFileService() : new LLNTUploadAddFileService();
+  }
+
+  static triggerImageService(): devTriggerImageSearchService | LLNTTriggerImageSearchService {
     return isDevEnv ? new devTriggerImageSearchService() : new LLNTTriggerImageSearchService();
   }
 

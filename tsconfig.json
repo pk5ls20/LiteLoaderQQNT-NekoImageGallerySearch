@@ -9,13 +9,18 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    }
   },
   "include": [
-    "src/*",
-    "src/**/*"
+    "src/**/*",
+    "node_modules/liteloaderqqnt-types/types/index.d.ts"
   ],
   "exclude": [
-    "./node_modules",
     "src/app/*"
   ]
 }

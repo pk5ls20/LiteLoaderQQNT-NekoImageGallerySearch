@@ -3,8 +3,8 @@ import type Model from '@ckeditor/ckeditor5-engine/src/model/model';
 import type DocumentSelection from '@ckeditor/ckeditor5-engine/src/model/documentselection';
 import type Writer from '@ckeditor/ckeditor5-engine/src/model/writer';
 import type Element from '@ckeditor/ckeditor5-engine/src/model/element';
-import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { NTQQEditorMsg } from '../editor/editorMsgService';
+import { sharedAdapter } from '../../adapter/SharedAdapter';
 
 interface addNTQQEditorService {
   set(message: NTQQEditorMsg[]): void;
@@ -12,7 +12,7 @@ interface addNTQQEditorService {
 
 export class devAddNTQQEditorService implements addNTQQEditorService {
   set(message: NTQQEditorMsg[]) {
-    console.log(JSON.stringify(message));
+    sharedAdapter.Log.debug(JSON.stringify(message));
   }
 }
 
@@ -27,7 +27,7 @@ export class LLNTAddNTQQEditorService implements addNTQQEditorService {
         const editorSelection = editorModel.document.selection as DocumentSelection;
         const position = editorSelection.getFirstPosition();
         if (!position) {
-          EnvAdapter.log('LLNTAddNTQQEditorService: editorSelection.getFirstPosition() not found.');
+          sharedAdapter.Log.error('LLNTAddNTQQEditorService: editorSelection.getFirstPosition() not found.');
           return;
         }
         editorModel.change((writer: Writer) => {
@@ -37,10 +37,10 @@ export class LLNTAddNTQQEditorService implements addNTQQEditorService {
           });
         });
       } else {
-        console.log('CKEditor instance not found or the element does not exist.');
+        sharedAdapter.Log.debug('CKEditor instance not found or the element does not exist.');
       }
     } catch (error) {
-      console.log('Error:', error);
+      sharedAdapter.Log.error('Error:', error);
     }
   }
 }

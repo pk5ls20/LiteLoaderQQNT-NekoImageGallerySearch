@@ -1,0 +1,125 @@
+{
+  "search": {
+    "searchWindow": {
+      "tab": {
+        "text": "情景文搜图",
+        "ocr": "文字文搜图",
+        "image": "图搜图",
+        "advance": "高级搜索"
+      },
+      "serverConnectedStatusMessage": "已连接服务器",
+      "serverUnauthorizedStatusMessage": "服务器认证失败",
+      "serverDisconnectedStatusMessage": "未连接服务器"
+    },
+    "basicSearchInput": {
+      "inputPlaceholder": "搜索...",
+      "inputPlaceholderDisabled": "由于服务端配置限制，文搜图目前不可用"
+    },
+    "imageSearchInput": {
+      "inputTip": "点击此处从本地上传用于以图搜图的图片...",
+      "uploadImageCountMoreThanOneTip": "只能上传一张图片哦",
+      "uploadImageCallbackErrorTip": "拉取本地图片时发生错误！"
+    },
+    "advanceSearchInput": {
+      "promptTitle": "提示词",
+      "modeSelectLabel": "模式",
+      "promptInputNoSelectedLabel": "请至少输入一个提示词！",
+      "promptInputSelectedLabel": "输入 {0} 提示词...",
+      "queryAdvanceChipsList": {
+        "positive": "正面",
+        "negative": "反面",
+        "combined": "正反结合"
+      },
+      "queryAdvanceModes": {
+        "averageVision": "平均视觉",
+        "averageOCR": "平均文本",
+        "bestVision": "最佳视觉",
+        "bestOCR": "最佳文本"
+      }
+    },
+    "filterDialog": {
+      "title": "筛选选项",
+      "aspectRatioLabel": "宽高比",
+      "preferredAspectRatioLabel": "首选宽高比",
+      "ratioToleranceLabel": "比例容忍度",
+      "minSizeLabel": "最小尺寸",
+      "minWidthLabel": "最小宽度",
+      "minHeightLabel": "最小高度",
+      "starredOnlyLabel": "仅限标星",
+      "categoriesLabel": "类别",
+      "negativeCategoriesLabel": "排除类别",
+      "separateByCommaLabel": "逗号分隔"
+    },
+    "searchResult": {
+      "similarSearchLabel": "相似搜索",
+      "scoreLabel": "相似度: {0}%",
+      "sizeLabel": "大小: {0}x{1}",
+      "loadMoreLabel": "加载更多",
+      "likeLabel": "喜欢",
+      "dislikeLabel": "取消喜欢",
+      "likeSuccessText": "成功为图片 {0} 设置喜欢！",
+      "dislikeSuccessText": "成功取消图片 {0} 的喜欢！",
+      "likeErrorText": "在设置喜欢中出现错误！",
+      "deleteLabel": "删除",
+      "deleteConfirmTitle": "删除确认",
+      "deleteConfirmContent": "确定要删除这张图片吗？",
+      "deleteCancelText": "删除操作被用户取消！",
+      "deleteSuccessText": "成功删除图片 {0}！",
+      "deleteErrorText": "删除中出现错误！"
+    },
+    "searchWindowDialog": {
+      "statusDialogTitle": "服务器状态",
+      "fetchErrorDialogTitle": "请求失败",
+      "serverStatusMsg": "加载中...",
+      "serverStatusMessage": "正在检查服务器连接...",
+      "serverLastCheckTimeText": "上次检查于: {0} （服务器时间）",
+      "ocrAvailableText": "OCR服务可用性： {0}",
+      "authStatusText": "服务器认证状态： {0}",
+      "adminAPIStatusText": "Admin API状态：{0}",
+      "ocrAvailableMessage": [
+        "可用",
+        "不可用"
+      ],
+      "authStatusMessage": [
+        "需要，已通过",
+        "需要，未通过",
+        "不需要，已通过",
+        "不需要，未通过"
+      ],
+      "adminAPIStatusMessage": [
+        "可用，已通过",
+        "可用，未通过",
+        "不可用，已通过",
+        "不可用，未通过"
+      ],
+      "rawOutputLabel": "原始输出"
+    }
+  },
+  "upload": {
+    "uploadWindow": {
+      "windowTitleUploadTip": "正在上传",
+      "windowTitleNotUploadTip": "上传图片",
+      "uploadButtonTitle": "上传",
+      "addFile": "添加文件",
+      "addFolder": "添加文件夹",
+      "likeTitle": "右键点击我切换到选择不喜欢！",
+      "disLikeTitle": "右键点击我切换到选择喜欢！",
+      "skipOcrTitle": "右键点击我切换到选择跳过OCR！",
+      "disSkipOcrTitle": "右键点击我切换到选择不跳过OCR！",
+      "categoriesDialogTitle": "输入选择的类别",
+      "categoriesDialogContent": "类别",
+      "uncategorizedTip": "无分类",
+      "noUploadTaskTip": "当前没有上传任务...",
+      "adminUnavailableTip": "由于服务端Admin API的配置限制，上传图片当前不可用...",
+      "errorDialogTitle": "错误",
+      "errorDialogNoFileContent": "=w= 请选择要上传的文件！"
+    },
+    "uploadConfirmSnackbar": {
+      "snackbarContent": "上传完成！共上传 {0} 张，其中 {1} 张重复，{2} 张上传失败！"
+    },
+    "uploadTriggerHelper": {
+      "noFileContentTip": "缺少文件内容！",
+      "noServerAdminTip": "由于服务端Admin API的配置限制，上传图片当前不可用！"
+    }
+  }
+}

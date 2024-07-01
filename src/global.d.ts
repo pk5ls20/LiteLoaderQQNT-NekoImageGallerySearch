@@ -1,24 +1,30 @@
 import 'vite/client';
+import { pluginSettingsModel } from './common/share/PluginSettingsModel';
+import { TriggerImageRegisterName } from './common/share/triggerImageRegisterName';
+import { type MimeType } from 'file-type';
 
 declare global {
-  let LiteLoader: any;
-
   interface Window {
     imageSearch: {
-      getSettings: () => Promise<any>;
-      setSettings: (content: object) => Promise<void>;
-      getLocalFileAsBlob: (filePath: string) => Promise<Blob | null>;
-      postAppImageSearchReq: (file_content: Blob | null) => void;
-      postAppImageSearchRes: (callback: (file_content: Buffer | null) => Promise<void>) => void;
+      getSettings: () => Promise<pluginSettingsModel | null>;
+      setSettings: (content: pluginSettingsModel) => Promise<void>;
+      getLocalFileAsUInt8Array: (filePath: string) => Promise<Uint8Array | null>;
+      postAppImageReq: (file_content: Uint8Array | null, registerNum: TriggerImageRegisterName) => void;
+      postAppImageRes: (
+        callback: (file_content: Uint8Array | null, file_mine: MimeType) => Promise<void>,
+        registerNum: TriggerImageRegisterName
+      ) => void;
       triggerSettingReq: (setting: string | null) => void;
       triggerSettingRes: (callback: (setting: string | null) => Promise<void>) => void;
       openWeb: (url: string) => void;
+      selectFiles: (multiple: boolean, accept: string[]) => Promise<File[]>;
+      selectDirectory: (accept: string[] | null) => Promise<File[]>;
     };
   }
 }
 
 declare module '*.svg' {
-  const content: any;
+  const content: unknown;
 }
 
 export {};

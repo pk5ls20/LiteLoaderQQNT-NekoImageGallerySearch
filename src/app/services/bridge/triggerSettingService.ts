@@ -1,5 +1,6 @@
 /// <reference types="../../../global.d.ts" />
 // import { ipcRenderer } from 'electron';
+import { sharedAdapter } from '../../adapter/SharedAdapter';
 
 interface TriggerSettingService {
   init(callback: (setting: string | null) => Promise<void>): void;
@@ -9,11 +10,11 @@ interface TriggerSettingService {
 
 export class devTriggerSettingService implements TriggerSettingService {
   init(callback: (setting: string | null) => Promise<void>): void {
-    console.log('devTriggerSettingService init with callback', callback);
+    sharedAdapter.Log.debug('devTriggerSettingService init with callback', callback);
   }
 
   reset(): void {
-    console.log('devTriggerSettingService reset');
+    sharedAdapter.Log.debug('devTriggerSettingService reset');
   }
 }
 

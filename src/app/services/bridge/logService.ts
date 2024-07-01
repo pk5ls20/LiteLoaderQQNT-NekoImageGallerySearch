@@ -1,5 +1,4 @@
-// @ts-ignore
-import { log } from '../../../common/logs';
+import { sharedAdapter } from '../../adapter/SharedAdapter';
 
 interface LogService {
   set(...args: any[]): void;
@@ -13,6 +12,6 @@ export class devLogService implements LogService {
 
 export class LLNTLogService implements LogService {
   set(...args: any[]): void {
-    log.debug('[Vue app log]', ...args);
+    sharedAdapter.Log.debug('[Vue app log]', ...args);
   }
 }

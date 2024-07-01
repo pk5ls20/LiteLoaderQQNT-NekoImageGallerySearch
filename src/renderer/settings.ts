@@ -1,4 +1,4 @@
-import { log } from '../common/logs';
+import { log } from '../common/share/logs';
 import iconHtml from '../app/assets/logo.svg?raw';
 
 // reference https://github.com/MUKAPP/LiteLoaderQQNT-DeepL/blob/main/src/renderer.js#L377
@@ -17,10 +17,14 @@ export const settings = async (view: any) => {
     //   }
     // });
     const settings = await window.imageSearch.getSettings();
+    if (!settings) {
+      alert('Failed to get settings');
+      return;
+    }
     const api_input = view.querySelector('.image_search .api-input');
     const reset = view.querySelector('.image_search .reset');
     const apply = view.querySelector('.image_search .apply');
-    api_input.value = settings.nekoimage_api;
+    api_input.value = settings.nekoimage_api ?? '';
     apply.addEventListener('click', async () => {
       settings.nekoimage_api = api_input.value;
       await window.imageSearch.setSettings(settings);
@@ -38,9 +42,14 @@ export const settings = async (view: any) => {
     const nekoimage_admin_token = view.querySelector('.image_search .chat-target-lang');
     const nekoimage_admin_token_apply = view.querySelector('.image_search .chat-target-lang-apply');
     const nekoimage_admin_token_reset = view.querySelector('.image_search .chat-target-lang-reset');
+    const nekoimage_lang = view.querySelector('.image_search .neko-lang');
+    const nekoimage_lang_apply = view.querySelector('.image_search .neko-lang-apply');
+    const nekoimage_lang_reset = view.querySelector('.image_search .neko-lang-reset');
 
-    nekoimage_access_token.value = settings.nekoimage_admin_token;
-    nekoimage_admin_token.value = settings.nekoimage_admin_token;
+    console.log(JSON.stringify(settings));
+    nekoimage_access_token.value = settings.nekoimage_admin_token ?? '';
+    nekoimage_admin_token.value = settings.nekoimage_admin_token ?? '';
+    nekoimage_lang.value = settings.nekoimage_lang ?? 'en-US';
     nekoimage_access_token_apply.addEventListener('click', async () => {
       settings.nekoimage_access_token = nekoimage_access_token.value;
       await window.imageSearch.setSettings(settings);
@@ -62,6 +71,17 @@ export const settings = async (view: any) => {
       settings.nekoimage_admin_token = '';
       await window.imageSearch.setSettings(settings);
       alert('Admin Token Reset');
+    });
+    nekoimage_lang_apply.addEventListener('click', async () => {
+      settings.nekoimage_lang = nekoimage_lang.value as 'en-US' | 'zh-CN';
+      await window.imageSearch.setSettings(settings);
+      alert('Language Applied');
+    });
+    nekoimage_lang_reset.addEventListener('click', async () => {
+      nekoimage_lang.value = 'en-US';
+      settings.nekoimage_lang = 'en-US';
+      await window.imageSearch.setSettings(settings);
+      alert('Language Reset');
     });
   } catch (error) {
     log.error('[Error in setting]', error);
