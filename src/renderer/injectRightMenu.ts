@@ -110,8 +110,12 @@ export const addQContextMenuMain = async () => {
       }
       if (forwardMsgData) {
         addQContextMenu(qContextMenu, iconHtml, 'Upload forwardMsg images', 'nekoimg-forward-msg-menu', async () => {
-          await window.imageSearch.getForwardMsgContent(forwardMsgData!);
-          // TODO:
+          // TODO: Fetching images from forward messages is not time-consuming, but the download process is
+          //  Currently, fetching and downloading images from forward messages are combined.
+          //  The plan is to separate these processes and provide individual notifications
+          //  (Successfully fetched $num images, starting download; Successfully downloaded $num images).
+          const imgList = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
+          log.debug('ForwardMsg Image List', imgList);
           showToast('Not Implemented...', 5000);
         });
       }

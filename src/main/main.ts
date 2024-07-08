@@ -10,8 +10,8 @@ import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
 import { hookIpc } from './invokeNTQQ/hookipc';
 import { invokeNative } from './invokeNTQQ/invokeNative';
-import { forwardMsgData } from '../renderer/NTQQMsgModel';
-import type { RawMessage } from 'napcat.core';
+import { forwardMsgData, forwardMsgPic, GetReq } from '../renderer/NTQQMsgModel';
+import type { GeneralCallResult, PicElement, RawMessage } from 'napcat.core';
 
 export const onBrowserWindowCreated = (window: BrowserWindow) => {
   hookIpc(window);
@@ -155,13 +155,20 @@ ipcMain.handle(channel.CALCULATE_FILE_TYPE, async (_, file_content: Uint8Array):
 ipcMain.on(channel.OPEN_WEB, (_, url: string) => shell.openExternal(url).then());
 
 const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage[]> => {
-  const args = {
-    peer: { chatType: msgData.chatType, guildId: '', peerUid: msgData.peerUid },
-    rootMsgId: msgData.rootMsgId,
-    parentMsgId: msgData.parentMsgId ?? msgData.rootMsgId
-  };
+  const args = [
+    {
+      peer: { chatType: msgData.chatType, guildId: '', peerUid: msgData.peerUid },
+      rootMsgId: msgData.rootMsgId,
+      parentMsgId: msgData.parentMsgId ?? msgData.rootMsgId
+    }
+  ];
   // log.debug('await invokeNative in args: ', JSON.stringify(args));
-  const res = await invokeNative('ns-ntApi-2', 'nodeIKernelMsgService/getMultiMsg', 'IPC_UP_2', args);
+  const res = await invokeNative<unknown[], GeneralCallResult, { msgList: RawMessage[] }>(
+    'ns-ntApi-2',
+    'nodeIKernelMsgService/getMultiMsg',
+    'IPC_UP_2',
+    args
+  );
   // log.debug('getForwardMsgContent', JSON.stringify(res));
   const nonNestedMessages = res.msgList.filter(
     (msg) => !msg.elements.some((element) => element.multiForwardMsgElement)
@@ -185,21 +192,67 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
   return [...nonNestedMessages, ...nestedResults.flat()];
 };
 
-ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgData) => {
+type ApiParams = [{ getReq: GetReq }, null];
+
+ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgData): Promise<string[]> => {
   const res = await getForwardMsgContent(msgData);
-  const picPathList = res
-    .map((msg) => {
-      const picElement = msg.elements.find((element) => element.picElement);
-      return picElement?.picElement?.sourcePath;
-    })
-    .filter((path): path is string => path !== undefined);
-  log.debug(`channel.GET_FORWARD_MSG_CONTENT now have valid picList len=${picPathList.length} `);
-  const picNotExistPathList = picPathList.filter((path) => !fs.existsSync(path));
+  const picRawList: RawMessage[] = res.filter((msg) =>
+    msg.elements.some((element) => element.picElement && element.picElement.sourcePath !== undefined)
+  );
+  const picList: forwardMsgPic[] = picRawList.map((rawMsg) => {
+    const t = rawMsg.elements.find((ele) => ele.picElement !== undefined);
+    return {
+      pic: t?.picElement as PicElement,
+      msgId: msgData.rootMsgId!,
+      chatType: msgData?.chatType!,
+      peerUid: msgData?.peerUid!,
+      elementId: t?.elementId as string
+    };
+  });
+  log.debug(`channel.GET_FORWARD_MSG_CONTENT now have valid picList len=${picList.length}`);
+  const picNotExistPathList = picList.filter((ele) => !fs.existsSync(ele.pic.sourcePath));
   if (picNotExistPathList.length > 0) {
     log.debug(`Need to download picNotExistPathList len=${picNotExistPathList.length}`);
+    // TODO: maybe not necessary
+    // await invokeNative<GeneralCallResult, null>(
+    //   'ns-ntApi-2-register',
+    //   'nodeIKernelMsgService/downloadRichMedia',
+    //   'IPC_UP_2'
+    // );
+    const downloadPromises = picNotExistPathList.map((ele) => {
+      const apiParams: ApiParams = [
+        {
+          getReq: {
+            fileModelId: '0',
+            downSourceType: 0,
+            triggerType: 1,
+            msgId: ele.msgId,
+            chatType: ele.chatType,
+            peerUid: ele.peerUid,
+            elementId: ele.elementId,
+            thumbSize: 0,
+            downloadType: 1,
+            filePath: ele.pic.sourcePath
+          }
+        },
+        null
+      ];
+      return invokeNative<ApiParams, GeneralCallResult, null, any, { notifyInfo: { filePath: string; msgId: string } }>(
+        'ns-ntApi-2',
+        'nodeIKernelMsgService/downloadRichMedia',
+        'IPC_UP_2',
+        apiParams,
+        100000,
+        'nodeIKernelMsgListener/onRichMediaDownloadComplete',
+        (stageTwoData: [{ payload: { notifyInfo: { filePath: string; msgId: string; fileErrCode: string } } }]) => {
+          return stageTwoData[0].payload.notifyInfo.filePath === ele.pic.sourcePath;
+        }
+      );
+    });
+    // TODO: it will stuck UI
+    await Promise.all(downloadPromises);
   }
-  // TODO: Files in this list may not have been downloaded yet
-  // TODO: It is necessary to call `nodeIKernelMsgService/downloadRichMedia` to download files that do not exist locally
-  // TODO: see https://github.com/LLOneBot/LLOneBot/blob/v3.26.7/src/ntqqapi/api/file.ts#L109
-  return picPathList;
+  return picList.map((ele) => {
+    return ele.pic.sourcePath;
+  });
 });

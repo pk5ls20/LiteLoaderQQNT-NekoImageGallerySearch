@@ -4,8 +4,15 @@ import { type BrowserWindow } from 'electron';
 
 const hookIpcSend = (sendData: any) => {
   const [_, event, data] = sendData;
+  if (data) {
+    // console.log('hookIpcSend-0', data);
+  }
   if (event.callbackId && activeCallbackIds.has(event.callbackId)) {
+    // console.log('hookIpcSend-1', event.callbackId);
     eventEmitter.emit(event.callbackId, data);
+  } else if (Array.isArray(data) && data[0]?.cmdName) {
+    // console.log('hookIpcSend-2', data[0]?.cmdName);
+    eventEmitter.emit(data[0]?.cmdName, data);
   }
   return sendData;
 };

@@ -126,3 +126,24 @@ export interface forwardMsgData {
   parentMsgId?: string; // used in ipcChannel
   resId?: string; // used in raw packet
 }
+
+export interface forwardMsgPic {
+  pic: PicElement;
+  msgId: string;
+  chatType: number;
+  peerUid: string;
+  elementId: string;
+}
+
+export interface GetReq {
+  fileModelId: string;
+  downSourceType: number;
+  triggerType: number;
+  msgId: string;
+  chatType: number;
+  peerUid: string;
+  elementId: string;
+  thumbSize: number;
+  downloadType: number;
+  filePath: string;
+}
