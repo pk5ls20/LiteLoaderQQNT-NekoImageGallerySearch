@@ -164,8 +164,8 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
   ];
   // log.debug('await invokeNative in args: ', JSON.stringify(args));
   const res = await invokeNative<unknown[], GeneralCallResult, { msgList: RawMessage[] }>(
-    'ns-ntApi-2',
     'nodeIKernelMsgService/getMultiMsg',
+    'ns-ntApi-2',
     'IPC_UP_2',
     args
   );
@@ -238,8 +238,8 @@ ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgDat
         null
       ];
       return invokeNative<ApiParams, GeneralCallResult, null, any, { notifyInfo: { filePath: string; msgId: string } }>(
-        'ns-ntApi-2',
         'nodeIKernelMsgService/downloadRichMedia',
+        'ns-ntApi-2',
         'IPC_UP_2',
         apiParams,
         100000,

@@ -47,6 +47,7 @@ class SCListener<CB1, CB2> {
 
   private setupListener(eventName: string) {
     this.eventEmitter.on(eventName, (result: any) => {
+      // log.debug('SCListeners: Received event:', eventName, result);
       for (const [uuid, cond] of this.checkMap.entries()) {
         if (cond(result)) {
           // log.debug('SCListeners: Condition met:', uuid, result);
@@ -80,8 +81,8 @@ export async function invokeNative<
   RTS1 = never extends RTS1B ? never : RTS1B,
   RTS2 = never extends RTS2B ? never : RTS2B
 >(
-  eventName: string = 'ns-ntApi-2',
   cmdName: string,
+  eventName: string = 'ns-ntApi-2',
   channel: string = 'IPC_UP_2',
   args: AGT = [] as unknown as AGT,
   timeout: number = IPC_TIMEOUT,
