@@ -119,9 +119,10 @@ type RoleInfo = {
   roleId: string;
 };
 
-export type forwardMsgData = {
+export interface forwardMsgData {
   peerUid?: string; // used in ipcChannel
   chatType?: number; // used in ipcChannel
-  msgId?: string; // used in ipcChannel
+  rootMsgId?: string; // used in ipcChannel
+  parentMsgId?: string; // used in ipcChannel
   resId?: string; // used in raw packet
-};
+}

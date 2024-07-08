@@ -51,6 +51,7 @@ export const addQContextMenuMain = async () => {
   let imageObject: imageContainer | null = null;
   let forwardMsgData: forwardMsgData | null = null;
   let el: HTMLElement | null = null;
+  let isRightClick = false;
   const bodyElement = document.querySelector('body');
   const haveImgContent = (): boolean => {
     return el !== null && el.classList.contains('image-content') && !!el.getAttribute('src');
@@ -60,9 +61,11 @@ export const addQContextMenuMain = async () => {
     return;
   }
   document.addEventListener(mouseEventName, async (event: MouseEvent) => {
+    isRightClick = false;
     if (event.button === 2) {
       forwardMsgData = null;
       imageObject = null;
+      isRightClick = true;
       if (event.target instanceof HTMLElement) {
         el = event.target as HTMLElement;
         const elParent = el.closest('.ml-item');
@@ -76,7 +79,8 @@ export const addQContextMenuMain = async () => {
           forwardMsgData = {
             peerUid: forwardMsgElement?.data?.peerUid,
             chatType: forwardMsgElement?.data?.chatType,
-            msgId: forwardMsgElement?.data?.msgId,
+            rootMsgId: forwardMsgElement?.data?.msgId,
+            parentMsgId: forwardMsgElement?.data?.msgId,
             resId: forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement?.resId
           };
           log.debug('Got Forward Message', JSON.stringify(forwardMsgData));
@@ -92,7 +96,7 @@ export const addQContextMenuMain = async () => {
   });
   new MutationObserver(async () => {
     const qContextMenu = document.querySelector('.q-context-menu');
-    if (qContextMenu) {
+    if (qContextMenu && isRightClick) {
       if (imageObject) {
         const fileBlobContent = await imageObject.toBlob();
         addQContextMenu(qContextMenu, iconHtml, 'Image Search', 'nekoimg-i2i-menu', async () => {
