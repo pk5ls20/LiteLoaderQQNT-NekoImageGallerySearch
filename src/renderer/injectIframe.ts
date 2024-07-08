@@ -14,7 +14,7 @@ const iframeMaxWidth = 700;
 const iframeMaxHeight = 650;
 const mountID = 'nekoImagePluginView';
 const iframeClassName = 'nekoimage_iframe';
-const adjustIframe = (iframe: any) => {
+const adjustIframe = (iframe: HTMLIFrameElement) => {
   const appDiv = document.getElementById('app');
   if (!appDiv) {
     log.error("adjustIframe: Div with id 'app' not found.");
@@ -38,7 +38,7 @@ export const setupIframe = async () => {
   iframe.id = iframeID;
   iframe.onload = () => {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
-    if (iframeDocument !== undefined) {
+    if (iframeDocument) {
       // inner css - global css
       const innerGlobalCSSLink = document.createElement('link');
       innerGlobalCSSLink.rel = 'stylesheet';
@@ -63,7 +63,7 @@ export const setupIframe = async () => {
     }
   };
   iframe.src = 'about:blank';
-  // set QQNT locate
+  // set NTQQ locate
   const appDiv = document.getElementById('app');
   if (appDiv) {
     appDiv.appendChild(iframe);
@@ -78,7 +78,7 @@ export const setupIframe = async () => {
   iframe.classList.add(iframeClassName);
   iframe.classList.add(iframePreShowClassName);
   controlIframe(iframeStyleEnum.hide, iframe);
-  // add mask on QQNT
+  // add mask on NTQQ
   const mask = document.createElement('div');
   mask.id = iframeMaskClassName;
   mask.classList.add(iframeMaskClassName);

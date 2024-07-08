@@ -4784,6 +4784,11 @@ nanoid@^3.3.4, nanoid@^3.3.7:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
 
+napcat.core@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/napcat.core/-/napcat.core-1.0.3.tgz#708f18d1d48627bc0ee0ba0b5fbf73dcbc34e273"
+  integrity sha512-Xw8zRl6ChhigVs9BA4aucLl9s8RzeIfR1OWE5fORUXkrupoUySAXjvnV4e/MKXk3jLQw3BlbL7gl5NJqbUE7ZQ==
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"

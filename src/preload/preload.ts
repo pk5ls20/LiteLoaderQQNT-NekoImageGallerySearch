@@ -1,11 +1,11 @@
-import * as channel from '../common/channels';
+import { contextBridge, ipcRenderer } from 'electron';
 import { type MimeType } from 'file-type';
+import * as channel from '../common/channels';
 import { FileObject } from '../common/fileObject';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-
-const { contextBridge, ipcRenderer } = require('electron');
+import { type forwardMsgData } from '../renderer/NTQQMsgModel';
 
 const handleSelectFile = async (fileList: FileObject[]): Promise<File[]> => {
   return await Promise.all(
@@ -74,24 +74,24 @@ const imageSearch = {
     registerNum: TriggerImageRegisterName
   ): void {
     postAppImageCallBackDict.set(registerNum, callback);
-    log.debug('postAppImageRes: Registering callback for registerName:', registerNum);
+    log.debug('postAppImageRes: Registering callback for registerNum:', registerNum);
     if (hasPostAppImageResRegistered) {
       return;
     }
     hasPostAppImageResRegistered = true;
     ipcRenderer.on(
       channel.POST_APP_IMAGE_SEARCH_RES,
-      async (event, response: Uint8Array | null, mine_type: MimeType, registerName) => {
+      async (event, response: Uint8Array | null, mine_type: MimeType, registerNum: number) => {
         try {
-          log.debug('postAppImageSearchRes: Received image search response:', response, registerName);
-          const callback = postAppImageCallBackDict.get(registerName);
+          log.debug('postAppImageSearchRes: Received image search response:', response, registerNum);
+          const callback = postAppImageCallBackDict.get(registerNum);
           if (callback && response) {
-            log.debug('postAppImageSearchRes: Found callback for the registerName:', registerName);
+            log.debug('postAppImageSearchRes: Found callback for the registerNum:', registerNum);
             await callback(response, mine_type);
           } else {
             log.error(
-              'postAppImageSearchRes: No callback or No content found for the registerName:',
-              registerName,
+              'postAppImageSearchRes: No callback or No content found for the registerNum:',
+              registerNum,
               response
             );
           }
@@ -134,6 +134,15 @@ const imageSearch = {
     } catch (error) {
       console.error('Failed to select directory:', error);
       throw new Error('Failed to select directory');
+    }
+  },
+
+  async getForwardMsgContent(data: forwardMsgData): Promise<string[] | null> {
+    try {
+      return await ipcRenderer.invoke(channel.GET_FORWARD_MSG_CONTENT, data);
+    } catch (error) {
+      log.error('Error retrieving forward message content:', error);
+      return null;
     }
   },
 

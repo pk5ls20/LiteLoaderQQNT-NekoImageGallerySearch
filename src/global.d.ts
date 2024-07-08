@@ -2,6 +2,7 @@ import 'vite/client';
 import { pluginSettingsModel } from './common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from './common/share/triggerImageRegisterName';
 import { type MimeType } from 'file-type';
+import { type forwardMsgData } from './renderer/NTQQMsgModel';
 
 declare global {
   interface Window {
@@ -19,6 +20,7 @@ declare global {
       openWeb: (url: string) => void;
       selectFiles: (multiple: boolean, accept: string[]) => Promise<File[]>;
       selectDirectory: (accept: string[] | null) => Promise<File[]>;
+      getForwardMsgContent: (forwardMsgData: forwardMsgData) => Promise<string[] | null>;
     };
   }
 }

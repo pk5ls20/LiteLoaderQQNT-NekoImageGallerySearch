@@ -8,6 +8,13 @@ import { fileTypeFromBuffer, type MimeType } from 'file-type';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
+import { hookIpc } from './invokeNTQQ/hookipc';
+import { invokeNative } from './invokeNTQQ/invokeNative';
+import { forwardMsgData } from '../renderer/NTQQMsgModel';
+
+export const onBrowserWindowCreated = (window: BrowserWindow) => {
+  hookIpc(window);
+};
 
 const pluginDataPath = LiteLoader.plugins['image_search'].path.data;
 const settingsPath = path.join(pluginDataPath, 'settings.json');
@@ -23,7 +30,7 @@ if (!fs.existsSync(settingsPath)) {
 }
 
 // ipcMain handle
-ipcMain.handle(channel.GET_SETTING, (event): pluginSettingsModel | null => {
+ipcMain.handle(channel.GET_SETTING, (_): pluginSettingsModel | null => {
   try {
     const data = fs.readFileSync(settingsPath, 'utf-8');
     return JSON.parse(data);
@@ -33,7 +40,7 @@ ipcMain.handle(channel.GET_SETTING, (event): pluginSettingsModel | null => {
   }
 });
 
-ipcMain.handle(channel.SET_SETTING, (event, content: pluginSettingsModel): pluginSettingsModel | {} => {
+ipcMain.handle(channel.SET_SETTING, (_, content: pluginSettingsModel): pluginSettingsModel | {} => {
   try {
     const new_config = JSON.stringify(content);
     fs.writeFileSync(settingsPath, new_config, 'utf-8');
@@ -44,7 +51,7 @@ ipcMain.handle(channel.SET_SETTING, (event, content: pluginSettingsModel): plugi
   }
 });
 
-ipcMain.handle(channel.GET_LOCAL_FILE, (event, file_path: string): Buffer | null => {
+ipcMain.handle(channel.GET_LOCAL_FILE, (_, file_path: string): Buffer | null => {
   try {
     return fs.readFileSync(file_path);
   } catch (error) {
@@ -68,7 +75,7 @@ ipcMain.on(
   }
 );
 
-ipcMain.on(channel.TRIGGER_SETTING_REQ, (event, setting: pluginSettingsModel | null): void => {
+ipcMain.on(channel.TRIGGER_SETTING_REQ, (_, setting: pluginSettingsModel | null): void => {
   let settingStr: string | null = null;
   if (setting) {
     log.debug('Received updated settings');
@@ -125,23 +132,47 @@ const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: 
   }
 };
 
-ipcMain.handle(channel.SELECT_FILE, async (event, multiple: boolean, accept: MimeType[]): Promise<FileObject[]> => {
+ipcMain.handle(channel.SELECT_FILE, async (_, multiple: boolean, accept: MimeType[]): Promise<FileObject[]> => {
   const result = await dialog.showOpenDialog({
     properties: multiple ? ['openFile', 'multiSelections'] : ['openFile']
   });
   return handleOpenDialog(result, accept);
 });
 
-ipcMain.handle(channel.SELECT_FOLDER, async (event, accept: MimeType[]): Promise<FileObject[]> => {
+ipcMain.handle(channel.SELECT_FOLDER, async (_, accept: MimeType[]): Promise<FileObject[]> => {
   const result = await dialog.showOpenDialog({
     properties: ['openDirectory', 'multiSelections']
   });
   return handleOpenDialog(result, accept);
 });
 
-ipcMain.handle(channel.CALCULATE_FILE_TYPE, async (event, file_content: Uint8Array): Promise<MimeType> => {
+ipcMain.handle(channel.CALCULATE_FILE_TYPE, async (_, file_content: Uint8Array): Promise<MimeType> => {
   const res = await fileTypeFromBuffer(file_content);
   return res?.mime ?? 'image/png';
 });
 
-ipcMain.on(channel.OPEN_WEB, (event, url: string) => shell.openExternal(url).then());
+ipcMain.on(channel.OPEN_WEB, (_, url: string) => shell.openExternal(url).then());
+
+ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgData) => {
+  log.debug('getForwardMsgContent', JSON.stringify(msgData));
+  const res = await invokeNative('ns-ntApi-2', 'nodeIKernelMsgService/getMultiMsg', 'IPC_UP_2', {
+    peer: { chatType: msgData.chatType, guildId: '', peerUid: msgData.peerUid },
+    rootMsgId: msgData.msgId,
+    parentMsgId: msgData.msgId
+  });
+  const picPathList = res.msgList
+    .map((msg) => {
+      const picElement = msg.elements.find((element) => element.picElement);
+      return picElement?.picElement?.sourcePath;
+    })
+    .filter((path): path is string => path !== undefined);
+  log.debug('channel.GET_FORWARD_MSG_CONTENT now have picList', JSON.stringify(picPathList));
+  const picNotExistPathList = picPathList.filter((path) => !fs.existsSync(path));
+  if (picNotExistPathList.length > 0) {
+    log.debug('Need to download picNotExistPathList', JSON.stringify(picNotExistPathList));
+  }
+  // TODO: Files in this list may not have been downloaded yet
+  // TODO: It is necessary to call `nodeIKernelMsgService/downloadRichMedia` to download files that do not exist locally
+  // TODO: see https://github.com/LLOneBot/LLOneBot/blob/v3.26.7/src/ntqqapi/api/file.ts#L109
+  return picPathList;
+});
