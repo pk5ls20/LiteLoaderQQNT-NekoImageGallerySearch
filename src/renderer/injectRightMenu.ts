@@ -61,6 +61,8 @@ export const addQContextMenuMain = async () => {
   }
   document.addEventListener(mouseEventName, async (event: MouseEvent) => {
     if (event.button === 2) {
+      forwardMsgData = null;
+      imageObject = null;
       if (event.target instanceof HTMLElement) {
         el = event.target as HTMLElement;
         const elParent = el.closest('.ml-item');
@@ -77,17 +79,13 @@ export const addQContextMenuMain = async () => {
             msgId: forwardMsgElement?.data?.msgId,
             resId: forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement?.resId
           };
-          // log.debug('Got Forward Message', JSON.stringify(forwardMsgData));
-        } else {
-          forwardMsgData = null;
+          log.debug('Got Forward Message', JSON.stringify(forwardMsgData));
         }
       }
       if (event.target instanceof HTMLImageElement) {
         if (haveImgContent()) {
           imageObject = new imageContainer((event.target as HTMLImageElement).src?.toString());
-          // log.debug('Got Image', JSON.stringify(imageObject));
-        } else {
-          imageObject = null;
+          log.debug('Got Image', imageObject);
         }
       }
     }
