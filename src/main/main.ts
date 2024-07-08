@@ -11,6 +11,7 @@ import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterNa
 import { hookIpc } from './invokeNTQQ/hookipc';
 import { invokeNative } from './invokeNTQQ/invokeNative';
 import { forwardMsgData } from '../renderer/NTQQMsgModel';
+import type { RawMessage } from 'napcat.core';
 
 export const onBrowserWindowCreated = (window: BrowserWindow) => {
   hookIpc(window);
@@ -153,23 +154,49 @@ ipcMain.handle(channel.CALCULATE_FILE_TYPE, async (_, file_content: Uint8Array):
 
 ipcMain.on(channel.OPEN_WEB, (_, url: string) => shell.openExternal(url).then());
 
-ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgData) => {
-  log.debug('getForwardMsgContent', JSON.stringify(msgData));
-  const res = await invokeNative('ns-ntApi-2', 'nodeIKernelMsgService/getMultiMsg', 'IPC_UP_2', {
+const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage[]> => {
+  const args = {
     peer: { chatType: msgData.chatType, guildId: '', peerUid: msgData.peerUid },
-    rootMsgId: msgData.msgId,
-    parentMsgId: msgData.msgId
-  });
-  const picPathList = res.msgList
+    rootMsgId: msgData.rootMsgId,
+    parentMsgId: msgData.parentMsgId ?? msgData.rootMsgId
+  };
+  // log.debug('await invokeNative in args: ', JSON.stringify(args));
+  const res = await invokeNative('ns-ntApi-2', 'nodeIKernelMsgService/getMultiMsg', 'IPC_UP_2', args);
+  // log.debug('getForwardMsgContent', JSON.stringify(res));
+  const nonNestedMessages = res.msgList.filter(
+    (msg) => !msg.elements.some((element) => element.multiForwardMsgElement)
+  );
+  const nestedMessages = res.msgList.filter((msg) => msg.elements.some((element) => element.multiForwardMsgElement));
+  // log.debug(
+  //   `currently, have ${nonNestedMessages.length} nonNestedMessages and ${nestedMessages.length} nestedMessages`
+  // );
+  const nestedResults = await Promise.all(
+    nestedMessages.map(async (msg) => {
+      const nestedMsgData: forwardMsgData = {
+        peerUid: msgData.peerUid,
+        chatType: msgData.chatType,
+        rootMsgId: msgData.rootMsgId,
+        parentMsgId: msg.msgId
+      };
+      // log.debug('getForwardMsgContent nestedMessages in loop prepare to get', JSON.stringify(nestedMsgData));
+      return await getForwardMsgContent(nestedMsgData);
+    })
+  );
+  return [...nonNestedMessages, ...nestedResults.flat()];
+};
+
+ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgData) => {
+  const res = await getForwardMsgContent(msgData);
+  const picPathList = res
     .map((msg) => {
       const picElement = msg.elements.find((element) => element.picElement);
       return picElement?.picElement?.sourcePath;
     })
     .filter((path): path is string => path !== undefined);
-  log.debug('channel.GET_FORWARD_MSG_CONTENT now have picList', JSON.stringify(picPathList));
+  log.debug(`channel.GET_FORWARD_MSG_CONTENT now have valid picList len=${picPathList.length} `);
   const picNotExistPathList = picPathList.filter((path) => !fs.existsSync(path));
   if (picNotExistPathList.length > 0) {
-    log.debug('Need to download picNotExistPathList', JSON.stringify(picNotExistPathList));
+    log.debug(`Need to download picNotExistPathList len=${picNotExistPathList.length}`);
   }
   // TODO: Files in this list may not have been downloaded yet
   // TODO: It is necessary to call `nodeIKernelMsgService/downloadRichMedia` to download files that do not exist locally
