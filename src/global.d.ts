@@ -20,7 +20,9 @@ declare global {
       openWeb: (url: string) => void;
       selectFiles: (multiple: boolean, accept: string[]) => Promise<File[]>;
       selectDirectory: (accept: string[] | null) => Promise<File[]>;
-      getForwardMsgContent: (forwardMsgData: forwardMsgData) => Promise<string[] | null>;
+      getForwardMsgContent: (
+        forwardMsgData: forwardMsgData
+      ) => Promise<{ startDownload: Promise<{ onDisk: string[]; notOnDisk: string[] }>; endDownload: Promise<void> }>;
     };
   }
 }

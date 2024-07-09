@@ -110,13 +110,28 @@ export const addQContextMenuMain = async () => {
       }
       if (forwardMsgData) {
         addQContextMenu(qContextMenu, iconHtml, 'Upload forwardMsg images', 'nekoimg-forward-msg-menu', async () => {
-          // TODO: Fetching images from forward messages is not time-consuming, but the download process is
-          //  Currently, fetching and downloading images from forward messages are combined.
-          //  The plan is to separate these processes and provide individual notifications
-          //  (Successfully fetched $num images, starting download; Successfully downloaded $num images).
-          const imgList = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
-          log.debug('ForwardMsg Image List', imgList);
-          showToast('Not Implemented...', 5000);
+          try {
+            const ps = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
+            const startDownloadResult = await ps.startDownload;
+            showToast(
+              `Successfully retrieved ${startDownloadResult.onDisk.length + startDownloadResult.notOnDisk.length} forwardMsg content! 
+    Starting background download ${startDownloadResult.notOnDisk.length} images...`,
+              5000
+            );
+            (async () => {
+              await ps.endDownload;
+              showToast(
+                `Successfully downloaded ${startDownloadResult.notOnDisk.length} images! Open NekoImage to upload...`,
+                5000
+              );
+            })().catch((error) => {
+              log.debug('Error when downloading ForwardMsg images:', error);
+              showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
+            });
+          } catch (error) {
+            log.debug('Error when retrieving forwardMsg images:', error);
+            showToast(`Error when fetching forwardMsg images: ${error}`, 5000, 'error');
+          }
         });
       }
     }

@@ -3,13 +3,14 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import * as channel from '../common/channels';
-import { FileObject } from '../common/fileObject';
+import { ImgObject } from '../common/imgObject';
 import { fileTypeFromBuffer, type MimeType } from 'file-type';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-import { hookIpc } from './invokeNTQQ/hookipc';
-import { invokeNative } from './invokeNTQQ/invokeNative';
+import { readDirectory } from './fs';
+import { hookIpc } from './native/sora/hookipc';
+import { invokeNative } from './native/sora/invokeNative';
 import { forwardMsgData, forwardMsgPic, GetReq } from '../renderer/NTQQMsgModel';
 import type { GeneralCallResult, PicElement, RawMessage } from 'napcat.core';
 
@@ -90,40 +91,7 @@ ipcMain.on(channel.TRIGGER_SETTING_REQ, (_, setting: pluginSettingsModel | null)
   });
 });
 
-// TODO: add callback for vue app show warning for failure
-const readDirectory = async (paths: string[], allow_mine: MimeType[]): Promise<FileObject[]> => {
-  log.debug(allow_mine);
-  const filePromises: Promise<FileObject[]>[] = [];
-  for (const singlePath of paths) {
-    const stats = await fs.promises.stat(singlePath);
-    if (stats.isDirectory()) {
-      const entries = await fs.promises.readdir(singlePath, { withFileTypes: true });
-      const dirPaths = entries.map((entry: fs.Dirent) => path.join(singlePath, entry.name));
-      filePromises.push(readDirectory(dirPaths, allow_mine));
-    } else {
-      const content = await fs.promises.readFile(singlePath);
-      const type = await fileTypeFromBuffer(content);
-      if (type?.mime && allow_mine.includes(type?.mime)) {
-        filePromises.push(
-          Promise.resolve([
-            new FileObject(
-              path.basename(singlePath),
-              singlePath,
-              path.extname(singlePath).substring(1),
-              new Uint8Array(content).buffer
-            )
-          ])
-        );
-      } else {
-        log.debug('File type not allowed:', JSON.stringify(type), singlePath, allow_mine);
-      }
-    }
-  }
-  const filesArrays = await Promise.all(filePromises);
-  return filesArrays.flat();
-};
-
-const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: MimeType[]): Promise<FileObject[]> => {
+const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: MimeType[]): Promise<ImgObject[]> => {
   if (result.canceled) {
     log.debug('No directory selected');
     return Promise.reject(new Error('No directory selected'));
@@ -133,14 +101,14 @@ const handleOpenDialog = async (result: Electron.OpenDialogReturnValue, accept: 
   }
 };
 
-ipcMain.handle(channel.SELECT_FILE, async (_, multiple: boolean, accept: MimeType[]): Promise<FileObject[]> => {
+ipcMain.handle(channel.SELECT_FILE, async (_, multiple: boolean, accept: MimeType[]): Promise<ImgObject[]> => {
   const result = await dialog.showOpenDialog({
     properties: multiple ? ['openFile', 'multiSelections'] : ['openFile']
   });
   return handleOpenDialog(result, accept);
 });
 
-ipcMain.handle(channel.SELECT_FOLDER, async (_, accept: MimeType[]): Promise<FileObject[]> => {
+ipcMain.handle(channel.SELECT_FOLDER, async (_, accept: MimeType[]): Promise<ImgObject[]> => {
   const result = await dialog.showOpenDialog({
     properties: ['openDirectory', 'multiSelections']
   });
@@ -153,6 +121,8 @@ ipcMain.handle(channel.CALCULATE_FILE_TYPE, async (_, file_content: Uint8Array):
 });
 
 ipcMain.on(channel.OPEN_WEB, (_, url: string) => shell.openExternal(url).then());
+
+type ApiParams = [{ getReq: GetReq }, null];
 
 const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage[]> => {
   const args = [
@@ -192,67 +162,70 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
   return [...nonNestedMessages, ...nestedResults.flat()];
 };
 
-type ApiParams = [{ getReq: GetReq }, null];
-
-ipcMain.handle(channel.GET_FORWARD_MSG_CONTENT, async (_, msgData: forwardMsgData): Promise<string[]> => {
-  const res = await getForwardMsgContent(msgData);
-  const picRawList: RawMessage[] = res.filter((msg) =>
-    msg.elements.some((element) => element.picElement && element.picElement.sourcePath !== undefined)
-  );
-  const picList: forwardMsgPic[] = picRawList.map((rawMsg) => {
-    const t = rawMsg.elements.find((ele) => ele.picElement !== undefined);
-    return {
-      pic: t?.picElement as PicElement,
-      msgId: msgData.rootMsgId!,
-      chatType: msgData?.chatType!,
-      peerUid: msgData?.peerUid!,
-      elementId: t?.elementId as string
-    };
-  });
-  log.debug(`channel.GET_FORWARD_MSG_CONTENT now have valid picList len=${picList.length}`);
-  const picNotExistPathList = picList.filter((ele) => !fs.existsSync(ele.pic.sourcePath));
-  if (picNotExistPathList.length > 0) {
-    log.debug(`Need to download picNotExistPathList len=${picNotExistPathList.length}`);
-    // TODO: maybe not necessary
-    // await invokeNative<GeneralCallResult, null>(
-    //   'ns-ntApi-2-register',
-    //   'nodeIKernelMsgService/downloadRichMedia',
-    //   'IPC_UP_2'
-    // );
-    const downloadPromises = picNotExistPathList.map((ele) => {
-      const apiParams: ApiParams = [
-        {
-          getReq: {
-            fileModelId: '0',
-            downSourceType: 0,
-            triggerType: 1,
-            msgId: ele.msgId,
-            chatType: ele.chatType,
-            peerUid: ele.peerUid,
-            elementId: ele.elementId,
-            thumbSize: 0,
-            downloadType: 1,
-            filePath: ele.pic.sourcePath
-          }
-        },
-        null
-      ];
-      return invokeNative<ApiParams, GeneralCallResult, null, any, { notifyInfo: { filePath: string; msgId: string } }>(
-        'nodeIKernelMsgService/downloadRichMedia',
-        'ns-ntApi-2',
-        'IPC_UP_2',
-        apiParams,
-        100000,
-        'nodeIKernelMsgListener/onRichMediaDownloadComplete',
-        (stageTwoData: [{ payload: { notifyInfo: { filePath: string; msgId: string; fileErrCode: string } } }]) => {
-          return stageTwoData[0].payload.notifyInfo.filePath === ele.pic.sourcePath;
-        }
-      );
+ipcMain.handle(
+  channel.GET_FORWARD_MSG_PIC,
+  async (_, msgData: forwardMsgData): Promise<{ onDisk: forwardMsgPic[]; notOnDisk: forwardMsgPic[] }> => {
+    const res = await getForwardMsgContent(msgData);
+    const picRawList: RawMessage[] = res.filter((msg) =>
+      msg.elements.some((element) => element.picElement && element.picElement.sourcePath !== undefined)
+    );
+    const picList: forwardMsgPic[] = picRawList.map((rawMsg) => {
+      const t = rawMsg.elements.find((ele) => ele.picElement !== undefined);
+      return {
+        pic: t?.picElement as PicElement,
+        msgId: msgData.rootMsgId!,
+        chatType: msgData?.chatType!,
+        peerUid: msgData?.peerUid!,
+        elementId: t?.elementId as string
+      };
     });
-    // TODO: it will stuck UI
-    await Promise.all(downloadPromises);
+    const onDisk: forwardMsgPic[] = [];
+    const notOnDisk: forwardMsgPic[] = [];
+    picList.forEach((pic) => {
+      if (fs.existsSync(pic.pic.sourcePath)) {
+        onDisk.push(pic);
+      } else {
+        notOnDisk.push(pic);
+      }
+    });
+    log.debug(
+      `channel.GET_FORWARD_MSG_PIC now have valid picList len=${picList.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDisk.length}`
+    );
+    return { onDisk, notOnDisk };
   }
-  return picList.map((ele) => {
-    return ele.pic.sourcePath;
+);
+
+ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: forwardMsgPic[]): Promise<string[]> => {
+  const downloadPromises = picList.map((ele) => {
+    const apiParams: ApiParams = [
+      {
+        getReq: {
+          fileModelId: '0',
+          downSourceType: 0,
+          triggerType: 1,
+          msgId: ele.msgId,
+          chatType: ele.chatType,
+          peerUid: ele.peerUid,
+          elementId: ele.elementId,
+          thumbSize: 0,
+          downloadType: 1,
+          filePath: ele.pic.sourcePath
+        }
+      },
+      null
+    ];
+    return invokeNative<ApiParams, GeneralCallResult, null, any, { notifyInfo: { filePath: string; msgId: string } }>(
+      'nodeIKernelMsgService/downloadRichMedia',
+      'ns-ntApi-2',
+      'IPC_UP_2',
+      apiParams,
+      100000,
+      'nodeIKernelMsgListener/onRichMediaDownloadComplete',
+      (stageTwoData: [{ payload: { notifyInfo: { filePath: string; msgId: string; fileErrCode: string } } }]) => {
+        return stageTwoData[0].payload.notifyInfo.filePath === ele.pic.sourcePath;
+      }
+    );
   });
+  await Promise.all(downloadPromises);
+  return picList.map((ele) => ele.pic.sourcePath);
 });

@@ -1,5 +1,5 @@
 // reference https://github.com/psrx/LiteLoaderQQNT-BeginnerTutorial
-import { activeCallbackIds, eventEmitter } from './eventEmitter';
+import { activeCallbackIds, eventEmitter } from './event';
 import { type BrowserWindow } from 'electron';
 
 const hookIpcSend = (sendData: any) => {

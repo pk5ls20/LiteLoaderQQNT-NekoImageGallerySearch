@@ -1,15 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { type MimeType } from 'file-type';
 import * as channel from '../common/channels';
-import { FileObject } from '../common/fileObject';
+import { ImgObject } from '../common/imgObject';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
 import { type forwardMsgData } from '../renderer/NTQQMsgModel';
 
-const handleSelectFile = async (fileList: FileObject[]): Promise<File[]> => {
+const handleSelectFile = async (fileList: ImgObject[]): Promise<File[]> => {
   return await Promise.all(
-    fileList.map(async (file: FileObject) => {
+    fileList.map(async (file: ImgObject) => {
       const mine = await ipcRenderer.invoke(channel.CALCULATE_FILE_TYPE, file.content);
       const blob = new Blob([file.content], { type: mine });
       return new File([blob], file.name, {
@@ -107,7 +107,7 @@ const imageSearch = {
   },
 
   triggerSettingRes(callback: (setting: string | null) => Promise<void>): void {
-    ipcRenderer.on(channel.TRIGGER_SETTING_RES, async (event, response) => {
+    ipcRenderer.on(channel.TRIGGER_SETTING_RES, async (_, response) => {
       try {
         await callback(response);
         log.debug('Callback successfully executed');
@@ -119,7 +119,7 @@ const imageSearch = {
 
   async selectFiles(multiple: boolean, accept: MimeType[]): Promise<File[]> {
     try {
-      const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
+      const filesInfo: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
       return handleSelectFile(filesInfo);
     } catch (error) {
       log.error('Failed to select files:', error);
@@ -129,7 +129,7 @@ const imageSearch = {
 
   async selectDirectory(accept: MimeType[] | null): Promise<File[]> {
     try {
-      const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
+      const filesInfo: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
       return handleSelectFile(filesInfo);
     } catch (error) {
       console.error('Failed to select directory:', error);
@@ -137,12 +137,28 @@ const imageSearch = {
     }
   },
 
-  async getForwardMsgContent(data: forwardMsgData): Promise<string[] | null> {
+  async getForwardMsgContent(
+    data: forwardMsgData
+  ): Promise<{ startDownload: Promise<{ onDisk: string[]; notOnDisk: string[] }>; endDownload: Promise<string[]> }> {
     try {
-      return await ipcRenderer.invoke(channel.GET_FORWARD_MSG_CONTENT, data);
+      const downloadHandle = async () => {
+        const result = await ipcRenderer.invoke(channel.GET_FORWARD_MSG_PIC, data);
+        const onDisk = result.onDisk;
+        const notOnDisk = result.notOnDisk;
+        const startDownload: Promise<{ onDisk: string[]; notOnDisk: string[] }> = Promise.resolve({
+          onDisk,
+          notOnDisk
+        });
+        const endDownload: Promise<string[]> = ipcRenderer.invoke(channel.DOWNLOAD_MULTI_MSG_IMAGE, notOnDisk);
+        return { startDownload, endDownload };
+      };
+      return downloadHandle();
     } catch (error) {
       log.error('Error retrieving forward message content:', error);
-      return null;
+      return {
+        startDownload: Promise.reject(error),
+        endDownload: Promise.reject([])
+      };
     }
   },
 

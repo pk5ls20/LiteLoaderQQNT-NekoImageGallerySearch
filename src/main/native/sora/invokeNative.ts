@@ -3,65 +3,13 @@
 import { ipcMain } from 'electron';
 import { randomUUID, type UUID } from 'crypto';
 import type { GeneralCallResult } from 'napcat.core';
-import { type EventEmitter } from 'events';
-import { activeCallbackIds as firstStageCallbackIds, eventEmitter } from './eventEmitter';
-import { log } from '../../common/share/logs';
+import { activeCallbackIds as firstStageCallbackIds, cleanFCListeners, eventEmitter, SCListener } from './event';
+import { log } from '../../../common/share/logs';
 
 const IPC_TIMEOUT = 10000;
 
 type RTS1B = unknown;
 type RTS2B = unknown;
-
-const cleanFCListeners = (callbackId: UUID) => {
-  firstStageCallbackIds.delete(callbackId);
-  eventEmitter.removeAllListeners(callbackId);
-};
-
-class SCListener<CB1, CB2> {
-  private checkMap: Map<UUID, (stageTwoData: CB1 & CB2) => boolean>;
-  private promiseResolvers: Map<UUID, () => void>;
-
-  constructor(private eventEmitter: EventEmitter) {
-    this.checkMap = new Map();
-    this.promiseResolvers = new Map();
-  }
-
-  waitListener(eventName: string, cond: (stageTwoData: CB1 & CB2) => boolean): { uuid: UUID; promise: Promise<void> } {
-    const uuid = randomUUID();
-    this.checkMap.set(uuid, cond as (stageTwoData: CB1 & CB2) => boolean);
-    if (!this.eventEmitter.listenerCount(eventName)) {
-      this.setupListener(eventName);
-    }
-    return {
-      uuid,
-      promise: new Promise<void>((resolve) => {
-        this.promiseResolvers.set(uuid, resolve);
-      })
-    };
-  }
-
-  manuallyRemoveListener(uuid: UUID) {
-    this.checkMap.delete(uuid);
-    this.promiseResolvers.delete(uuid);
-  }
-
-  private setupListener(eventName: string) {
-    this.eventEmitter.on(eventName, (result: CB1 & CB2) => {
-      // log.debug('SCListeners: Received event:', eventName, result);
-      for (const [uuid, cond] of this.checkMap.entries()) {
-        if (cond(result)) {
-          // log.debug('SCListeners: Condition met:', uuid, result);
-          this.checkMap.delete(uuid);
-          const resolve = this.promiseResolvers.get(uuid);
-          if (resolve) {
-            resolve();
-            this.promiseResolvers.delete(uuid);
-          }
-        }
-      }
-    });
-  }
-}
 
 const SCListeners = new SCListener<RTS1B, RTS2B>(eventEmitter);
 
@@ -102,7 +50,7 @@ export async function invokeNative<
         cleanFCListeners(callbackId);
       }
       if (!result && !secondCmdName && !secondCmdResCond) {
-        reject(new Error('No result returned'));
+        reject(new Error('invokeNative: in stage1, no result returned!'));
       }
     });
     if (secondCmdName && secondCmdResCond) {
@@ -111,7 +59,7 @@ export async function invokeNative<
         secondCmdResCond as (stageTwoData: RTS1B & RTS2B) => boolean
       );
       secondCmdId = uuid;
-      await promise;
+      await promise; // will never reject
       // log.debug('invokeNative: Second command resolved:', secondCmdId);
       resolve(promise as RTS1 & RTS2);
     }
@@ -120,7 +68,7 @@ export async function invokeNative<
   const timeoutPromise = new Promise<(RTF1 & RTF2) | (RTS1 & RTS2)>((_, reject) => {
     setTimeout(() => {
       if (secondCmdName && secondCmdResCond && secondCmdId) SCListeners.manuallyRemoveListener(secondCmdId);
-      reject(new Error(`Timeout after ${timeout} milliseconds`));
+      reject(new Error(`invokeNative: call ${cmdName} timeout after ${timeout} milliseconds`));
     }, timeout);
   });
 
