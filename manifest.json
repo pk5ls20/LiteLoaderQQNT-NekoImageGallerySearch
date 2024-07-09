@@ -4,7 +4,7 @@
   "name": "NekoImageGallerySearch",
   "slug": "image_search",
   "description": "Another web UI for NekoImageGallery, seamlessly integrated with NTQQ through LiteLoaderQQNT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "icon": "./icon.png",
   "authors": [
     {
@@ -26,7 +26,7 @@
     "repo": "pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch",
     "branch": "main",
     "release": {
-      "tag": "v0.1.0",
+      "tag": "v0.1.1",
       "file": "LiteLoaderQQNT-NekoImage.zip"
     }
   }
