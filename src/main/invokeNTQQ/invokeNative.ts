@@ -46,7 +46,7 @@ class SCListener<CB1, CB2> {
   }
 
   private setupListener(eventName: string) {
-    this.eventEmitter.on(eventName, (result: any) => {
+    this.eventEmitter.on(eventName, (result: CB1 & CB2) => {
       // log.debug('SCListeners: Received event:', eventName, result);
       for (const [uuid, cond] of this.checkMap.entries()) {
         if (cond(result)) {
@@ -75,9 +75,9 @@ const SCListeners = new SCListener<RTS1B, RTS2B>(eventEmitter);
  * @template RTS2 - The type for NTQQ ipc call stage2 return type part B
  */
 export async function invokeNative<
-  AGT extends Array<any> = unknown[],
+  AGT extends Array<unknown> = unknown[],
   RTF1 = GeneralCallResult,
-  RTF2 = any,
+  RTF2 = unknown,
   RTS1 = never extends RTS1B ? never : RTS1B,
   RTS2 = never extends RTS2B ? never : RTS2B
 >(
