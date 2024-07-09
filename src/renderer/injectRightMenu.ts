@@ -110,7 +110,7 @@ export const addQContextMenuMain = async () => {
       }
       if (forwardMsgData) {
         addQContextMenu(qContextMenu, iconHtml, 'Upload forwardMsg images', 'nekoimg-forward-msg-menu', async () => {
-          try {
+          (async () => {
             const ps = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
             const startDownloadResult = await ps.startDownload;
             await window.imageSearch.addUploadFileReq(startDownloadResult.onDiskImgList);
@@ -120,22 +120,17 @@ export const addQContextMenuMain = async () => {
               forwardMsg content! Starting background download ${startDownloadResult.notOnDiskMsgList.length} images...`,
               5000
             );
-            (async () => {
-              const es = await ps.endDownload;
-              await window.imageSearch.addUploadFileReq(es);
-              const message =
-                startDownloadResult.notOnDiskMsgList.length > 0
-                  ? `Successfully downloaded ${startDownloadResult.notOnDiskMsgList.length} images! `
-                  : '';
-              showToast(`${message}Open NekoImage to upload...`, 5000);
-            })().catch((error) => {
-              log.debug('Error when downloading ForwardMsg images:', error);
-              showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
-            });
-          } catch (error) {
-            log.debug('Error when retrieving forwardMsg images:', error);
-            showToast(`Error when fetching forwardMsg images: ${error}`, 5000, 'error');
-          }
+            const es = await ps.endDownload;
+            await window.imageSearch.addUploadFileReq(es);
+            const message =
+              startDownloadResult.notOnDiskMsgList.length > 0
+                ? `Successfully downloaded ${startDownloadResult.notOnDiskMsgList.length} images! `
+                : '';
+            showToast(`${message}Open NekoImage to upload...`, 5000);
+          })().catch((error) => {
+            log.debug('Error when downloading ForwardMsg images:', error);
+            showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
+          });
         });
       }
     }
