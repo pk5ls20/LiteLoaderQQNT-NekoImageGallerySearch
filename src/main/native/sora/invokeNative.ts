@@ -13,6 +13,8 @@ type RTS2B = unknown;
 
 const SCListeners = new SCListener<RTS1B, RTS2B>(eventEmitter);
 
+type INPRT<RTF1, RTF2, RTS1, RTS2> = [RTS1, RTS2] extends [never, never] ? RTF1 & RTF2 : RTS1 & RTS2;
+
 /**
  * Invokes a native NTQQ API call.
  *
@@ -26,8 +28,8 @@ export async function invokeNative<
   AGT extends Array<unknown> = unknown[],
   RTF1 = GeneralCallResult,
   RTF2 = unknown,
-  RTS1 = never extends RTS1B ? never : RTS1B,
-  RTS2 = never extends RTS2B ? never : RTS2B
+  RTS1 extends RTS1B = never,
+  RTS2 extends RTS2B = never
 >(
   cmdName: string,
   eventName: string = 'ns-ntApi-2',
@@ -36,17 +38,17 @@ export async function invokeNative<
   timeout: number = IPC_TIMEOUT,
   secondCmdName?: string | null,
   secondCmdResCond?: ((stageTwoData: RTS1 & RTS2) => boolean) | null
-): Promise<(RTF1 & RTF2) | (RTS1 & RTS2)> {
+): Promise<INPRT<RTF1, RTF2, RTS1, RTS2>> {
   const callbackId = randomUUID();
   let secondCmdId: UUID | null = null;
   firstStageCallbackIds.add(callbackId);
 
-  const operationPromise = new Promise<(RTF1 & RTF2) | (RTS1 & RTS2)>(async (resolve, reject) => {
+  const operationPromise = new Promise<INPRT<RTF1, RTF2, RTS1, RTS2>>(async (resolve, reject) => {
     // log.debug('invokeNative: Sent request:', { type: 'request', callbackId, eventName }, [cmdName, ...args]);
     ipcMain.emit(channel, {}, { type: 'request', callbackId, eventName }, [cmdName, ...(args as AGT)]);
     eventEmitter.once(callbackId, (result: RTF1 & RTF2) => {
       if (result && !secondCmdName && !secondCmdResCond) {
-        resolve(result as RTF1 & RTF2);
+        resolve(result as INPRT<RTF1, RTF2, RTS1, RTS2>);
         cleanFCListeners(callbackId);
       }
       if (!result && !secondCmdName && !secondCmdResCond) {
@@ -61,11 +63,11 @@ export async function invokeNative<
       secondCmdId = uuid;
       await promise; // will never reject
       // log.debug('invokeNative: Second command resolved:', secondCmdId);
-      resolve(promise as RTS1 & RTS2);
+      resolve(promise as INPRT<RTF1, RTF2, RTS1, RTS2>);
     }
   });
 
-  const timeoutPromise = new Promise<(RTF1 & RTF2) | (RTS1 & RTS2)>((_, reject) => {
+  const timeoutPromise = new Promise<INPRT<RTF1, RTF2, RTS1, RTS2>>((_, reject) => {
     setTimeout(() => {
       if (secondCmdName && secondCmdResCond && secondCmdId) SCListeners.manuallyRemoveListener(secondCmdId);
       reject(new Error(`invokeNative: call ${cmdName} timeout after ${timeout} milliseconds`));
