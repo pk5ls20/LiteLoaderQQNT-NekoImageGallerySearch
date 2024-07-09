@@ -1,15 +1,15 @@
-import * as channel from '../common/channels';
+import { contextBridge, ipcRenderer } from 'electron';
 import { type MimeType } from 'file-type';
-import { FileObject } from '../common/fileObject';
+import * as channel from '../common/channels';
+import { ImgObject } from '../common/imgObject';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
+import { type forwardMsgData, forwardMsgPic } from '../renderer/NTQQMsgModel';
 
-const { contextBridge, ipcRenderer } = require('electron');
-
-const handleSelectFile = async (fileList: FileObject[]): Promise<File[]> => {
+const convertImgObject = async (fileList: ImgObject[]): Promise<File[]> => {
   return await Promise.all(
-    fileList.map(async (file: FileObject) => {
+    fileList.map(async (file: ImgObject) => {
       const mine = await ipcRenderer.invoke(channel.CALCULATE_FILE_TYPE, file.content);
       const blob = new Blob([file.content], { type: mine });
       return new File([blob], file.name, {
@@ -74,24 +74,24 @@ const imageSearch = {
     registerNum: TriggerImageRegisterName
   ): void {
     postAppImageCallBackDict.set(registerNum, callback);
-    log.debug('postAppImageRes: Registering callback for registerName:', registerNum);
+    log.debug('postAppImageRes: Registering callback for registerNum:', registerNum);
     if (hasPostAppImageResRegistered) {
       return;
     }
     hasPostAppImageResRegistered = true;
     ipcRenderer.on(
       channel.POST_APP_IMAGE_SEARCH_RES,
-      async (event, response: Uint8Array | null, mine_type: MimeType, registerName) => {
+      async (event, response: Uint8Array | null, mine_type: MimeType, registerNum: number) => {
         try {
-          log.debug('postAppImageSearchRes: Received image search response:', response, registerName);
-          const callback = postAppImageCallBackDict.get(registerName);
+          log.debug('postAppImageSearchRes: Received image search response:', response, registerNum);
+          const callback = postAppImageCallBackDict.get(registerNum);
           if (callback && response) {
-            log.debug('postAppImageSearchRes: Found callback for the registerName:', registerName);
+            log.debug('postAppImageSearchRes: Found callback for the registerNum:', registerNum);
             await callback(response, mine_type);
           } else {
             log.error(
-              'postAppImageSearchRes: No callback or No content found for the registerName:',
-              registerName,
+              'postAppImageSearchRes: No callback or No content found for the registerNum:',
+              registerNum,
               response
             );
           }
@@ -107,7 +107,7 @@ const imageSearch = {
   },
 
   triggerSettingRes(callback: (setting: string | null) => Promise<void>): void {
-    ipcRenderer.on(channel.TRIGGER_SETTING_RES, async (event, response) => {
+    ipcRenderer.on(channel.TRIGGER_SETTING_RES, async (_, response) => {
       try {
         await callback(response);
         log.debug('Callback successfully executed');
@@ -119,8 +119,8 @@ const imageSearch = {
 
   async selectFiles(multiple: boolean, accept: MimeType[]): Promise<File[]> {
     try {
-      const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
-      return handleSelectFile(filesInfo);
+      const imgList: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
+      return convertImgObject(imgList);
     } catch (error) {
       log.error('Failed to select files:', error);
       throw new Error('Failed to select files');
@@ -129,12 +129,64 @@ const imageSearch = {
 
   async selectDirectory(accept: MimeType[] | null): Promise<File[]> {
     try {
-      const filesInfo: FileObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
-      return handleSelectFile(filesInfo);
+      const imgList: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
+      return convertImgObject(imgList);
     } catch (error) {
       console.error('Failed to select directory:', error);
       throw new Error('Failed to select directory');
     }
+  },
+
+  async getForwardMsgContent(data: forwardMsgData): Promise<{
+    startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: forwardMsgPic[] }>;
+    endDownload: Promise<ImgObject[]>;
+  }> {
+    try {
+      const downloadHandle = async () => {
+        const result: { notOnDiskMsgList: forwardMsgPic[]; onDiskImgList: ImgObject[] } = await ipcRenderer.invoke(
+          channel.GET_FORWARD_MSG_PIC,
+          data
+        );
+        const onDiskImgList = result.onDiskImgList;
+        const notOnDiskMsgList = result.notOnDiskMsgList;
+        const startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: forwardMsgPic[] }> =
+          Promise.resolve({
+            onDiskImgList,
+            notOnDiskMsgList
+          });
+        const endDownload: Promise<ImgObject[]> = ipcRenderer.invoke(
+          channel.DOWNLOAD_MULTI_MSG_IMAGE,
+          notOnDiskMsgList
+        );
+        return { startDownload, endDownload };
+      };
+      return downloadHandle();
+    } catch (error) {
+      log.error('Error retrieving forward message content:', error);
+      return {
+        startDownload: Promise.reject(error),
+        endDownload: Promise.reject([])
+      };
+    }
+  },
+
+  async addUploadFileReq(imgList: ImgObject[]): Promise<void> {
+    try {
+      ipcRenderer.send(channel.ADD_UPLOAD_FILE_REQ, imgList);
+    } catch (error) {
+      log.error('Error adding upload file:', error);
+    }
+  },
+
+  addUploadFileRes(callback: (file: File[]) => void): void {
+    ipcRenderer.on(channel.ADD_UPLOAD_FILE_RES, async (_, imgList: ImgObject[]) => {
+      try {
+        const fileList = await convertImgObject(imgList);
+        callback(fileList);
+      } catch (error) {
+        log.error('Error processing uploaded file:', error);
+      }
+    });
   },
 
   openWeb(url: string): void {

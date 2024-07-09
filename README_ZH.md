@@ -2,7 +2,8 @@
 
 [![wakatime](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch.svg)](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch)
 
-又一个[NekoImageGallery](https://github.com/hv0905/NekoImageGallery)的web UI, 但使用vue并通过[LiteLoaderQQNT](https://liteloaderqqnt.github.io)与NTQQ**无缝结合**
+又一个[NekoImageGallery](https://github.com/hv0905/NekoImageGallery)的web UI,
+使用Vue开发，并通过[LiteLoaderQQNT](https://liteloaderqqnt.github.io)与NTQQ**无缝结合**
 
 [English Document](README.md)
 
@@ -60,3 +61,4 @@ cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 - https://github.com/Night-stars-1/LiteLoaderQQNT-Plugin-LLAPI
 - https://github.com/LLOneBot/LLOneBot
 - https://github.com/darkreader/darkreader
+- （代码注释中提到的更多项目）

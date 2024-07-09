@@ -2,6 +2,10 @@ import iconHtml from '../app/assets/logo.svg?raw';
 import { imageContainer } from '../common/imageContainer';
 import { log } from '../common/share/logs';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
+import { vueMsgElement, forwardMsgData } from './NTQQMsgModel';
+import { showToast } from './toast';
+
+declare var app: any; // hooked NTQQ mainwindow vue app
 
 let mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32' ? 'mouseup' : 'mousedown';
 
@@ -44,44 +48,91 @@ const addQContextMenu = (qContextMenu: Element, icon: string, title: string, men
 };
 
 export const addQContextMenuMain = async () => {
-  let isRightClick: boolean = false;
   let imageObject: imageContainer | null = null;
-  let imgEl: HTMLImageElement | null = null;
+  let forwardMsgData: forwardMsgData | null = null;
+  let el: HTMLElement | null = null;
+  let isRightClick = false;
   const bodyElement = document.querySelector('body');
   const haveImgContent = (): boolean => {
-    return imgEl !== null && imgEl.classList.contains('image-content') && !!imgEl.getAttribute('src');
+    return el !== null && el.classList.contains('image-content') && !!el.getAttribute('src');
   };
   if (bodyElement === null) {
     log.error('addQContextMenuMain: Cannot find bodyElement, inject addQContextMenuMain failed');
     return;
   }
-  document.addEventListener(mouseEventName, (event: MouseEvent) => {
-    if (event.button === 2 && event.target instanceof HTMLImageElement) {
-      isRightClick = true;
-      imgEl = event.target;
-      if (haveImgContent()) {
-        imageObject = new imageContainer(imgEl.src?.toString());
-      } else {
-        imgEl = null;
-        imageObject = null;
-      }
-    } else {
-      isRightClick = false;
+  document.addEventListener(mouseEventName, async (event: MouseEvent) => {
+    isRightClick = false;
+    if (event.button === 2) {
+      forwardMsgData = null;
       imageObject = null;
+      isRightClick = true;
+      if (event.target instanceof HTMLElement) {
+        el = event.target as HTMLElement;
+        const elParent = el.closest('.ml-item');
+        if (!elParent) return;
+        // hook vue app to get forward msg data
+        const forwardMsgVueElement = (app as any)?.__vue_app__?.config?.globalProperties?.$store?.state?.aio_chatMsgArea
+          ?.msgListRef?.curMsgs as vueMsgElement[] | null;
+        const forwardMsgElement = forwardMsgVueElement?.find((msg: vueMsgElement) => msg.id === elParent.id);
+        // In QQ, forward msg elements cannot be combined like text and picture messages, so just simply use elements[0]
+        if (forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement) {
+          forwardMsgData = {
+            peerUid: forwardMsgElement?.data?.peerUid,
+            chatType: forwardMsgElement?.data?.chatType,
+            rootMsgId: forwardMsgElement?.data?.msgId,
+            parentMsgId: forwardMsgElement?.data?.msgId,
+            resId: forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement?.resId
+          };
+          log.debug('Got Forward Message', JSON.stringify(forwardMsgData));
+        }
+      }
+      if (event.target instanceof HTMLImageElement) {
+        if (haveImgContent()) {
+          imageObject = new imageContainer((event.target as HTMLImageElement).src?.toString());
+          log.debug('Got Image', imageObject);
+        }
+      }
     }
   });
   new MutationObserver(async () => {
     const qContextMenu = document.querySelector('.q-context-menu');
-    if (qContextMenu && imageObject) {
-      const fileBlobContent = await imageObject.toBlob();
-      addQContextMenu(qContextMenu, iconHtml, 'Image Search', 'nekoimg-i2i-menu', async () => {
-        log.debug('Image Search');
-        window.imageSearch.postAppImageReq(fileBlobContent, TriggerImageRegisterName.IMAGE_SEARCH);
-      });
-      addQContextMenu(qContextMenu, iconHtml, 'Image Upload', 'nekoimg-upload-menu', async () => {
-        log.debug('Image Upload');
-        window.imageSearch.postAppImageReq(fileBlobContent, TriggerImageRegisterName.IMAGE_UPLOAD);
-      });
+    if (qContextMenu && isRightClick) {
+      if (imageObject) {
+        const fileBlobContent = await imageObject.toBlob();
+        addQContextMenu(qContextMenu, iconHtml, 'Image Search', 'nekoimg-i2i-menu', async () => {
+          log.debug('Image Search');
+          window.imageSearch.postAppImageReq(fileBlobContent, TriggerImageRegisterName.IMAGE_SEARCH);
+        });
+        addQContextMenu(qContextMenu, iconHtml, 'Image Upload', 'nekoimg-upload-menu', async () => {
+          log.debug('Image Upload');
+          window.imageSearch.postAppImageReq(fileBlobContent, TriggerImageRegisterName.IMAGE_UPLOAD);
+        });
+      }
+      if (forwardMsgData) {
+        addQContextMenu(qContextMenu, iconHtml, 'Upload forwardMsg images', 'nekoimg-forward-msg-menu', async () => {
+          (async () => {
+            const ps = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
+            const startDownloadResult = await ps.startDownload;
+            await window.imageSearch.addUploadFileReq(startDownloadResult.onDiskImgList);
+            showToast(
+              `Successfully retrieved 
+              ${startDownloadResult.onDiskImgList.length + startDownloadResult.notOnDiskMsgList.length} 
+              forwardMsg content! Starting background download ${startDownloadResult.notOnDiskMsgList.length} images...`,
+              5000
+            );
+            const es = await ps.endDownload;
+            await window.imageSearch.addUploadFileReq(es);
+            const message =
+              startDownloadResult.notOnDiskMsgList.length > 0
+                ? `Successfully downloaded ${startDownloadResult.notOnDiskMsgList.length} images! `
+                : '';
+            showToast(`${message}Open NekoImage to upload...`, 5000);
+          })().catch((error) => {
+            log.debug('Error when downloading ForwardMsg images:', error);
+            showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
+          });
+        });
+      }
     }
   }).observe(bodyElement, { childList: true });
 };

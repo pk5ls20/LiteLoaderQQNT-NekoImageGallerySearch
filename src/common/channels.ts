@@ -11,3 +11,7 @@ export const POST_APP_IMAGE_SEARCH_RES = 'LiteLoader.imageSearch.imageSearchResp
 export const TRIGGER_SETTING_REQ = 'LiteLoader.imageSearch.triggerSettingReq';
 export const TRIGGER_SETTING_RES = 'LiteLoader.imageSearch.triggerSettingResponse';
 export const CALCULATE_FILE_TYPE = 'LiteLoader.imageSearch.calculateFileType';
+export const GET_FORWARD_MSG_PIC = 'LiteLoader.imageSearch.getForwardMsgContent';
+export const DOWNLOAD_MULTI_MSG_IMAGE = 'LiteLoader.imageSearch.downloadMultiMsgImage';
+export const ADD_UPLOAD_FILE_REQ = 'LiteLoader.imageSearch.addUploadFileReq';
+export const ADD_UPLOAD_FILE_RES = 'LiteLoader.imageSearch.addUploadFileRes';
