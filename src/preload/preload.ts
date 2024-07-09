@@ -5,9 +5,9 @@ import { ImgObject } from '../common/imgObject';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-import { type forwardMsgData } from '../renderer/NTQQMsgModel';
+import { type forwardMsgData, forwardMsgPic } from '../renderer/NTQQMsgModel';
 
-const handleSelectFile = async (fileList: ImgObject[]): Promise<File[]> => {
+const convertImgObject = async (fileList: ImgObject[]): Promise<File[]> => {
   return await Promise.all(
     fileList.map(async (file: ImgObject) => {
       const mine = await ipcRenderer.invoke(channel.CALCULATE_FILE_TYPE, file.content);
@@ -119,8 +119,8 @@ const imageSearch = {
 
   async selectFiles(multiple: boolean, accept: MimeType[]): Promise<File[]> {
     try {
-      const filesInfo: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
-      return handleSelectFile(filesInfo);
+      const imgList: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FILE, multiple, accept);
+      return convertImgObject(imgList);
     } catch (error) {
       log.error('Failed to select files:', error);
       throw new Error('Failed to select files');
@@ -129,27 +129,35 @@ const imageSearch = {
 
   async selectDirectory(accept: MimeType[] | null): Promise<File[]> {
     try {
-      const filesInfo: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
-      return handleSelectFile(filesInfo);
+      const imgList: ImgObject[] = await ipcRenderer.invoke(channel.SELECT_FOLDER, accept);
+      return convertImgObject(imgList);
     } catch (error) {
       console.error('Failed to select directory:', error);
       throw new Error('Failed to select directory');
     }
   },
 
-  async getForwardMsgContent(
-    data: forwardMsgData
-  ): Promise<{ startDownload: Promise<{ onDisk: string[]; notOnDisk: string[] }>; endDownload: Promise<string[]> }> {
+  async getForwardMsgContent(data: forwardMsgData): Promise<{
+    startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: forwardMsgPic[] }>;
+    endDownload: Promise<ImgObject[]>;
+  }> {
     try {
       const downloadHandle = async () => {
-        const result = await ipcRenderer.invoke(channel.GET_FORWARD_MSG_PIC, data);
-        const onDisk = result.onDisk;
-        const notOnDisk = result.notOnDisk;
-        const startDownload: Promise<{ onDisk: string[]; notOnDisk: string[] }> = Promise.resolve({
-          onDisk,
-          notOnDisk
-        });
-        const endDownload: Promise<string[]> = ipcRenderer.invoke(channel.DOWNLOAD_MULTI_MSG_IMAGE, notOnDisk);
+        const result: { notOnDiskMsgList: forwardMsgPic[]; onDiskImgList: ImgObject[] } = await ipcRenderer.invoke(
+          channel.GET_FORWARD_MSG_PIC,
+          data
+        );
+        const onDiskImgList = result.onDiskImgList;
+        const notOnDiskMsgList = result.notOnDiskMsgList;
+        const startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: forwardMsgPic[] }> =
+          Promise.resolve({
+            onDiskImgList,
+            notOnDiskMsgList
+          });
+        const endDownload: Promise<ImgObject[]> = ipcRenderer.invoke(
+          channel.DOWNLOAD_MULTI_MSG_IMAGE,
+          notOnDiskMsgList
+        );
         return { startDownload, endDownload };
       };
       return downloadHandle();
@@ -160,6 +168,25 @@ const imageSearch = {
         endDownload: Promise.reject([])
       };
     }
+  },
+
+  async addUploadFileReq(imgList: ImgObject[]): Promise<void> {
+    try {
+      ipcRenderer.send(channel.ADD_UPLOAD_FILE_REQ, imgList);
+    } catch (error) {
+      log.error('Error adding upload file:', error);
+    }
+  },
+
+  addUploadFileRes(callback: (file: File[]) => void): void {
+    ipcRenderer.on(channel.ADD_UPLOAD_FILE_RES, async (_, imgList: ImgObject[]) => {
+      try {
+        const fileList = await convertImgObject(imgList);
+        callback(fileList);
+      } catch (error) {
+        log.error('Error processing uploaded file:', error);
+      }
+    });
   },
 
   openWeb(url: string): void {

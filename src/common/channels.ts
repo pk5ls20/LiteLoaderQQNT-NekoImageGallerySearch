@@ -13,3 +13,5 @@ export const TRIGGER_SETTING_RES = 'LiteLoader.imageSearch.triggerSettingRespons
 export const CALCULATE_FILE_TYPE = 'LiteLoader.imageSearch.calculateFileType';
 export const GET_FORWARD_MSG_PIC = 'LiteLoader.imageSearch.getForwardMsgContent';
 export const DOWNLOAD_MULTI_MSG_IMAGE = 'LiteLoader.imageSearch.downloadMultiMsgImage';
+export const ADD_UPLOAD_FILE_REQ = 'LiteLoader.imageSearch.addUploadFileReq';
+export const ADD_UPLOAD_FILE_RES = 'LiteLoader.imageSearch.addUploadFileRes';

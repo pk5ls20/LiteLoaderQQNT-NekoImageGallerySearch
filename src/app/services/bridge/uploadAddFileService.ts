@@ -1,10 +1,12 @@
 import { type MimeType } from 'file-type';
+import { sharedAdapter } from '../../adapter/SharedAdapter';
 
 export const imageFileTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] as MimeType[];
 
 interface UploadAddFileService {
   selectFiles: (multiple?: boolean, accept?: MimeType[]) => Promise<File[]>;
   selectDirectory: (accept?: MimeType[] | null) => Promise<File[]>;
+  addUploadFileListener: (callback: (file: File[]) => void) => void;
 }
 
 export class devUploadAddFileService implements UploadAddFileService {
@@ -47,6 +49,10 @@ export class devUploadAddFileService implements UploadAddFileService {
       input.click();
     });
   };
+
+  addUploadFileListener(callback: (file: File[]) => void): void {
+    sharedAdapter.Log.debug('devUploadAddFileService addUploadFileListener');
+  }
 }
 
 export class LLNTUploadAddFileService implements UploadAddFileService {
@@ -56,5 +62,9 @@ export class LLNTUploadAddFileService implements UploadAddFileService {
 
   selectDirectory = (accept: MimeType[] | null = imageFileTypes): Promise<File[]> => {
     return window.imageSearch.selectDirectory(accept);
+  };
+
+  addUploadFileListener = (callback: (file: File[]) => void): void => {
+    window.imageSearch.addUploadFileRes(callback);
   };
 }

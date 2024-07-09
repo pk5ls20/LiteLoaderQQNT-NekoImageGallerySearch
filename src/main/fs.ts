@@ -22,9 +22,9 @@ export const readDirectory = async (localPath: string[], allow_mine: MimeType[])
           Promise.resolve([
             new ImgObject(
               path.basename(singlePath),
-              singlePath,
               path.extname(singlePath).substring(1),
-              new Uint8Array(content).buffer
+              new Uint8Array(content).buffer,
+              singlePath
             )
           ])
         );

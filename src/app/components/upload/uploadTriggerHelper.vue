@@ -49,5 +49,8 @@ onMounted(() => {
     postAppImageSearchResCallBack,
     sharedAdapter.TriggerImageRegisterName.IMAGE_UPLOAD
   );
+  EnvAdapter.UploadAddFileService().addUploadFileListener((file: File[]) => {
+    uploadStore.queue.push(...file.map((f) => new UploadTask(f)));
+  });
 });
 </script>

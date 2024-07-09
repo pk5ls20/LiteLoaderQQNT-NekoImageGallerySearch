@@ -162,9 +162,21 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
   return [...nonNestedMessages, ...nestedResults.flat()];
 };
 
+const convertPicToImgObject = async (picList: forwardMsgPic[]): Promise<ImgObject[]> => {
+  return Promise.all(
+    picList.map(async (ele) => {
+      const sourcePath = ele.pic.sourcePath;
+      const fileName = path.basename(sourcePath);
+      const fileExtension = path.extname(sourcePath).substring(1);
+      const fileContent = await fs.promises.readFile(sourcePath);
+      return new ImgObject(fileName, fileExtension, fileContent, sourcePath);
+    })
+  );
+};
+
 ipcMain.handle(
   channel.GET_FORWARD_MSG_PIC,
-  async (_, msgData: forwardMsgData): Promise<{ onDisk: forwardMsgPic[]; notOnDisk: forwardMsgPic[] }> => {
+  async (_, msgData: forwardMsgData): Promise<{ notOnDiskMsgList: forwardMsgPic[]; onDiskImgList: ImgObject[] }> => {
     const res = await getForwardMsgContent(msgData);
     const picRawList: RawMessage[] = res.filter((msg) =>
       msg.elements.some((element) => element.picElement && element.picElement.sourcePath !== undefined)
@@ -180,22 +192,23 @@ ipcMain.handle(
       };
     });
     const onDisk: forwardMsgPic[] = [];
-    const notOnDisk: forwardMsgPic[] = [];
+    const notOnDiskList: forwardMsgPic[] = [];
     picList.forEach((pic) => {
       if (fs.existsSync(pic.pic.sourcePath)) {
         onDisk.push(pic);
       } else {
-        notOnDisk.push(pic);
+        notOnDiskList.push(pic);
       }
     });
+    const onDiskImg = await convertPicToImgObject(onDisk);
     log.debug(
-      `channel.GET_FORWARD_MSG_PIC now have valid picList len=${picList.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDisk.length}`
+      `channel.GET_FORWARD_MSG_PIC now have valid picList len=${picList.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDiskList.length}`
     );
-    return { onDisk, notOnDisk };
+    return { onDiskImgList: onDiskImg, notOnDiskMsgList: notOnDiskList };
   }
 );
 
-ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: forwardMsgPic[]): Promise<string[]> => {
+ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: forwardMsgPic[]): Promise<ImgObject[]> => {
   const downloadPromises = picList.map((ele) => {
     const apiParams: ApiParams = [
       {
@@ -227,5 +240,9 @@ ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: forwardMsgPi
     );
   });
   await Promise.all(downloadPromises);
-  return picList.map((ele) => ele.pic.sourcePath);
+  return convertPicToImgObject(picList);
+});
+
+ipcMain.on(channel.ADD_UPLOAD_FILE_REQ, (event, imgList: ImgObject[]) => {
+  event.sender.send(channel.ADD_UPLOAD_FILE_RES, imgList);
 });

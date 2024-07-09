@@ -113,17 +113,21 @@ export const addQContextMenuMain = async () => {
           try {
             const ps = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
             const startDownloadResult = await ps.startDownload;
+            await window.imageSearch.addUploadFileReq(startDownloadResult.onDiskImgList);
             showToast(
-              `Successfully retrieved ${startDownloadResult.onDisk.length + startDownloadResult.notOnDisk.length} forwardMsg content! 
-    Starting background download ${startDownloadResult.notOnDisk.length} images...`,
+              `Successfully retrieved 
+              ${startDownloadResult.onDiskImgList.length + startDownloadResult.notOnDiskMsgList.length} 
+              forwardMsg content! Starting background download ${startDownloadResult.notOnDiskMsgList.length} images...`,
               5000
             );
             (async () => {
-              await ps.endDownload;
-              showToast(
-                `Successfully downloaded ${startDownloadResult.notOnDisk.length} images! Open NekoImage to upload...`,
-                5000
-              );
+              const es = await ps.endDownload;
+              await window.imageSearch.addUploadFileReq(es);
+              const message =
+                startDownloadResult.notOnDiskMsgList.length > 0
+                  ? `Successfully downloaded ${startDownloadResult.notOnDiskMsgList.length} images! `
+                  : '';
+              showToast(`${message}Open NekoImage to upload...`, 5000);
             })().catch((error) => {
               log.debug('Error when downloading ForwardMsg images:', error);
               showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
