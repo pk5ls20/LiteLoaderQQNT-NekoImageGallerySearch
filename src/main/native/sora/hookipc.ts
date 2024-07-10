@@ -7,12 +7,14 @@ const hookIpcSend = (sendData: any) => {
   if (data) {
     // console.log('hookIpcSend-0', data);
   }
-  if (event.callbackId && activeCallbackIds.has(event.callbackId)) {
+  if (event?.callbackId && activeCallbackIds.has(event.callbackId)) {
     // console.log('hookIpcSend-1', event.callbackId);
     eventEmitter.emit(event.callbackId, data);
   } else if (Array.isArray(data) && data[0]?.cmdName) {
     // console.log('hookIpcSend-2', data[0]?.cmdName);
     eventEmitter.emit(data[0]?.cmdName, data);
+  } else {
+    console.warn('hookIpcSend: Unexpected sendData format', sendData);
   }
   return sendData;
 };
