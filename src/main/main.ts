@@ -178,19 +178,21 @@ ipcMain.handle(
   channel.GET_FORWARD_MSG_PIC,
   async (_, msgData: forwardMsgData): Promise<{ notOnDiskMsgList: forwardMsgPic[]; onDiskImgList: ImgObject[] }> => {
     const res = await getForwardMsgContent(msgData);
-    const picRawList: RawMessage[] = res.filter((msg) =>
-      msg.elements.some((element) => element.picElement && element.picElement.sourcePath !== undefined)
+    const picList: forwardMsgPic[] = res.flatMap((rawMsg) =>
+      rawMsg.elements
+        .filter((ele) => ele?.elementId !== undefined && ele?.picElement?.sourcePath !== undefined)
+        .map(
+          (ele) =>
+            ({
+              pic: ele.picElement,
+              elementId: ele.elementId,
+              msgId: msgData.rootMsgId!,
+              chatType: msgData?.chatType!,
+              peerUid: msgData?.peerUid!
+            }) as forwardMsgPic
+        )
     );
-    const picList: forwardMsgPic[] = picRawList.map((rawMsg) => {
-      const t = rawMsg.elements.find((ele) => ele.picElement !== undefined);
-      return {
-        pic: t?.picElement as PicElement,
-        msgId: msgData.rootMsgId!,
-        chatType: msgData?.chatType!,
-        peerUid: msgData?.peerUid!,
-        elementId: t?.elementId as string
-      };
-    });
+    // log.debug(`channel.GET_FORWARD_MSG_PIC got picList ${JSON.stringify(picList)}`);
     const onDisk: forwardMsgPic[] = [];
     const notOnDiskList: forwardMsgPic[] = [];
     picList.forEach((pic) => {
