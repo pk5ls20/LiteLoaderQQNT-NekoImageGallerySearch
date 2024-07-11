@@ -1,5 +1,5 @@
 <template>
-  <div v-ripple class="q-dialog-image-input" @click="handleUploadImageQuery">
+  <div v-ripple class="q-dialog-image-input" @click="performImageInputSearch">
     <div v-if="searchStore.queryImageInput === null" class="q-dialog-image-input-tip">
       {{ $t('search.imageSearchInput.inputTip') }}
     </div>
@@ -35,8 +35,7 @@ import { type MimeType } from 'file-type';
 import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { sharedAdapter } from '../../adapter/SharedAdapter';
 import { searchType } from '../../models/search/SearchWindowEnum';
-import { ImageSearchQuery } from '../../services/search/searchQueryService';
-import { performQuerySearchService } from '../../services/search/performQuerySearchService';
+import { performImageSearch } from '../../services/search/performSearchQueryService';
 import { useSearchStore } from '../../states/searchWindowState';
 import { displaySearchErrorDialog } from '../../utils/handleCatchError';
 import { useMainStore } from '../../states/mainWindowState';
@@ -46,7 +45,7 @@ const mainStore = useMainStore();
 const searchStore = useSearchStore();
 const { t } = useI18n();
 
-const handleUploadImageQuery = async () => {
+const performImageInputSearch = async () => {
   const imgList = await EnvAdapter.UploadAddFileService().selectFiles(false);
   // because it is not available to choose more, in theory, the IMG array should have only one element
   // but just check it =w=
@@ -54,9 +53,7 @@ const handleUploadImageQuery = async () => {
     displaySearchErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
     return;
   }
-  searchStore.queryImageInput = URL.createObjectURL(imgList[0]);
-  const req = new ImageSearchQuery(imgList[0]);
-  await performQuerySearchService(req, 0);
+  await performImageSearch(imgList[0]);
 };
 
 const postAppImageSearchResCallBack = async (file_content: Uint8Array | null, file_mine: MimeType) => {
@@ -65,9 +62,7 @@ const postAppImageSearchResCallBack = async (file_content: Uint8Array | null, fi
   await EnvAdapter.adjustVisible(true);
   if (file_content !== null) {
     const blob = new Blob([file_content], { type: file_mine });
-    searchStore.queryImageInput = URL.createObjectURL(blob);
-    const req = new ImageSearchQuery(blob);
-    await performQuerySearchService(req, 0);
+    await performImageSearch(blob);
   } else {
     displaySearchErrorDialog(t('search.imageSearchInput.uploadImageCountMoreThanOneTip'));
   }

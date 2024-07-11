@@ -72,12 +72,12 @@
     <ui-dialog-actions></ui-dialog-actions>
   </ui-dialog>
 </template>
+
 <script setup lang="ts">
 import { EnvAdapter } from '../../adapter/EnvAdapter';
 import type { Image } from '../../models/search/Image';
 import { fetchStatus, fetchType } from '../../models/search/SearchWindowEnum';
-import { SearchQueryService, SimilarSearchQuery } from '../../services/search/searchQueryService';
-import { performQuerySearchService } from '../../services/search/performQuerySearchService';
+import { performLoadMoreSearch, performSimilarSearch } from '../../services/search/performSearchQueryService';
 import { useSearchStore } from '../../states/searchWindowState';
 import { getPreviewURL } from '../../utils/getURL';
 import { EditorImageMsg, NTQQEditorImageMsg } from '../../services/editor/editorMsgService';
@@ -87,16 +87,6 @@ import progressiveImage from '../utils/progressiveImage.vue';
 
 const store = useSearchStore();
 const { t } = useI18n();
-
-const performLoadMoreSearch = async () => {
-  // store.lastQueryEntry must not be null
-  await performQuerySearchService(store.lastQueryEntry as SearchQueryService, fetchType.MORE);
-};
-
-const performSimilarSearch = async (searchImage: Image, type: fetchType) => {
-  const query = new SimilarSearchQuery(searchImage);
-  await performQuerySearchService(query, type);
-};
 
 const handleLikeClick = async (img: Image) => {
   try {

@@ -31,28 +31,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { SearchBasis } from '../../models/search/SearchBasis';
 import { fetchType, searchType } from '../../models/search/SearchWindowEnum';
-import { performQuerySearchService } from '../../services/search/performQuerySearchService';
-import { RandomSearchQuery, TextSearchQuery } from '../../services/search/searchQueryService';
 import { useSearchStore } from '../../states/searchWindowState';
+import { performBasicSearch, performRandomSearch } from '../../services/search/performSearchQueryService';
 
 const store = useSearchStore();
-
 const isSearchComponentsAvailable = computed(() => store.serverOCRAvailable || store.tabActiveItem !== searchType.OCR);
-
-const performBasicSearch = async (type: fetchType) => {
-  const query = new TextSearchQuery(
-    store.queryBasicInput,
-    store.tabActiveItem === searchType.TEXT ? SearchBasis.vision : SearchBasis.ocr,
-    false
-  );
-  await performQuerySearchService(query, type);
-};
-
-const performRandomSearch = async () => {
-  await performQuerySearchService(new RandomSearchQuery(), fetchType.FIRST);
-};
 </script>
 
 <style scoped>

@@ -36,7 +36,13 @@
       "
       class="q-dialog-advance-input-text"
       outlined
-      @keyup.enter="performAdvanceSearch(fetchType.FIRST)"
+      @keyup.enter="
+        performAdvanceSearch(
+          fetchType.FIRST,
+          queryAdvanceLookUp?.[0] as AdvancedSearchMode,
+          queryAdvanceLookUp?.[1] as SearchBasis
+        )
+      "
     >
       <template #after>
         <ui-textfield-icon @click="store.isFilterOptionsDialogOpen = true">
@@ -48,7 +54,13 @@
       :class="{ active: store.isQueryAdvanceModeClicked }"
       class="q-dialog-advance-input-search-button"
       raised
-      @click="performAdvanceSearch(fetchType.FIRST)"
+      @click="
+        performAdvanceSearch(
+          fetchType.FIRST,
+          queryAdvanceLookUp?.[0] as AdvancedSearchMode,
+          queryAdvanceLookUp?.[1] as SearchBasis
+        )
+      "
     >
       GO🔍
     </ui-button>
@@ -63,8 +75,7 @@ import { EnvAdapter } from '../../adapter/EnvAdapter';
 import { SearchBasis } from '../../models/search/SearchBasis';
 import { fetchType, promptType } from '../../models/search/SearchWindowEnum';
 import { AdvancedSearchMode } from '../../models/search/AdvancedSearchModel';
-import { performQuerySearchService } from '../../services/search/performQuerySearchService';
-import { AdvancedSearchQuery, CombinedSearchQuery } from '../../services/search/searchQueryService';
+import { performAdvanceSearch } from '../../services/search/performSearchQueryService';
 import { useSearchStore } from '../../states/searchWindowState';
 
 const { t } = useI18n();
@@ -104,6 +115,14 @@ const queryAdvanceModes = [
     mode: [AdvancedSearchMode.best, SearchBasis.ocr]
   }
 ];
+
+const clearPrompt = () => {
+  store.queryAdvanceInputPromptMap.clear();
+  store.queryAdvanceInput = '';
+  queryAdvanceChipsList.value.map((item: { label: string; value: string }) => {
+    if (item.label.indexOf('⭐') !== -1) item.label = item.label.replace('⭐', '');
+  });
+};
 
 const queryAdvanceLookUp = computed(() => {
   return (
@@ -155,48 +174,6 @@ const handleClickStop = (event: MouseEvent) => {
     'advanceSelectEquivalentClickCount:',
     store.advanceSelectEquivalentClickCount
   );
-};
-
-const clearPrompt = () => {
-  store.queryAdvanceInputPromptMap.clear();
-  store.queryAdvanceInput = '';
-  queryAdvanceChipsList.value.map((item: { label: string; value: string }) => {
-    if (item.label.indexOf('⭐') !== -1) item.label = item.label.replace('⭐', '');
-  });
-};
-
-const performAdvanceSearch = async (type: fetchType) => {
-  // first, decide to use which type of advance search
-  // old store.queryAdvanceInputPromptMap
-  let query = null;
-  if (store.queryAdvanceInputPromptMap.has(promptType.COMBINED)) {
-    // use combined mode
-    query = new CombinedSearchQuery(
-      {
-        extra_prompt: store.queryAdvanceInputPromptMap.get(promptType.COMBINED) ?? '',
-        criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE) ?? ''], // TODO: split ' '
-        negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE) ?? ''],
-        mode: queryAdvanceLookUp?.value[0] as AdvancedSearchMode
-      },
-      queryAdvanceLookUp?.value[1] as SearchBasis
-    );
-  } else if (
-    store.queryAdvanceInputPromptMap.has(promptType.POSITIVE) ||
-    store.queryAdvanceInputPromptMap.has(promptType.NEGATIVE)
-  ) {
-    // use advance mode
-    query = new AdvancedSearchQuery(
-      {
-        criteria: [store.queryAdvanceInputPromptMap.get(promptType.POSITIVE) ?? ''],
-        negative_criteria: [store.queryAdvanceInputPromptMap.get(promptType.NEGATIVE) ?? ''],
-        mode: queryAdvanceLookUp?.value[0] as AdvancedSearchMode
-      },
-      queryAdvanceLookUp?.value[1] as SearchBasis
-    );
-  }
-  if (query) {
-    await performQuerySearchService(query, type);
-  }
 };
 </script>
 
