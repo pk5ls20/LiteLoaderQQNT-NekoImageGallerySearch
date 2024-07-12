@@ -9,8 +9,7 @@ Another web UI for [NekoImageGallery](https://github.com/hv0905/NekoImageGallery
 >
 > Want to use [NekoImageGallery.App](https://github.com/hv0905/NekoImageGallery.App) in NTQQ? No problem,
 > try [NekoImageGallery.LiteLoader.App](https://github.com/pk5ls20/NekoImageGallery.LiteLoader.App) (currently in a *
-*very
-early WIP stage**, your PRs are welcome).
+*very early WIP stage**, your PRs are welcome!)
 
 ## Screenshots
 

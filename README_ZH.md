@@ -10,7 +10,7 @@
 >
 > 想在 NTQQ 中使用 [NekoImageGallery.App](https://github.com/hv0905/NekoImageGallery.App)
 > 吗？没问题，来试试 [NekoImageGallery.LiteLoader.App](https://github.com/pk5ls20/NekoImageGallery.LiteLoader.App)
-> 吧（目前正处于相当早期的 WIP 阶段，欢迎您的 PR）。
+> 吧（目前正处于相当早期的 WIP 阶段，欢迎您的 PR！）
 
 ## 预览
 
