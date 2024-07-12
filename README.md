@@ -1,10 +1,16 @@
 ## LiteLoaderQQNT-NekoImageGallerySearch
 
 [![wakatime](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch.svg)](https://wakatime.com/badge/github/pk5ls20/LiteLoaderQQNT-NekoImageGallerySearch)
+[![中文README](https://img.shields.io/badge/中文-README-blue)](README_ZH.md)
 
 Another web UI for [NekoImageGallery](https://github.com/hv0905/NekoImageGallery), but completed using Vue, and **seamlessly integrated with NTQQ** through [LiteLoaderQQNT](https://liteloaderqqnt.github.io)
 
-[中文文档](README_ZH.md)
+> [!NOTE]
+>
+> Want to use [NekoImageGallery.App](https://github.com/hv0905/NekoImageGallery.App) in NTQQ? No problem,
+> try [NekoImageGallery.LiteLoader.App](https://github.com/pk5ls20/NekoImageGallery.LiteLoader.App) (currently in a *
+*very
+early WIP stage**, your PRs are welcome).
 
 ## Screenshots
 
