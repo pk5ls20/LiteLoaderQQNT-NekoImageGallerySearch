@@ -1,5 +1,4 @@
 import { log } from '../common/share/logs';
-import iconHtml from '../app/assets/logo.svg?raw';
 
 // reference https://github.com/MUKAPP/LiteLoaderQQNT-DeepL/blob/main/src/renderer.js#L377
 export const settings = async (view: any) => {
@@ -46,7 +45,7 @@ export const settings = async (view: any) => {
     const nekoimage_lang_apply = view.querySelector('.image_search .neko-lang-apply');
     const nekoimage_lang_reset = view.querySelector('.image_search .neko-lang-reset');
 
-    console.log(JSON.stringify(settings));
+    // console.log(JSON.stringify(settings));
     nekoimage_access_token.value = settings.nekoimage_admin_token ?? '';
     nekoimage_admin_token.value = settings.nekoimage_admin_token ?? '';
     nekoimage_lang.value = settings.nekoimage_lang ?? 'en-US';

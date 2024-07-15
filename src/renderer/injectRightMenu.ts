@@ -2,7 +2,7 @@ import iconHtml from '../app/assets/logo.svg?raw';
 import { imageContainer } from '../common/imageContainer';
 import { log } from '../common/share/logs';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-import { forwardMsgData, picMsgData, vueMsgElement } from './NTQQMsgModel';
+import { arkForwardMsgBytesData, forwardMsgData, picMsgData, vueMsgElement } from './NTQQMsgModel';
 import { showToast } from './toast';
 import { ImgObject } from '../common/imgObject';
 import * as channel from '../common/channels';
@@ -78,6 +78,15 @@ const injectLogic = async (msgData: forwardMsgData) => {
   });
 };
 
+const isArkElementLikeForwardMsg = (bytesData: string): boolean => {
+  try {
+    const arkBytesData: arkForwardMsgBytesData = JSON.parse(bytesData);
+    return arkBytesData?.app === 'com.tencent.multimsg';
+  } catch (error) {
+    return false;
+  }
+};
+
 export const addQContextMenuMain = async () => {
   let imageObject: imageContainer | null = null;
   let forwardMsgData: forwardMsgData | null = null;
@@ -107,6 +116,7 @@ export const addQContextMenuMain = async () => {
         const forwardMsgElement = forwardMsgVueElement?.find((msg: vueMsgElement) => msg.id === elParent.id);
         // log.debug('Forward Msg Element', forwardMsgElement);
         // In QQ, forward msg elements cannot be combined like text and picture messages, so just simply use elements[0]
+        // common forward msg, just multiForwardMsgElement
         if (forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement) {
           forwardMsgData = {
             peerUid: forwardMsgElement?.data?.peerUid,
@@ -115,8 +125,22 @@ export const addQContextMenuMain = async () => {
             parentMsgId: forwardMsgElement?.data?.msgId,
             resId: forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement?.resId
           };
-          log.debug('Got Forward Message', JSON.stringify(forwardMsgData));
         }
+        // unusual forward msg, special arkElement
+        else if (
+          forwardMsgElement?.data?.elements[0]?.arkElement &&
+          isArkElementLikeForwardMsg(forwardMsgElement?.data?.elements[0]?.arkElement?.bytesData)
+        ) {
+          const bd = JSON.parse(forwardMsgElement?.data?.elements[0]?.arkElement?.bytesData) as arkForwardMsgBytesData;
+          forwardMsgData = {
+            peerUid: forwardMsgElement?.data?.peerUid,
+            chatType: forwardMsgElement?.data?.chatType,
+            rootMsgId: forwardMsgElement?.data?.msgId,
+            parentMsgId: forwardMsgElement?.data?.msgId,
+            resId: bd?.meta?.detail?.resid
+          };
+        }
+        if (forwardMsgData) log.debug('Got Forward Message', JSON.stringify(forwardMsgData));
       }
       if (event.target instanceof HTMLImageElement) {
         if (haveImgContent()) {

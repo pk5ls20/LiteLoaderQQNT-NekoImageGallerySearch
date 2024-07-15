@@ -132,6 +132,31 @@ export interface forwardMsgData extends nekoMsgData {
   resId?: string; // used in raw packet
 }
 
+export interface arkForwardMsgBytesData {
+  app?: string;
+  config?: {
+    autosize?: number;
+    forward?: number;
+    round?: number;
+    type?: string;
+    width?: number;
+  };
+  desc?: string;
+  extra?: string;
+  meta?: {
+    detail?: {
+      news?: Array<{ text?: string }>;
+      resid?: string;
+      source?: string;
+      summary?: string;
+      uniseq?: string;
+    };
+  };
+  prompt?: string;
+  ver?: string;
+  view?: string;
+}
+
 export interface picMsgData extends nekoMsgData {
   pic: PicElement;
   msgId: string;
