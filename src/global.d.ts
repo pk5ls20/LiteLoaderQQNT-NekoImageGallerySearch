@@ -21,7 +21,12 @@ declare global {
       openWeb: (url: string) => void;
       selectFiles: (multiple: boolean, accept: string[]) => Promise<File[]>;
       selectDirectory: (accept: string[] | null) => Promise<File[]>;
-      downloadMsgContent: <DT extends nekoMsgData | nekoMsgData[], SDT1, SDT2, EDT1>(
+      downloadMsgContent: <
+        DT extends nekoMsgData | nekoMsgData[],
+        SDT1 extends unknown,
+        SDT2 extends unknown,
+        EDT1 extends unknown
+      >(
         msgData: DT,
         startDownloadChannel: string,
         finishDownloadChannel: string

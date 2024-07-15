@@ -162,7 +162,7 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
   return [...nonNestedMessages, ...nestedResults.flat()];
 };
 
-const convertPicToImgObject = async (picList: (picMsgData | marketFaceMsgData)[]): Promise<ImgObject[]> => {
+const convertPicToImgObject = async <T>(picList: T[]): Promise<ImgObject[]> => {
   return Promise.all(
     picList.map(async (ele) => {
       let sourcePath: string | null = null;
@@ -183,19 +183,21 @@ const convertPicToImgObject = async (picList: (picMsgData | marketFaceMsgData)[]
   );
 };
 
+type multiPicDataT = picMsgData | marketFaceMsgData;
+
 // TODO: maybe can be refactored using generics
 ipcMain.handle(
   channel.GET_MSG_MULTI_PIC,
   async (
     _,
-    msgData: (picMsgData | marketFaceMsgData)[]
+    msgData: multiPicDataT[]
   ): Promise<{
     onDiskMsgContentList: ImgObject[];
-    notOnDiskMsgContentList: (picMsgData | marketFaceMsgData)[];
+    notOnDiskMsgContentList: multiPicDataT[];
   }> => {
-    const onDisk: (picMsgData | marketFaceMsgData)[] = [];
-    const notOnDiskList: (picMsgData | marketFaceMsgData)[] = [];
-    msgData?.forEach((pic: picMsgData | marketFaceMsgData) => {
+    const onDisk: multiPicDataT[] = [];
+    const notOnDiskList: multiPicDataT[] = [];
+    msgData?.forEach((pic: multiPicDataT) => {
       if ((pic as picMsgData)?.pic && fs.existsSync((pic as picMsgData).pic.sourcePath)) {
         fs.existsSync((pic as picMsgData).pic.sourcePath)
           ? onDisk.push(<picMsgData>pic)
@@ -213,7 +215,7 @@ ipcMain.handle(
     // log.debug(`channel.GET_MSG_MULTI_PIC got msgData ${JSON.stringify(msgData)}`);
     // log.debug('onDisk', JSON.stringify(onDisk));
     // log.debug('notOnDiskList', JSON.stringify(notOnDiskList));
-    const onDiskImg = await convertPicToImgObject(onDisk);
+    const onDiskImg = await convertPicToImgObject<multiPicDataT>(onDisk);
     log.debug(
       `channel.GET_MSG_MULTI_PIC now have valid picList len=${msgData.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDiskList.length}`
     );
@@ -257,7 +259,7 @@ ipcMain.handle(
         notOnDiskList.push(pic);
       }
     });
-    const onDiskImg = await convertPicToImgObject(onDisk);
+    const onDiskImg = await convertPicToImgObject<picMsgData>(onDisk);
     log.debug(
       `channel.GET_FORWARD_MSG_PIC now have valid picList len=${picList.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDiskList.length}`
     );
@@ -280,7 +282,7 @@ ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: picMsgData[]
           thumbSize: 0,
           downloadType: 1,
           filePath: ele.pic.sourcePath
-        }
+        } as GetReq
       },
       null
     ];

@@ -137,7 +137,12 @@ const imageSearch = {
     }
   },
 
-  async downloadMsgContent<DT extends nekoMsgData | nekoMsgData[], SDT1, SDT2, EDT1>(
+  async downloadMsgContent<
+    DT extends nekoMsgData | nekoMsgData[],
+    SDT1 extends unknown,
+    SDT2 extends unknown,
+    EDT1 extends unknown
+  >(
     msgData: DT,
     startDownloadChannel: string,
     finishDownloadChannel: string
