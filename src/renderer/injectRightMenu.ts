@@ -145,7 +145,10 @@ export const addQContextMenuMain = async () => {
       if (event.target instanceof HTMLImageElement) {
         if (haveImgContent()) {
           imageObject = new imageContainer((event.target as HTMLImageElement).src?.toString());
-          log.debug('Got Image', imageObject);
+          log.debug(
+            'Got Image',
+            imageObject.src.length > 200 ? `${imageObject.src.slice(0, 200)}...` : imageObject.src
+          );
         }
       }
     }
