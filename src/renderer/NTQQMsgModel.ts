@@ -119,7 +119,12 @@ type RoleInfo = {
   roleId: string;
 };
 
-export interface forwardMsgData {
+export interface nekoMsgData {
+  chatType?: number;
+  peerUid?: string;
+}
+
+export interface forwardMsgData extends nekoMsgData {
   peerUid?: string; // used in ipcChannel
   chatType?: number; // used in ipcChannel
   rootMsgId?: string; // used in ipcChannel
@@ -127,12 +132,20 @@ export interface forwardMsgData {
   resId?: string; // used in raw packet
 }
 
-export interface forwardMsgPic {
+export interface picMsgData extends nekoMsgData {
   pic: PicElement;
   msgId: string;
   chatType: number;
   peerUid: string;
   elementId: string;
+}
+
+export interface NTQQVueMarketFaceElement extends MarketFaceElement {
+  staticFacePath: string;
+}
+
+export interface marketFaceMsgData extends nekoMsgData {
+  marketFace: NTQQVueMarketFaceElement;
 }
 
 export interface GetReq {

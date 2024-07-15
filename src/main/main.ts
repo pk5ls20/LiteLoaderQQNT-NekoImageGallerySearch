@@ -11,8 +11,8 @@ import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterNa
 import { readDirectory } from './fs';
 import { hookIpc } from './native/sora/hookipc';
 import { invokeNative } from './native/sora/invokeNative';
-import { forwardMsgData, forwardMsgPic, GetReq } from '../renderer/NTQQMsgModel';
-import type { GeneralCallResult, PicElement, RawMessage } from 'napcat.core';
+import { forwardMsgData, GetReq, marketFaceMsgData, picMsgData } from '../renderer/NTQQMsgModel';
+import type { GeneralCallResult, RawMessage } from 'napcat.core';
 
 export const onBrowserWindowCreated = (window: BrowserWindow) => {
   hookIpc(window);
@@ -139,7 +139,7 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
     'IPC_UP_2',
     args
   );
-  // log.debug('getForwardMsgContent', JSON.stringify(res));
+  // log.debug('downloadMsgContent', JSON.stringify(res));
   const nonNestedMessages = res.msgList.filter(
     (msg) => !msg.elements.some((element) => element.multiForwardMsgElement)
   );
@@ -155,30 +155,85 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
         rootMsgId: msgData.rootMsgId,
         parentMsgId: msg.msgId
       };
-      // log.debug('getForwardMsgContent nestedMessages in loop prepare to get', JSON.stringify(nestedMsgData));
+      // log.debug('downloadMsgContent nestedMessages in loop prepare to get', JSON.stringify(nestedMsgData));
       return await getForwardMsgContent(nestedMsgData);
     })
   );
   return [...nonNestedMessages, ...nestedResults.flat()];
 };
 
-const convertPicToImgObject = async (picList: forwardMsgPic[]): Promise<ImgObject[]> => {
+const convertPicToImgObject = async (picList: (picMsgData | marketFaceMsgData)[]): Promise<ImgObject[]> => {
   return Promise.all(
     picList.map(async (ele) => {
-      const sourcePath = ele.pic.sourcePath;
-      const fileName = path.basename(sourcePath);
-      const fileExtension = path.extname(sourcePath).substring(1);
-      const fileContent = await fs.promises.readFile(sourcePath);
-      return new ImgObject(fileName, fileExtension, fileContent, sourcePath);
+      let sourcePath: string | null = null;
+      if ((ele as picMsgData)?.pic) {
+        sourcePath = (ele as picMsgData).pic.sourcePath;
+      } else if ((ele as marketFaceMsgData)?.marketFace?.staticFacePath) {
+        sourcePath = (ele as marketFaceMsgData).marketFace.staticFacePath;
+      }
+      if (sourcePath) {
+        const fileName = path.basename(sourcePath);
+        const fileExtension = path.extname(sourcePath).substring(1);
+        const fileContent = await fs.promises.readFile(sourcePath);
+        return new ImgObject(fileName, fileExtension, fileContent, sourcePath);
+      } else {
+        throw new Error(`convertPicToImgObject: sourcePath is null, ele=${JSON.stringify(ele)}`);
+      }
     })
   );
 };
 
+// TODO: maybe can be refactored using generics
+ipcMain.handle(
+  channel.GET_MSG_MULTI_PIC,
+  async (
+    _,
+    msgData: (picMsgData | marketFaceMsgData)[]
+  ): Promise<{
+    onDiskMsgContentList: ImgObject[];
+    notOnDiskMsgContentList: (picMsgData | marketFaceMsgData)[];
+  }> => {
+    const onDisk: (picMsgData | marketFaceMsgData)[] = [];
+    const notOnDiskList: (picMsgData | marketFaceMsgData)[] = [];
+    msgData?.forEach((pic: picMsgData | marketFaceMsgData) => {
+      if ((pic as picMsgData)?.pic && fs.existsSync((pic as picMsgData).pic.sourcePath)) {
+        fs.existsSync((pic as picMsgData).pic.sourcePath)
+          ? onDisk.push(<picMsgData>pic)
+          : notOnDiskList.push(<picMsgData>pic);
+      }
+      if (
+        (pic as marketFaceMsgData)?.marketFace?.staticFacePath &&
+        fs.existsSync((pic as marketFaceMsgData).marketFace.staticFacePath)
+      ) {
+        fs.existsSync((pic as marketFaceMsgData).marketFace.staticFacePath)
+          ? onDisk.push(<marketFaceMsgData>pic)
+          : notOnDiskList.push(<marketFaceMsgData>pic);
+      }
+    });
+    // log.debug(`channel.GET_MSG_MULTI_PIC got msgData ${JSON.stringify(msgData)}`);
+    // log.debug('onDisk', JSON.stringify(onDisk));
+    // log.debug('notOnDiskList', JSON.stringify(notOnDiskList));
+    const onDiskImg = await convertPicToImgObject(onDisk);
+    log.debug(
+      `channel.GET_MSG_MULTI_PIC now have valid picList len=${msgData.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDiskList.length}`
+    );
+    return { onDiskMsgContentList: onDiskImg, notOnDiskMsgContentList: notOnDiskList };
+  }
+);
+
+// TODO: maybe can be refactored using generics
 ipcMain.handle(
   channel.GET_FORWARD_MSG_PIC,
-  async (_, msgData: forwardMsgData): Promise<{ notOnDiskMsgList: forwardMsgPic[]; onDiskImgList: ImgObject[] }> => {
+  async (
+    _,
+    msgData: forwardMsgData
+  ): Promise<{
+    onDiskMsgContentList: ImgObject[];
+    notOnDiskMsgContentList: picMsgData[];
+  }> => {
+    // log.debug(`channel.GET_FORWARD_MSG_PIC got msgData ${JSON.stringify(msgData)}`);
     const res = await getForwardMsgContent(msgData);
-    const picList: forwardMsgPic[] = res.flatMap((rawMsg) =>
+    const picList: picMsgData[] = res.flatMap((rawMsg) =>
       rawMsg.elements
         .filter((ele) => ele?.elementId !== undefined && ele?.picElement?.sourcePath !== undefined)
         .map(
@@ -189,12 +244,12 @@ ipcMain.handle(
               msgId: msgData.rootMsgId!,
               chatType: msgData?.chatType!,
               peerUid: msgData?.peerUid!
-            }) as forwardMsgPic
+            }) as picMsgData
         )
     );
     // log.debug(`channel.GET_FORWARD_MSG_PIC got picList ${JSON.stringify(picList)}`);
-    const onDisk: forwardMsgPic[] = [];
-    const notOnDiskList: forwardMsgPic[] = [];
+    const onDisk: picMsgData[] = [];
+    const notOnDiskList: picMsgData[] = [];
     picList.forEach((pic) => {
       if (fs.existsSync(pic.pic.sourcePath)) {
         onDisk.push(pic);
@@ -206,11 +261,11 @@ ipcMain.handle(
     log.debug(
       `channel.GET_FORWARD_MSG_PIC now have valid picList len=${picList.length}, onDisk=${onDisk.length}, notOnDisk=${notOnDiskList.length}`
     );
-    return { onDiskImgList: onDiskImg, notOnDiskMsgList: notOnDiskList };
+    return { onDiskMsgContentList: onDiskImg, notOnDiskMsgContentList: notOnDiskList };
   }
 );
 
-ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: forwardMsgPic[]): Promise<ImgObject[]> => {
+ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: picMsgData[]): Promise<ImgObject[]> => {
   const downloadPromises = picList.map((ele) => {
     const apiParams: ApiParams = [
       {

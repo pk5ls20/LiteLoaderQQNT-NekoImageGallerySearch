@@ -5,7 +5,7 @@ import { ImgObject } from '../common/imgObject';
 import { log } from '../common/share/logs';
 import { pluginSettingsModel } from '../common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-import { type forwardMsgData, forwardMsgPic } from '../renderer/NTQQMsgModel';
+import type { nekoMsgData } from '../renderer/NTQQMsgModel';
 
 const convertImgObject = async (fileList: ImgObject[]): Promise<File[]> => {
   return await Promise.all(
@@ -137,27 +137,37 @@ const imageSearch = {
     }
   },
 
-  async getForwardMsgContent(data: forwardMsgData): Promise<{
-    startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: forwardMsgPic[] }>;
-    endDownload: Promise<ImgObject[]>;
+  async downloadMsgContent<DT extends nekoMsgData | nekoMsgData[], SDT1, SDT2, EDT1>(
+    msgData: DT,
+    startDownloadChannel: string,
+    finishDownloadChannel: string
+  ): Promise<{
+    startDownload: Promise<Awaited<{ onDiskMsgContentList: SDT1[]; notOnDiskMsgContentList: SDT2[] }>>;
+    endDownload: Promise<EDT1[]>;
   }> {
     try {
       const downloadHandle = async () => {
-        const result: { notOnDiskMsgList: forwardMsgPic[]; onDiskImgList: ImgObject[] } = await ipcRenderer.invoke(
-          channel.GET_FORWARD_MSG_PIC,
-          data
+        // log.debug('Downloading forward message content:', msgData);
+        const result: { onDiskMsgContentList: SDT1[]; notOnDiskMsgContentList: SDT2[] } = await ipcRenderer.invoke(
+          startDownloadChannel,
+          msgData
         );
-        const onDiskImgList = result.onDiskImgList;
-        const notOnDiskMsgList = result.notOnDiskMsgList;
-        const startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: forwardMsgPic[] }> =
+        // log.debug('Downloaded forward message content:', result);
+        const onDiskMsgContentList: SDT1[] = result.onDiskMsgContentList;
+        const notOnDiskMsgContentList: SDT2[] = result.notOnDiskMsgContentList;
+        const startDownload: Promise<Awaited<{ onDiskMsgContentList: SDT1[]; notOnDiskMsgContentList: SDT2[] }>> =
           Promise.resolve({
-            onDiskImgList,
-            notOnDiskMsgList
+            onDiskMsgContentList,
+            notOnDiskMsgContentList
           });
-        const endDownload: Promise<ImgObject[]> = ipcRenderer.invoke(
-          channel.DOWNLOAD_MULTI_MSG_IMAGE,
-          notOnDiskMsgList
-        );
+        // log.debug(
+        //   'Downloaded forward message content:',
+        //   'on disk:',
+        //   onDiskMsgContentList,
+        //   'not on disk',
+        //   notOnDiskMsgContentList
+        // );
+        const endDownload: Promise<EDT1[]> = ipcRenderer.invoke(finishDownloadChannel, notOnDiskMsgContentList);
         return { startDownload, endDownload };
       };
       return downloadHandle();

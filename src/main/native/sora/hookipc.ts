@@ -3,9 +3,9 @@ import { activeCallbackIds, eventEmitter } from './event';
 import { type BrowserWindow } from 'electron';
 
 const hookIpcSend = (sendData: any) => {
-  const [_, event, data] = sendData;
+  const [name, event, data] = sendData;
   if (data) {
-    // console.log('hookIpcSend-0', data);
+    // console.log('hookIpcSend-0', name, event, data);
   }
   if (event?.callbackId && activeCallbackIds.has(event.callbackId)) {
     // console.log('hookIpcSend-1', event.callbackId);
@@ -14,7 +14,7 @@ const hookIpcSend = (sendData: any) => {
     // console.log('hookIpcSend-2', data[0]?.cmdName);
     eventEmitter.emit(data[0]?.cmdName, data);
   } else {
-    console.warn('hookIpcSend: Unexpected sendData format', sendData);
+    // console.warn('hookIpcSend: Unexpected sendData format', sendData);
   }
   return sendData;
 };

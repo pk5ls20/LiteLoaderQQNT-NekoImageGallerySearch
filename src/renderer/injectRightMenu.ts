@@ -2,8 +2,10 @@ import iconHtml from '../app/assets/logo.svg?raw';
 import { imageContainer } from '../common/imageContainer';
 import { log } from '../common/share/logs';
 import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-import { vueMsgElement, forwardMsgData } from './NTQQMsgModel';
+import { forwardMsgData, picMsgData, vueMsgElement } from './NTQQMsgModel';
 import { showToast } from './toast';
+import { ImgObject } from '../common/imgObject';
+import * as channel from '../common/channels';
 
 declare var app: any; // hooked NTQQ mainwindow vue app
 
@@ -47,6 +49,35 @@ const addQContextMenu = (qContextMenu: Element, icon: string, title: string, men
   separator === null ? qContextMenu.appendChild(item) : qContextMenu.insertBefore(item, separator);
 };
 
+const injectLogic = async (msgData: forwardMsgData) => {
+  (async () => {
+    const ps = await window.imageSearch.downloadMsgContent<forwardMsgData, ImgObject, picMsgData, ImgObject>(
+      msgData!,
+      channel.GET_FORWARD_MSG_PIC,
+      channel.DOWNLOAD_MULTI_MSG_IMAGE
+    );
+    const startDownloadResult = await ps.startDownload;
+    await window.imageSearch.addUploadFileReq(startDownloadResult.onDiskMsgContentList);
+    showToast(
+      `Successfully retrieved 
+              ${startDownloadResult.onDiskMsgContentList.length + startDownloadResult.notOnDiskMsgContentList.length} 
+              forwardMsg content! Starting background download ${startDownloadResult.notOnDiskMsgContentList.length} images...`,
+      5000
+    );
+    const es = await ps.endDownload;
+    // log.debug('Downloaded ForwardMsg images:', es);
+    await window.imageSearch.addUploadFileReq(es);
+    const message =
+      startDownloadResult.notOnDiskMsgContentList.length > 0
+        ? `Successfully downloaded ${startDownloadResult.notOnDiskMsgContentList.length} images! `
+        : '';
+    showToast(`${message}Open NekoImage to upload...`, 5000);
+  })().catch((error) => {
+    log.debug('Error when downloading ForwardMsg images:', error);
+    showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
+  });
+};
+
 export const addQContextMenuMain = async () => {
   let imageObject: imageContainer | null = null;
   let forwardMsgData: forwardMsgData | null = null;
@@ -74,6 +105,7 @@ export const addQContextMenuMain = async () => {
         const forwardMsgVueElement = (app as any)?.__vue_app__?.config?.globalProperties?.$store?.state?.aio_chatMsgArea
           ?.msgListRef?.curMsgs as vueMsgElement[] | null;
         const forwardMsgElement = forwardMsgVueElement?.find((msg: vueMsgElement) => msg.id === elParent.id);
+        // log.debug('Forward Msg Element', forwardMsgElement);
         // In QQ, forward msg elements cannot be combined like text and picture messages, so just simply use elements[0]
         if (forwardMsgElement?.data?.elements[0]?.multiForwardMsgElement) {
           forwardMsgData = {
@@ -110,27 +142,7 @@ export const addQContextMenuMain = async () => {
       }
       if (forwardMsgData) {
         addQContextMenu(qContextMenu, iconHtml, 'Upload forwardMsg images', 'nekoimg-forward-msg-menu', async () => {
-          (async () => {
-            const ps = await window.imageSearch.getForwardMsgContent(forwardMsgData!);
-            const startDownloadResult = await ps.startDownload;
-            await window.imageSearch.addUploadFileReq(startDownloadResult.onDiskImgList);
-            showToast(
-              `Successfully retrieved 
-              ${startDownloadResult.onDiskImgList.length + startDownloadResult.notOnDiskMsgList.length} 
-              forwardMsg content! Starting background download ${startDownloadResult.notOnDiskMsgList.length} images...`,
-              5000
-            );
-            const es = await ps.endDownload;
-            await window.imageSearch.addUploadFileReq(es);
-            const message =
-              startDownloadResult.notOnDiskMsgList.length > 0
-                ? `Successfully downloaded ${startDownloadResult.notOnDiskMsgList.length} images! `
-                : '';
-            showToast(`${message}Open NekoImage to upload...`, 5000);
-          })().catch((error) => {
-            log.debug('Error when downloading ForwardMsg images:', error);
-            showToast(`Error when downloading ForwardMsg images: ${error}`, 5000, 'error');
-          });
+          if (forwardMsgData) await injectLogic(forwardMsgData);
         });
       }
     }

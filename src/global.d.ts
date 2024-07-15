@@ -1,8 +1,8 @@
 import 'vite/client';
 import { pluginSettingsModel } from './common/share/PluginSettingsModel';
 import { TriggerImageRegisterName } from './common/share/triggerImageRegisterName';
-import { type MimeType } from 'file-type';
-import { type forwardMsgData } from './renderer/NTQQMsgModel';
+import type { MimeType } from 'file-type';
+import type { nekoMsgData } from './renderer/NTQQMsgModel';
 import { ImgObject } from './common/imgObject';
 
 declare global {
@@ -21,9 +21,13 @@ declare global {
       openWeb: (url: string) => void;
       selectFiles: (multiple: boolean, accept: string[]) => Promise<File[]>;
       selectDirectory: (accept: string[] | null) => Promise<File[]>;
-      getForwardMsgContent: (forwardMsgData: forwardMsgData) => Promise<{
-        startDownload: Promise<{ onDiskImgList: ImgObject[]; notOnDiskMsgList: string[] }>;
-        endDownload: Promise<ImgObject[]>;
+      downloadMsgContent: <DT extends nekoMsgData | nekoMsgData[], SDT1, SDT2, EDT1>(
+        msgData: DT,
+        startDownloadChannel: string,
+        finishDownloadChannel: string
+      ) => Promise<{
+        startDownload: Promise<Awaited<{ onDiskMsgContentList: SDT1[]; notOnDiskMsgContentList: SDT2[] }>>;
+        endDownload: Promise<EDT1[]>;
       }>;
       addUploadFileReq: (imgList: ImgObject[]) => Promise<void>;
       addUploadFileRes: (callback: (file: File[]) => void) => void;
