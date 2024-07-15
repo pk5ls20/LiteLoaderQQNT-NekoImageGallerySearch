@@ -23,7 +23,7 @@ const config = {
         targets: [
           { src: './manifest.json', dest: 'LiteLoaderQQNT-NekoImage' },
           { src: './icon.png', dest: 'LiteLoaderQQNT-NekoImage' },
-          { src: 'src/renderer/settings.html', dest: 'LiteLoaderQQNT-NekoImage' }
+          { src: 'src/renderer/setting/settings.html', dest: 'LiteLoaderQQNT-NekoImage' }
         ]
       })
     ],
@@ -61,7 +61,7 @@ const config = {
     },
     plugins: [
       cp({
-        targets: [{ src: 'src/renderer/injectIframe.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' }]
+        targets: [{ src: 'src/renderer/iframe/injectIframe.css', dest: 'LiteLoaderQQNT-NekoImage/renderer/' }]
       }),
       vue(),
       svgLoader(),

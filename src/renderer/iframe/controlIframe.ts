@@ -1,4 +1,4 @@
-import { log } from '../common/share/logs';
+import { log } from '../../common/share/logs';
 
 export const iframeMaskClassName = 'nekoimage_mask';
 export const iframePreShowClassName = 'nekoimage_iframe_pre_show';
@@ -9,15 +9,15 @@ export enum iframeStyleEnum {
   hide
 }
 
-const preShow = (ele: any) => {
+const preShow = (ele: Element) => {
   ele.classList.add(iframePreShowClassName);
   ele.classList.remove(iframePreHideClassName);
 };
-const preHide = (ele: any) => {
+const preHide = (ele: Element) => {
   ele.classList.add(iframePreHideClassName);
   ele.classList.remove(iframePreShowClassName);
 };
-export const controlIframe = (style: iframeStyleEnum, iframe: any) => {
+export const controlIframe = (style: iframeStyleEnum, iframe: HTMLIFrameElement) => {
   if (style === iframeStyleEnum.show) {
     iframe.style.visibility = 'visible';
     iframe.style.display = 'block';
@@ -28,7 +28,7 @@ export const controlIframe = (style: iframeStyleEnum, iframe: any) => {
     log.error('controlIframe: Bad style');
   }
 };
-export const controlMask = (style: string, mask?: any) => {
+export const controlMask = (style: string, mask?: HTMLElement | null) => {
   if (mask) {
     mask.style.display = style;
   } else {
@@ -37,7 +37,7 @@ export const controlMask = (style: string, mask?: any) => {
   }
 };
 export const showIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | null) => {
-  const targetIframe = iframe || document.getElementById(iframeID);
+  const targetIframe = (iframe || document.getElementById(iframeID)) as HTMLIFrameElement;
   if (targetIframe) {
     controlMask('block');
     controlIframe(iframeStyleEnum.show, targetIframe);
@@ -52,7 +52,7 @@ export const showIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | n
 };
 
 export const hideIframe = (iframeID: string = '', iframe?: HTMLIFrameElement | null) => {
-  const targetIframe = iframe || document.getElementById(iframeID);
+  const targetIframe = (iframe || document.getElementById(iframeID)) as HTMLIFrameElement;
   if (targetIframe) {
     preShow(targetIframe);
     setTimeout(() => {

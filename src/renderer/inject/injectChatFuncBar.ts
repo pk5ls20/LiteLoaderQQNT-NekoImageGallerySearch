@@ -1,10 +1,9 @@
-import iconHtml from '../app/assets/logo.svg?raw';
-import { iframeID, setupIframe } from './injectIframe';
-import { showIframe } from './controlIframe';
-import { log } from '../common/share/logs';
+import iconHtml from '../../app/assets/logo.svg?raw';
+import { iframeID } from '../iframe/injectIframe';
+import { log } from '../../common/share/logs';
 
 // reference https://github.com/xtaw/LiteLoaderQQNT-Fake-Message/blob/master/src/renderer.js#L72
-export const injectChatFuncBar = async () => {
+export const injectChatFuncBar = async (clickCB: Promise<void>, settingUpdateCB: () => Promise<void>) => {
   new MutationObserver(async (mutations) => {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
@@ -14,7 +13,7 @@ export const injectChatFuncBar = async () => {
             // inject iframe only once
             if (document.getElementById(iframeID) === null) {
               log.debug('injectChatFuncBarObserver: iframe not exists, prepare to inject');
-              await setupIframe();
+              await clickCB;
             } else {
               log.debug('injectChatFuncBarObserver: iframe already exists');
             }
@@ -31,10 +30,7 @@ export const injectChatFuncBar = async () => {
                 }
                 const icon = openButton.getElementsByTagName('i')[0];
                 icon.innerHTML = iconHtml;
-                openButton.addEventListener('click', async () => {
-                  window.imageSearch.triggerSettingReq(null);
-                  showIframe(iframeID);
-                });
+                openButton.addEventListener('click', settingUpdateCB);
                 funcBar.appendChild(openButton);
               }
             }

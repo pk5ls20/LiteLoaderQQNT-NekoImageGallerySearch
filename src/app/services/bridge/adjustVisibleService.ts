@@ -13,9 +13,9 @@ export class devAdjustVisibleService implements adjustVisibleService {
 export class LLNTAdjustVisibleService implements adjustVisibleService {
   async set(state: boolean): Promise<void> {
     // @ts-ignore
-    const injectIframeModule = await import('../../../renderer/injectIframe');
+    const injectIframeModule = await import('../../../renderer/iframe/injectIframe');
     const { iframeID } = injectIframeModule;
-    const controlIframeModule = await import('../../../renderer/controlIframe');
+    const controlIframeModule = await import('../../../renderer/iframe/controlIframe');
     const { hideIframe, showIframe } = controlIframeModule;
     state ? showIframe(iframeID) : hideIframe(iframeID);
   }

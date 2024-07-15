@@ -1,18 +1,24 @@
-import iconHtml from '../app/assets/logo.svg?raw';
-import { imageContainer } from '../common/imageContainer';
-import { log } from '../common/share/logs';
-import { TriggerImageRegisterName } from '../common/share/triggerImageRegisterName';
-import { arkForwardMsgBytesData, forwardMsgData, picMsgData, vueMsgElement } from './NTQQMsgModel';
-import { showToast } from './toast';
-import { ImgObject } from '../common/imgObject';
-import * as channel from '../common/channels';
+import iconHtml from '../../app/assets/logo.svg?raw';
+import { imageContainer } from '../../common/imageContainer';
+import { log } from '../../common/share/logs';
+import { TriggerImageRegisterName } from '../../common/share/triggerImageRegisterName';
+import { arkForwardMsgBytesData, forwardMsgData, picMsgData, vueMsgElement } from '../../common/NTQQMsgModel';
+import { showToast } from '../common/toast';
+import { ImgObject } from '../../common/imgObject';
+import * as channel from '../../common/channels';
 
 declare var app: any; // hooked NTQQ mainwindow vue app
 
 let mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32' ? 'mouseup' : 'mousedown';
 
 // reference https://github.com/xh321/LiteLoaderQQNT-QR-Decode/blob/master/src/qContextMenu.js#L12
-const addQContextMenu = (qContextMenu: Element, icon: string, title: string, menuID: string, callback: Function) => {
+const addQContextMenu = (
+  qContextMenu: Element,
+  icon: string,
+  title: string,
+  menuID: string,
+  callback: () => Promise<void>
+) => {
   if (qContextMenu.querySelector(`#${menuID}`) != null) {
     log.debug(`addQContextMenu: ${menuID} already exists.`);
     return;

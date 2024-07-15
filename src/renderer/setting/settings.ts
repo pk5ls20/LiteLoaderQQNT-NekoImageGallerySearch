@@ -1,4 +1,4 @@
-import { log } from '../common/share/logs';
+import { log } from '../../common/share/logs';
 
 // reference https://github.com/MUKAPP/LiteLoaderQQNT-DeepL/blob/main/src/renderer.js#L377
 export const settings = async (view: any) => {

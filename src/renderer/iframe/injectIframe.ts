@@ -1,5 +1,5 @@
-import { log } from '../common/share/logs';
-import AppEntry from '../app/appEntry';
+import { log } from '../../common/share/logs';
+import AppEntry from '../../app/appEntry';
 import {
   controlIframe,
   controlMask,
