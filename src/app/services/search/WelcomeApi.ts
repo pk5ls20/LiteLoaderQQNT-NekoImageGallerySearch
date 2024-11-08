@@ -1,5 +1,5 @@
 // reference https://github.com/hv0905/NekoImageGallery.App/blob/master/src/Services/WelcomeApi.ts
-import { HomeApiResponse } from '../../models/search/HomeApiResponse';
+import type { HomeApiResponse } from '../../models/search/HomeApiResponse';
 import { getClient } from './baseSearchService';
 
 export async function WelcomeApi() {

@@ -79,7 +79,7 @@ import type { Image } from '../../models/search/Image';
 import { fetchStatus, fetchType } from '../../models/search/SearchWindowEnum';
 import { performLoadMoreSearch, performSimilarSearch } from '../../services/search/performSearchQueryService';
 import { useSearchStore } from '../../states/searchWindowState';
-import { getPreviewURL } from '../../utils/getURL';
+import { getPreviewURL, getUrlBase64 } from '../../utils/getURL';
 import { EditorImageMsg, NTQQEditorImageMsg } from '../../services/editor/editorMsgService';
 import { deleteImage, updateOpt } from '../../services/search/AdminApi';
 import { useI18n } from 'vue-i18n';
@@ -122,6 +122,7 @@ const handleConfirmDelete = async (confirmed: boolean) => {
 };
 
 const handleImageClick = async (img: Image, id: string) => {
+  img.url = await getUrlBase64(img.url);
   const editorImg = new EditorImageMsg(img, 0); // TODO: let user choose picSubType
   const editorMsg = new NTQQEditorImageMsg(editorImg);
   EnvAdapter.log('Adding editor', JSON.stringify(editorMsg));
