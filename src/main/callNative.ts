@@ -11,6 +11,9 @@ import { log } from '../common/share/logs';
 type ApiParams = [{ getReq: GetReq }, null];
 type multiPicDataT = picMsgData | marketFaceMsgData;
 
+const IPC_CHANNEL = LiteLoader.package.qqnt.buildVersion >= 28788 ? 'IPC_UP_3' : 'IPC_UP_2';
+const IPC_EVENT = LiteLoader.package.qqnt.buildVersion >= 28788 ? 'ns-ntApi-3' : 'ns-ntApi-2';
+
 const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage[]> => {
   const args = [
     {
@@ -173,8 +176,8 @@ ipcMain.handle(channel.DOWNLOAD_MULTI_MSG_IMAGE, async (_, picList: picMsgData[]
     ];
     return invokeNative<ApiParams, GeneralCallResult, null, any, { notifyInfo: { filePath: string; msgId: string } }>(
       'nodeIKernelMsgService/downloadRichMedia',
-      'ns-ntApi-2',
-      'IPC_UP_2',
+      IPC_EVENT,
+      IPC_CHANNEL,
       apiParams,
       100000,
       'nodeIKernelMsgListener/onRichMediaDownloadComplete',

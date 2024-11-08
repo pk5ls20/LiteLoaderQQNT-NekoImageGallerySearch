@@ -4,7 +4,6 @@ import { ipcMain } from 'electron';
 import { randomUUID, type UUID } from 'crypto';
 import type { GeneralCallResult } from 'napcat.core';
 import { activeCallbackIds as firstStageCallbackIds, cleanFCListeners, eventEmitter, SCListener } from './event';
-import { log } from '../../../common/share/logs';
 
 const IPC_TIMEOUT = 10000;
 
@@ -32,8 +31,8 @@ export async function invokeNative<
   RTS2 extends RTS2B = never
 >(
   cmdName: string,
-  eventName: string = 'ns-ntApi-2',
-  channel: string = 'IPC_UP_2',
+  eventName: string,
+  channel: string,
   args: AGT = [] as unknown as AGT,
   timeout: number = IPC_TIMEOUT,
   secondCmdName?: string | null,
