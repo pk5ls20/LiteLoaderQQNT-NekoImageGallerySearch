@@ -1,12 +1,17 @@
 import iconHtml from '../../app/assets/logo.svg?raw';
 import { log } from '../../common/share/logs';
-import { marketFaceMsgData, NTQQVueMarketFaceElement, picMsgData, vueMsgElementData } from '../../common/NTQQMsgModel';
-import type { PicElement } from 'napcat.core';
+import {
+  marketFaceMsgData,
+  NTQQVueMarketFaceElement,
+  PicElement,
+  picMsgData,
+  vueMsgElementData
+} from '../../common/NTQQMsgModel';
 import { showToast } from '../common/toast';
 import * as channel from '../../common/channels';
 import { ImgObject } from '../../common/imgObject';
 
-declare var app: any; // hooked NTQQ mainwindow vue app
+declare let app: any; // hooked NTQQ mainwindow vue app
 
 const addMsButton = (
   qContextMenu: Element,

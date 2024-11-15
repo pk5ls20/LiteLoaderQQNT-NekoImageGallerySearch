@@ -14,7 +14,7 @@
     "remote-plugin-build": "electron-vite build && scp -r LiteLoaderQQNT-NekoImage/* pk5ls@pk5ls-vm:/home/pk5ls/LiteLoaderQQNT/plugins/LiteLoaderQQNT-NekoImage/"
   },
   "dependencies": {
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "balm-ui": "^10.28.2",
     "file-type": "^19.0.0",
     "pinia": "^2.1.7",
@@ -39,12 +39,11 @@
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.25.0",
     "liteloaderqqnt-types": "^1.0.1",
-    "napcat.core": "^1.0.3",
     "prettier": "^3.2.5",
     "sass": "^1.74.1",
     "terser": "^5.30.3",
-    "typescript": "*",
-    "vite": "^5.1.4",
+    "typescript": "^5.4.5",
+    "vite": "5.4.6",
     "vite-plugin-cp": "^4.0.8",
     "vite-plugin-singlefile": "^2.0.1",
     "vite-plugin-vue-devtools": "^7.0.27",

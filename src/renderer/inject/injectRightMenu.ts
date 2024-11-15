@@ -7,9 +7,9 @@ import { showToast } from '../common/toast';
 import { ImgObject } from '../../common/imgObject';
 import * as channel from '../../common/channels';
 
-declare var app: any; // hooked NTQQ mainwindow vue app
+declare let app: any; // hooked NTQQ mainwindow vue app
 
-let mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32' ? 'mouseup' : 'mousedown';
+const mouseEventName: 'mouseup' | 'mousedown' = LiteLoader.os.platform === 'win32' ? 'mouseup' : 'mousedown';
 
 // reference https://github.com/xh321/LiteLoaderQQNT-QR-Decode/blob/master/src/qContextMenu.js#L12
 const addQContextMenu = (

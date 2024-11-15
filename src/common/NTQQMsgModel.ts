@@ -1,18 +1,40 @@
-import type {
-  ArkElement,
-  AtType,
-  ElementType,
-  FaceElement,
-  FileElement,
-  GrayTipElement,
-  InlineKeyboardElement,
-  MarkdownElement,
-  MarketFaceElement,
-  MultiForwardMsgElement,
-  PicElement,
-  PttElement,
-  VideoElement
-} from 'napcat.core';
+export interface GeneralCallResult {
+  result: number;
+  errMsg: string;
+}
+
+export interface PicElement {
+  picSubType?: number;
+  originImageUrl: string;
+  originImageMd5?: string;
+  sourcePath: string;
+  thumbPath: Map<number, string>;
+  picWidth: number;
+  picHeight: number;
+  fileSize: number;
+  fileName: string;
+  fileUuid: string;
+  md5HexStr?: string;
+}
+
+export interface ArkElement {
+  bytesData: string;
+  linkInfo: null;
+  subElementType: null;
+}
+
+export interface MarketFaceElement {
+  emojiPackageId: number;
+  faceName: string;
+  emojiId: string;
+  key: string;
+}
+
+export interface MultiForwardMsgElement {
+  xmlContent: string;
+  resId: string;
+  fileName: string;
+}
 
 export type vueMsgElement = {
   data: vueMsgElementData;
@@ -84,10 +106,23 @@ export type vueMsgElementData = {
   timeStamp: string;
 };
 
+export interface RawMessage {
+  msgId: string;
+  senderUid: string;
+  senderUin: string;
+  peerUid: string;
+  peerUin: string;
+  sendNickName: string;
+  sendMemberName?: string;
+  chatType: number;
+  sendStatus?: number;
+  recallTime: string;
+  elements: Array<NTQQMsgElement>;
+}
+
 // reference https://github.com/NapNeko/LiteLoader-NapCatCore/blob/main/src/entities/msg.ts#L513
 export type NTQQMsgElement = {
   elementId: string;
-  elementType: ElementType;
   replyElement: {
     senderUid: string;
     sourceMsgIsIncPic: boolean;
@@ -95,21 +130,14 @@ export type NTQQMsgElement = {
     replayMsgSeq: string;
   };
   textElement: {
-    atType: AtType;
+    atType: number;
     atUid: string;
     content: string;
     atNtUid: string;
   };
   picElement: PicElement;
-  pttElement: PttElement;
   arkElement: ArkElement;
-  grayTipElement: GrayTipElement;
-  faceElement: FaceElement;
-  videoElement: VideoElement;
-  fileElement: FileElement;
   marketFaceElement: MarketFaceElement;
-  inlineKeyboardElement: InlineKeyboardElement;
-  markdownElement: MarkdownElement;
   multiForwardMsgElement: MultiForwardMsgElement;
 };
 

@@ -1,8 +1,14 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { ipcMain } from 'electron';
-import type { GeneralCallResult, RawMessage } from 'napcat.core';
-import { forwardMsgData, GetReq, marketFaceMsgData, picMsgData } from '../common/NTQQMsgModel';
+import {
+  forwardMsgData,
+  GeneralCallResult,
+  GetReq,
+  marketFaceMsgData,
+  picMsgData,
+  RawMessage
+} from '../common/NTQQMsgModel';
 import { invokeNative } from './native/sora/invokeNative';
 import { ImgObject } from '../common/imgObject';
 import * as channel from '../common/channels';
@@ -25,8 +31,8 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
   // log.debug('await invokeNative in args: ', JSON.stringify(args));
   const res = await invokeNative<unknown[], GeneralCallResult, { msgList: RawMessage[] }>(
     'nodeIKernelMsgService/getMultiMsg',
-    'ns-ntApi-2',
-    'IPC_UP_2',
+    IPC_EVENT,
+    IPC_CHANNEL,
     args
   );
   // log.debug('downloadMsgContent', JSON.stringify(res));

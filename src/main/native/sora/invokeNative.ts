@@ -2,8 +2,8 @@
 // also thanks https://github.com/ilharp/ipcman
 import { ipcMain } from 'electron';
 import { randomUUID, type UUID } from 'crypto';
-import type { GeneralCallResult } from 'napcat.core';
 import { activeCallbackIds as firstStageCallbackIds, cleanFCListeners, eventEmitter, SCListener } from './event';
+import { GeneralCallResult } from '../../../common/NTQQMsgModel';
 
 const IPC_TIMEOUT = 10000;
 
