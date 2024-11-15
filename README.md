@@ -65,5 +65,6 @@ Thanks to the following projects. LiteLoaderQQNT-NekoImage could not have been r
 - https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools
 - https://github.com/Night-stars-1/LiteLoaderQQNT-Plugin-LLAPI
 - https://github.com/LLOneBot/LLOneBot
+- https://github.com/NapNeko/NapCatQQ
 - https://github.com/darkreader/darkreader
 - (more repo mentioned in the code comments)

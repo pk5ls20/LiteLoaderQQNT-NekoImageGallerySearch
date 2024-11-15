@@ -123,10 +123,10 @@ const handleConfirmDelete = async (confirmed: boolean) => {
 
 const handleImageClick = async (img: Image, id: string) => {
   img.url = await getUrlBase64(img.url);
-  const editorImg = new EditorImageMsg(img, 0); // TODO: let user choose picSubType
+  const editorImg = new EditorImageMsg(img, store.pluginSettingData.nekoimage_pic_subtype);
   const editorMsg = new NTQQEditorImageMsg(editorImg);
-  EnvAdapter.log('Adding editor', JSON.stringify(editorMsg));
-  EnvAdapter.log(`Image ID: ${id}`);
+  // EnvAdapter.log('Adding editor', JSON.stringify(editorMsg));
+  // EnvAdapter.log(`Image ID: ${id}`);
   EnvAdapter.addNTQQEditor([editorMsg]);
   await EnvAdapter.adjustVisible(false);
 };

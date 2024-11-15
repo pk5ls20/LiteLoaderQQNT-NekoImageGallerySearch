@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch, defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EnvAdapter } from '../adapter/EnvAdapter';
 import SearchWindowDialog from '../components/search/searchWindowStatusDialog.vue';

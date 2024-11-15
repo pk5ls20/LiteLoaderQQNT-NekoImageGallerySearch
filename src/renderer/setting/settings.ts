@@ -44,6 +44,9 @@ export const settings = async (view: any) => {
     const nekoimage_lang = view.querySelector('.image_search .neko-lang');
     const nekoimage_lang_apply = view.querySelector('.image_search .neko-lang-apply');
     const nekoimage_lang_reset = view.querySelector('.image_search .neko-lang-reset');
+    const nekoimage_pic_subtype = view.querySelector('.image_search .neko-pic-subtype');
+    const nekoimage_pic_subtype_apply = view.querySelector('.image_search .neko-pic-subtype-apply');
+    const nekoimage_pic_subtype_reset = view.querySelector('.image_search .neko-pic-subtype-reset');
 
     // console.log(JSON.stringify(settings));
     nekoimage_access_token.value = settings.nekoimage_admin_token ?? '';
@@ -81,6 +84,17 @@ export const settings = async (view: any) => {
       settings.nekoimage_lang = 'en-US';
       await window.imageSearch.setSettings(settings);
       alert('Language Reset');
+    });
+    nekoimage_pic_subtype_apply.addEventListener('click', async () => {
+      settings.nekoimage_pic_subtype = parseInt(nekoimage_pic_subtype.value) as 0 | 1;
+      await window.imageSearch.setSettings(settings);
+      alert('Pic Subtype Applied');
+    });
+    nekoimage_pic_subtype_reset.addEventListener('click', async () => {
+      nekoimage_pic_subtype.value = '0';
+      settings.nekoimage_pic_subtype = 0;
+      await window.imageSearch.setSettings(settings);
+      alert('Pic Subtype Reset');
     });
   } catch (error) {
     log.error('[Error in setting]', error);

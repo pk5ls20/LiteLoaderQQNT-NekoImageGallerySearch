@@ -58,7 +58,7 @@ const addQContextMenu = (
 const injectLogic = async (msgData: forwardMsgData) => {
   (async () => {
     const ps = await window.imageSearch.downloadMsgContent<forwardMsgData, ImgObject, picMsgData, ImgObject>(
-      msgData!,
+      msgData,
       channel.GET_FORWARD_MSG_PIC,
       channel.DOWNLOAD_MULTI_MSG_IMAGE
     );
@@ -113,11 +113,11 @@ export const addQContextMenuMain = async () => {
       imageObject = null;
       isRightClick = true;
       if (event.target instanceof HTMLElement) {
-        el = event.target as HTMLElement;
+        el = event.target;
         const elParent = el.closest('.ml-item');
         if (!elParent) return;
         // hook vue app to get forward msg data
-        const forwardMsgVueElement = (app as any)?.__vue_app__?.config?.globalProperties?.$store?.state?.aio_chatMsgArea
+        const forwardMsgVueElement = app?.__vue_app__?.config?.globalProperties?.$store?.state?.aio_chatMsgArea
           ?.msgListRef?.curMsgs as vueMsgElement[] | null;
         const forwardMsgElement = forwardMsgVueElement?.find((msg: vueMsgElement) => msg.id === elParent.id);
         // log.debug('Forward Msg Element', forwardMsgElement);
@@ -150,7 +150,7 @@ export const addQContextMenuMain = async () => {
       }
       if (event.target instanceof HTMLImageElement) {
         if (haveImgContent()) {
-          imageObject = new imageContainer((event.target as HTMLImageElement).src?.toString());
+          imageObject = new imageContainer(event.target.src?.toString());
           log.debug(
             'Got Image',
             imageObject.src.length > 200 ? `${imageObject.src.slice(0, 200)}...` : imageObject.src

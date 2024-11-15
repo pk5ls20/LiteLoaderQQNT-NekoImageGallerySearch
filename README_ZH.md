@@ -63,5 +63,6 @@ cp -r LiteLoaderQQNT-NekoImage /path/to/your/LiteloaderQQNT/plugin-path
 - https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools
 - https://github.com/Night-stars-1/LiteLoaderQQNT-Plugin-LLAPI
 - https://github.com/LLOneBot/LLOneBot
+- https://github.com/NapNeko/NapCatQQ
 - https://github.com/darkreader/darkreader
 - （代码注释中提到的更多项目）

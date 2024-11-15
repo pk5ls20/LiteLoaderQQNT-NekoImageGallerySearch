@@ -28,7 +28,7 @@ const getForwardMsgContent = async (msgData: forwardMsgData): Promise<RawMessage
       parentMsgId: msgData.parentMsgId ?? msgData.rootMsgId
     }
   ];
-  // log.debug('await invokeNative in args: ', JSON.stringify(args));
+  // log.debug(`await invokeNative in args: ${JSON.stringify(args)}`);
   const res = await invokeNative<unknown[], GeneralCallResult, { msgList: RawMessage[] }>(
     'nodeIKernelMsgService/getMultiMsg',
     IPC_EVENT,

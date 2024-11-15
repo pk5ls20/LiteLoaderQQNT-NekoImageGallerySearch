@@ -14,10 +14,10 @@ export const cleanFCListeners = (callbackId: UUID) => {
 
 // stage2 extend stage1
 export class SCListener<CB1, CB2> {
-  private checkMap: Map<UUID, (stageTwoData: CB1 & CB2) => boolean>;
-  private promiseResolvers: Map<UUID, () => void>;
+  private readonly checkMap: Map<UUID, (stageTwoData: CB1 & CB2) => boolean>;
+  private readonly promiseResolvers: Map<UUID, () => void>;
 
-  constructor(private eventEmitter: EventEmitter) {
+  constructor(private readonly eventEmitter: EventEmitter) {
     this.checkMap = new Map();
     this.promiseResolvers = new Map();
   }
